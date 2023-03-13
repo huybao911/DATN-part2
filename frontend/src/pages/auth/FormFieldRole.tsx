@@ -1,0 +1,86 @@
+import React from "react";
+import { makeStyles } from "@material-ui/core/styles";
+import { FormControl, FormLabel, TextField } from "@material-ui/core";
+import { useFormikContext } from "formik";
+import { MenuItem } from "@mui/material";
+import Select from '@mui/material/Select';
+
+import { getRoles } from "redux/actions/admin";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "redux/reducers";
+import { IRole } from "redux/types/role";
+
+const useStyles = makeStyles((theme) => ({
+    formLabel: {
+        fontWeight: 600,
+        marginBottom: theme.spacing(1.5),
+    },
+    formControl: {
+        margin: theme.spacing(2, 0),
+    },
+    placeholder: {
+        color: "#aaa"
+    }
+}));
+
+type Props = {
+    isRole?: boolean;
+};
+
+interface IValues {
+    role: string;
+}
+
+// const Placeholder = ({ children }: { children: any }) => {
+//     const classes = useStyles();
+//     return <div className={classes.placeholder}>{children}</div>;
+// };
+
+const FormField: React.FC<Props> = ({ isRole = false }): JSX.Element => {
+    const classes = useStyles();
+    const dispatch = useDispatch();
+    const { values, handleChange, handleBlur, touched, errors } =
+        useFormikContext<IValues>();
+    const [roles, setRoles] = React.useState<IRole[]>([]);
+    const Role = useSelector((state: RootState) => state.admin);
+
+    React.useEffect(() => {
+        dispatch(getRoles());
+    }, [dispatch]);
+
+    React.useEffect(() => {
+        setRoles(() => Role?.roles?.filter((role: any) => role.nameRole));
+    }, [Role]);
+    return (
+        <>
+            {isRole ? (
+                <FormControl fullWidth className={classes.formControl}>
+                    <FormLabel classes={{ root: classes.formLabel }}>Vai trò</FormLabel>
+                    <Select
+                        name="role"
+                        labelId="demo-simple-select-label"
+                        id="handle-role"
+                        value={values.role}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        error={touched.role ? Boolean(errors.role) : false}
+
+                    // renderValue={
+                    //     role !== "" ? undefined : () => <Placeholder>Role</Placeholder>
+                    // }
+                    >
+                        {roles?.map((role: any) => (
+                            <MenuItem value={role._id} key={role.keyRole}>
+                                {role.nameRole}
+                            </MenuItem>
+                        ))}
+
+                    </Select>
+                </FormControl>
+            ) : null}
+
+        </>
+    );
+};
+
+export default FormField;
