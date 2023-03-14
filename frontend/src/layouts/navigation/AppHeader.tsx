@@ -53,7 +53,7 @@ const AppHeader: React.FC = (): JSX.Element => {
       <NavLink exact to='/smanager' className={`${classes.navLink} nav-link`}>
         QUẢN LÝ CẤP CAO
       </NavLink>
-    ): admin.isAuthenticated && admin.admin.role === "admin" ? (
+    ): admin.isAuthenticated && admin.admin.role === "640cbf0573094a5e2e001859" ? (
       <NavLink exact to='/users' className={`${classes.navLink} nav-link`}>
         ADMIN
       </NavLink>

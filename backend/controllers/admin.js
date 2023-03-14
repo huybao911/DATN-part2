@@ -71,11 +71,12 @@ exports.addRole = async(req, res) => {
 exports.getUsers = async (req, res, next) => {
   try {
     if (!req.admin) return res.status(400).send("You dont have permission");
-    return res.status(200).json(await User.find().lean());
+    return res.status(200).json(await User.find().populate("role"));
   } catch (error) {
     return res.status(500).json(error);
   }
 };
+
 
 exports.getDepartments = async (req, res, next) => {
   try {
