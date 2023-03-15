@@ -76,7 +76,7 @@ const UserForm: React.FC<Props> = ({ user }): JSX.Element => {
         aria-controls='panel1a-content'
         id={`panel1a-header-${user._id}`}
       >
-        <Typography>{user?.username ?? null}</Typography>
+        <Typography>Chỉnh sửa</Typography>
       </AccordionSummary>
       <AccordionDetails>
         <Formik
@@ -115,6 +115,53 @@ const UserForm: React.FC<Props> = ({ user }): JSX.Element => {
         </Formik>
       </AccordionDetails>
     </Accordion>
+
+/* <Accordion className={classes.accordion} elevation={0}>
+<AccordionSummary
+  expandIcon={<ExpandMoreIcon />}
+  aria-controls='panel1a-content'
+  id={`panel1a-header-${user._id}`}
+>
+  <Typography>{user?.username ?? null}</Typography>
+</AccordionSummary>
+<AccordionDetails>
+  <Formik
+    enableReinitialize
+    initialValues={initialValues}
+    validationSchema={validationSchema}
+    onSubmit={onHandleSubmit}
+  >
+    {({ isSubmitting, handleSubmit }) => (
+      <form noValidate onSubmit={handleSubmit}>
+        <FormField isRegister={true} />
+        <FormFieldRole isRole={true} />
+        <FormFieldDepartment isDepartmentCbb={true} />
+        <Button
+          type='submit'
+          variant='contained'
+          color='primary'
+          size='small'
+          className={classes.btnLogin}
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? <CircularProgress size='1rem' /> : "Cập Nhật"}
+        </Button>
+        <Button
+          type='button'
+          variant='contained'
+          color='secondary'
+          size='small'
+          className={classes.btnLogin}
+          onClick={(e) => dispatch(deleteUser(user._id))}
+        >
+          Xóa
+        </Button>
+      </form>
+    )}
+  </Formik>
+</AccordionDetails>
+</Accordion> */
+
   );
 };
 

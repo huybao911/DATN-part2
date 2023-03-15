@@ -1,19 +1,29 @@
 import * as React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { useDispatch, useSelector } from "react-redux";
-
-import { getUsers, deleteUser } from "redux/actions/admin";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { getUsers, deleteUser, updateUser } from "redux/actions/admin";
 import { RootState } from "redux/reducers";
 import { IAdmin } from "redux/types/admin";
 import { ISManager } from "redux/types/sManager";
 import { IManager } from "redux/types/Manager";
 import { IUser } from "redux/types/user";
-import { Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
+import { AccordionSummary, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
 import { Link } from 'react-router-dom';
+import UserForm from "./UserForm";
 const useStyles = makeStyles((theme) => ({
   root: {
     maxWidth: "60%",
     margin: "auto",
+  },
+  btnLogin: {
+    marginTop: theme.spacing(1.5),
+    marginRight: theme.spacing(1),
+    padding: theme.spacing(1, 2),
+  },
+  accordion: {
+    marginBottom: theme.spacing(3),
+    padding: theme.spacing(1),
   },
 }));
 
@@ -21,16 +31,19 @@ function refreshPage() {
   window.location.reload();
 }
 
+
 const Users: React.FC = (): JSX.Element => {
 
   const styles = useStyles();
   const dispatch = useDispatch();
+
 
   const [users, setUsers] = React.useState<IUser[]>([]);
   const [SManagers, setSManagers] = React.useState<ISManager[]>([]);
   const [Managers, setManagers] = React.useState<IManager[]>([]);
   const [admins, setAdmins] = React.useState<IAdmin[]>([]);
   const admin = useSelector((state: RootState) => state.admin);
+
 
   React.useEffect(() => {
     dispatch(getUsers());
@@ -101,6 +114,8 @@ const Users: React.FC = (): JSX.Element => {
             <TableCell align="right">Role</TableCell>
             <TableCell align="right">Department</TableCell>
             <TableCell align="right" />
+            <TableCell align="right"></TableCell>
+
           </TableRow>
         </TableHead>
 
@@ -121,9 +136,9 @@ const Users: React.FC = (): JSX.Element => {
               </TableCell>
 
               <TableCell align="right">
-                {user.department}
+                {user.department.nameDepartment}
               </TableCell >
-
+              {/* Button delete */}
               <TableCell align="center">
                 {
                   <Button
@@ -137,6 +152,25 @@ const Users: React.FC = (): JSX.Element => {
                   </Button>
                 }
               </TableCell>
+
+              <TableCell align="center">
+                {
+                  <Button
+                    type='button'
+                    variant='contained'
+                    color='secondary'
+                    size='small'
+                    onClick={e => {}}
+                  >
+                    Chỉnh sửa
+                  </Button>
+                }
+              </TableCell>
+
+              {/* <TableCell>
+                 <UserForm user={user} key={user._id} />
+              </TableCell> */}
+
             </TableRow>
           )}
         </TableBody>
@@ -173,7 +207,7 @@ const Users: React.FC = (): JSX.Element => {
               </TableCell>
 
               <TableCell align="right">
-                {user.department}
+                {user.department.nameDepartment}
               </TableCell >
 
               <TableCell align="center">
@@ -225,7 +259,7 @@ const Users: React.FC = (): JSX.Element => {
               </TableCell>
 
               <TableCell align="right">
-                {user.department}
+                {user.department.nameDepartment}
               </TableCell >
 
               <TableCell align="center">

@@ -6,6 +6,7 @@ export interface IManager {
   username: string;
   password: string | null;
   role: any;
+  department: any;
 }
 
 interface IManagerLoaded {

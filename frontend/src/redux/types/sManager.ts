@@ -7,6 +7,7 @@ export interface ISManager {
   username: string;
   password: string | null;
   role: any;
+  department: any;
 }
 
 interface ISManagerLoaded {
