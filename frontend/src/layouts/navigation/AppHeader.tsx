@@ -75,6 +75,8 @@ const AppHeader: React.FC = (): JSX.Element => {
     <NavLink exact to='#' className={`${classes.navLink} nav-link`} onClick={(e) => dispatch(logOutManager())}>
       Đăng xuất
     </NavLink>
+
+    
   ):(
     <>
       <NavLink exact to='/register' className={`${classes.navLink} nav-link`}>
