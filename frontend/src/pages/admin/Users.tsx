@@ -141,7 +141,7 @@ const Users: React.FC = (): JSX.Element => {
               {/* Button delete */}
               <TableCell align="center">
                 {
-                  <Button
+                  <Button style={{backgroundColor:"black"}}
                     type='button'
                     variant='contained'
                     color='secondary'
@@ -155,7 +155,7 @@ const Users: React.FC = (): JSX.Element => {
 
               <TableCell align="center">
                 {
-                  <Button
+                  <Button style={{backgroundColor:"black"}}
                     type='button'
                     variant='contained'
                     color='secondary'
@@ -212,7 +212,7 @@ const Users: React.FC = (): JSX.Element => {
 
               <TableCell align="center">
                 {
-                  <Button
+                  <Button style={{backgroundColor:"black"}}
                     type='button'
                     variant='contained'
                     color='secondary'
@@ -264,7 +264,7 @@ const Users: React.FC = (): JSX.Element => {
 
               <TableCell align="center">
                 {
-                  <Button
+                  <Button style={{backgroundColor:"black"}}
                     type='button'
                     variant='contained'
                     color='secondary'

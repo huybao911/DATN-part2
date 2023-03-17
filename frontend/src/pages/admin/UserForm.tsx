@@ -76,7 +76,7 @@ const UserForm: React.FC<Props> = ({ user }): JSX.Element => {
         aria-controls='panel1a-content'
         id={`panel1a-header-${user._id}`}
       >
-        <Typography>Chỉnh sửa</Typography>
+        <Typography>{user.username}</Typography>
       </AccordionSummary>
       <AccordionDetails>
         <Formik
@@ -97,14 +97,16 @@ const UserForm: React.FC<Props> = ({ user }): JSX.Element => {
                 size='small'
                 className={classes.btnLogin}
                 disabled={isSubmitting}
+
               >
                 {isSubmitting ? <CircularProgress size='1rem' /> : "Cập Nhật"}
               </Button>
-              <Button
+              <Button 
                 type='button'
                 variant='contained'
                 color='secondary'
                 size='small'
+                style = {{backgroundColor:"black"}}
                 className={classes.btnLogin}
                 onClick={(e) => dispatch(deleteUser(user._id))}
               >
