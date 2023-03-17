@@ -21,16 +21,16 @@ const Manager: React.FC = (): JSX.Element => {
 
   const [users, setUsers] = React.useState<IUser[]>([]);
   const [Managers, setManagers] = React.useState<IManager[]>([]);
-  const Manager = useSelector((state: RootState) => state.Manager);
+  const Manager = useSelector((state: RootState) => state.manager);
 
   React.useEffect(() => {
     dispatch(getUsers());
   }, [dispatch]);
 
   React.useEffect(() => {
-    setUsers(() => Manager?.users?.filter((user: any) => user.role === "640cc3d329937ffacc4359fc"));
+    setUsers(() => Manager?.users?.filter((user: any) => user.role.keyRole === "user"));
 
-    setManagers(() => Manager?.users?.filter((user: any) => user.role === "640cc3ca29937ffacc4359fa"));
+    setManagers(() => Manager?.users?.filter((user: any) => user.role.keyRole === "manager"));
   }, [Manager]);
 
   React.useEffect(() => {

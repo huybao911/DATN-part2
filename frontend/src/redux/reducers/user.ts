@@ -1,6 +1,7 @@
 import types from "redux/actions/types";
 import { IUserState, UserActions } from "../types/user";
 import { IUser } from "redux/types/user";
+import { IRole } from "redux/types/role";
 import { IDepartment } from "redux/types/department";
 
 const initialState: IUserState = {
@@ -8,6 +9,7 @@ const initialState: IUserState = {
   loading: true,
   isAuthenticated: null,
   user: {} as IUser,
+  getRole: {} as IRole,
   departments: [] as IDepartment[],
 };
 
@@ -16,9 +18,9 @@ const userReducer = (state = initialState, action: UserActions): IUserState => {
     case types.USER_LOADED:
       return {
         ...state,
+        ...action.payload,
         isAuthenticated: true,
         loading: false,
-        user: action.payload,
       };
 
     case types.USER_REGISTER_SUCCESS:

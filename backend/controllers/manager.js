@@ -27,7 +27,7 @@ exports.login = async (req, res, next) => {
 exports.getUsers = async (req, res, next) => {
   try {
     if (!req.manager) return res.status(400).send("You dont have permission");
-    return res.status(200).json(await User.find().lean());
+    return res.status(200).json(await User.find().populate("role").populate("department"));
   } catch (error) {
     return res.status(500).json(error);
   }
@@ -36,9 +36,10 @@ exports.getUsers = async (req, res, next) => {
 exports.getAuthManager = async (req, res, next) => {
   try {
     const manager = await User.findById(req?.manager?._id).select("-password").lean();
+    let getRole = await Role.findById(manager.role);
     if (!manager)
       return res.status(400).send("Manager not found, Authorization denied..");
-    return res.status(200).json({ ...manager });
+    return res.status(200).json({ manager:{...manager}, getRole });
   } catch (error) {
     return res.status(500).send(error.message);
   }

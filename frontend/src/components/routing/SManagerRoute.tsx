@@ -14,8 +14,8 @@ const SManagerRoute: React.FC<Props> = ({
   ...rest
 }): JSX.Element => {
   const user = useSelector((state: RootState) => state.user);
-  const Manager = useSelector((state: RootState) => state.Manager);
-  const SManager = useSelector((state: RootState) => state.SManager);
+  const Manager = useSelector((state: RootState) => state.manager);
+  const SManager = useSelector((state: RootState) => state.smanager);
   const admin = useSelector((state: RootState) => state.admin);
 
   return (
@@ -27,16 +27,16 @@ const SManagerRoute: React.FC<Props> = ({
         if (!SManager.isAuthenticated) {
           return <Redirect to='/login' />;
         }
-        if (user.isAuthenticated && user.user.role === "640cc3d329937ffacc4359fc") {
+        if (user.isAuthenticated && user.getRole.keyRole === "user") {
           return <Redirect to='/dashboard' />;
         }
-        if (Manager.isAuthenticated && Manager.Manager.role === "640cc3ca29937ffacc4359fa") {
+        if (Manager.isAuthenticated && Manager.getRole.keyRole === "manager") {
           return <Redirect to='/manager' />;
         }
-        if (admin.isAuthenticated && admin.admin.role === "640cbf0573094a5e2e001859") {
+        if (admin.isAuthenticated && admin.getRole.keyRole === "admin") {
           return <Redirect to='/users' />;
         }
-        if (SManager.isAuthenticated && SManager.SManager.role === "640cc3c229937ffacc4359f8") {
+        if (SManager.isAuthenticated && SManager.getRole.keyRole === "smanager") {
           return <Component {...props} />;
         }
       }}

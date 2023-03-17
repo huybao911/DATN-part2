@@ -1,27 +1,27 @@
 import types from "redux/actions/types";
 import { IUser } from "./user";
+import { IRole } from "./role";
 
 export interface IManager {
   _id: any;
   username: string;
   password: string | null;
   role: any;
-  department: any;
 }
 
 interface IManagerLoaded {
   type: typeof types.MANAGER_LOADED;
-  payload: IManager;
+  payload: { getRole: IRole; manager: IManager };
 }
 
 interface IManagerRegisterSuccess {
   type: typeof types.MANAGER_REGISTER_SUCCESS;
-  payload: { token: string; Manager: IManager };
+  payload: { token: string; manager: IManager };
 }
 
 interface IManagerLoginSuccess {
   type: typeof types.MANAGER_LOGIN_SUCCESS;
-  payload: { token: string; Manager: IManager };
+  payload: { token: string; manager: IManager };
 }
 
 interface IGetUsers {
@@ -63,6 +63,7 @@ export interface IManagerState {
   token: string | null;
   loading: boolean;
   isAuthenticated: boolean | null;
-  Manager: IManager;
+  getRole: IRole;
+  manager: IManager;
   users: IUser[];
 }

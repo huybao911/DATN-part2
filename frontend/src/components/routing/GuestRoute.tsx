@@ -15,8 +15,8 @@ const GuestRoute: React.FC<Props> = ({
   ...rest
 }): JSX.Element => {
   const user = useSelector((state: RootState) => state.user);
-  const SManager = useSelector((state: RootState) => state.SManager);
-  const Manager = useSelector((state: RootState) => state.Manager);
+  const SManager = useSelector((state: RootState) => state.smanager);
+  const Manager = useSelector((state: RootState) => state.manager);
   const admin = useSelector((state: RootState) => state.admin);
 
 
@@ -27,13 +27,13 @@ const GuestRoute: React.FC<Props> = ({
           return <AppLoader />;
         // } else if (admin.isAuthenticated && user.isAuthenticated && SManager.isAuthenticated && Manager.isAuthenticated) {
         //     return <Login />;
-        } else if (user.isAuthenticated && user.user.role === "640cc3d329937ffacc4359fc") {
+        } else if (user.isAuthenticated && user.getRole.keyRole === "user") {
           return <Redirect to='/dashboard' />;
-        } else if (Manager.isAuthenticated && Manager.Manager.role === "640cc3ca29937ffacc4359fa") {
+        } else if (Manager.isAuthenticated && Manager.getRole.keyRole === "manager") {
           return <Redirect to='/manager' />;
-        } else if (SManager.isAuthenticated && SManager.SManager.role === "640cc3c229937ffacc4359f8") {
+        } else if (SManager.isAuthenticated && SManager.getRole.keyRole === "smanager") {
           return <Redirect to='/smanager' />;
-        } else if (admin.isAuthenticated && admin.admin.role === "640cbf0573094a5e2e001859") {
+        } else if (admin.isAuthenticated && admin.getRole.keyRole === "admin") {
           return <Redirect to='/users' />;
         } else {
           return <Component {...props} />;

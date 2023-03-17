@@ -1,15 +1,15 @@
 import { combineReducers } from "redux";
 import admin from "./admin";
-import SManager from "./sManager";
-import Manager from "./Manager";
+import smanager from "./sManager";
+import manager from "./Manager";
 import user from "./user";
 
 import alert from "./alert";
 
 const rootReducer = combineReducers({
   admin,
-  SManager,
-  Manager,
+  smanager,
+  manager,
   user,
   alert,
 });

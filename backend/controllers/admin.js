@@ -22,7 +22,7 @@ exports.login = async (req, res, next) => {
     const token = sign({ admin, getRole }, process.env.JWT_SECRET, {
       expiresIn: 360000,
     });
-    return res.status(200).json({ token, admin });
+    return res.status(200).json({ token, admin, getRole });
   } catch (error) {
     return res.status(500).send(error.message);
   }
@@ -133,9 +133,10 @@ exports.deleteUser = async (req, res, next) => {
 exports.getAuthAdmin = async (req, res, next) => {
   try {
     const admin = await User.findById(req?.admin?._id).select("-password").lean();
+    let getRole = await Role.findById(admin.role);
     if (!admin)
       return res.status(400).send("Admin not found, Authorization denied..");
-    return res.status(200).json({ ...admin });
+    return res.status(200).json({ admin:{...admin}, getRole });
   } catch (error) {
     return res.status(500).send(error.message);
   }

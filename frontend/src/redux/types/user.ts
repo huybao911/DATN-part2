@@ -1,5 +1,6 @@
 import types from "redux/actions/types";
-import { IDepartment } from "./department"
+import { IDepartment } from "./department";
+import { IRole } from "./role";
 
 export interface IUser {
   _id: any;
@@ -13,7 +14,7 @@ export interface IUser {
 
 interface IUserLoaded {
   type: typeof types.USER_LOADED;
-  payload: IUser;
+  payload: { getRole: IRole; user: IUser };
 }
 
 interface IUserLoginSuccess {
@@ -62,5 +63,6 @@ export interface IUserState {
   loading: boolean;
   isAuthenticated: boolean | null;
   user: IUser;
+  getRole: IRole;
   departments: IDepartment[];
 }

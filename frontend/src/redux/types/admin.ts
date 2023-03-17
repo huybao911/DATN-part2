@@ -14,7 +14,7 @@ export interface IAdmin {
 
 interface IAdminLoaded {
   type: typeof types.ADMIN_LOADED;
-  payload: IAdmin;
+  payload: { getRole: IRole; admin: IAdmin };
 }
 
 interface IAdminRegisterSuccess {
@@ -146,8 +146,9 @@ export interface IAdminState {
   loading: boolean;
   isAuthenticated: boolean | null;
   admin: IAdmin;
-  sManager: ISManager[];
-  Manager: IManager[];
+  getRole: IRole;
+  smanager: ISManager[];
+  manager: IManager[];
   users: IUser[];
   roles: IRole[];
   departments: IDepartment[];

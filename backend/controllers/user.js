@@ -41,7 +41,7 @@ exports.login = async (req, res, next) => {
     const isMatch = await compare(password, user.password);
     if (!isMatch) return res.status(400).send("Invalid credentials");
     const token = sign({ user, getRole }, process.env.JWT_SECRET, { expiresIn: 360000 });
-    return res.status(200).json({ token, user: { ...user, password: null } });
+    return res.status(200).json({ token, user: { ...user, password: null }, getRole });
   } catch (error) {
     return res.status(500).send(error.message);
   }
@@ -50,9 +50,10 @@ exports.login = async (req, res, next) => {
 exports.getAuthUser = async (req, res, next) => {
   try {
     const user = await User.findById(req?.user?._id).select("-password").lean();
+    let getRole = await Role.findById(user.role);
     if (!user)
       return res.status(400).send("User not found, Authorization denied..");
-    return res.status(200).json({ ...user });
+    return res.status(200).json({ user: {...user },getRole});
   } catch (error) {
     return res.status(500).send(error.message);
   }
@@ -61,14 +62,6 @@ exports.getAuthUser = async (req, res, next) => {
 exports.getDepartments = async (req, res, next) => {
   try {
     return res.status(200).json(await Department.find().lean());
-  } catch (error) {
-    return res.status(500).json(error);
-  }
-};
-
-exports.getNameDepartments = async (req, res, next) => {
-  try {
-    return res.status(200).json(await User.findOne({nameDepartment}).lean());
   } catch (error) {
     return res.status(500).json(error);
   }

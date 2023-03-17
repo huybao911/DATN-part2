@@ -5,13 +5,9 @@ type ROUTES = {
   path: string;
   component: React.FC;
   exact?: boolean;
-  role?: string;
+  keyRole?: string;
   auth?: boolean;
 };
-const ADMIN = "640cbf0573094a5e2e001859";
-const SMANAGER = "640cc3c229937ffacc4359f8";
-const MANAGER = "640cc3ca29937ffacc4359fa";
-const USER = "640cc3d329937ffacc4359fc";
 
 const routesProps: ROUTES[] = [
   {
@@ -19,7 +15,7 @@ const routesProps: ROUTES[] = [
     path: "/login",
     component: React.lazy(() => import("pages/auth/Login")),
     exact: true,
-    role: "guest",
+    keyRole: "guest",
     auth: false,
   },
   {
@@ -27,7 +23,7 @@ const routesProps: ROUTES[] = [
     path: "/",
     component: React.lazy(() => import("pages/auth/LoginUser")),
     exact: true,
-    role: "guest",
+    keyRole: "guest",
     auth: false,
   },
   {
@@ -35,7 +31,7 @@ const routesProps: ROUTES[] = [
     path: "/registerAdmin",
     component: React.lazy(() => import("pages/auth/Register")),
     exact: true,
-    role: ADMIN,
+    keyRole: "admin",
     auth: true,
   },
   {
@@ -43,7 +39,7 @@ const routesProps: ROUTES[] = [
     path: "/register",
     component: React.lazy(() => import("pages/auth/RegisterUser")),
     exact: true,
-    role: "guest",
+    keyRole: "guest",
     auth: false,
   },
   {
@@ -51,7 +47,7 @@ const routesProps: ROUTES[] = [
     path: "/dashboard",
     component: React.lazy(() => import("pages/dashboard/Dashboard")),
     exact: true,
-    role: USER,
+    keyRole: "user",
     auth: true,
   },
   {
@@ -59,7 +55,7 @@ const routesProps: ROUTES[] = [
     path: "/smanager",
     component: React.lazy(() => import("pages/SManager/SManager")),
     exact: true,
-    role: SMANAGER,
+    keyRole: "smanager",
     auth: true,
   },
   {
@@ -67,7 +63,7 @@ const routesProps: ROUTES[] = [
     path: "/manager",
     component: React.lazy(() => import("pages/Manager/Manager")),
     exact: true,
-    role: MANAGER,
+    keyRole: "manager",
     auth: true,
   },
   {
@@ -75,7 +71,7 @@ const routesProps: ROUTES[] = [
     path: "/users",
     component: React.lazy(() => import("pages/admin/Users")),
     exact: true,
-    role: ADMIN,
+    keyRole: "admin",
     auth: true,
   },
   {
@@ -83,7 +79,7 @@ const routesProps: ROUTES[] = [
     path: "/adddepartment",
     component: React.lazy(() => import("pages/admin/AddDepartment")),
     exact: true,
-    role: ADMIN,
+    keyRole: "admin",
     auth: true,
   },
   {

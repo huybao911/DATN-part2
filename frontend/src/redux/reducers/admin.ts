@@ -12,8 +12,9 @@ const initialState: IAdminState = {
   loading: true,
   isAuthenticated: null,
   admin: {} as IAdmin,
-  sManager: [] as ISManager[],
-  Manager: [] as IManager[],
+  getRole: {} as IRole,
+  smanager: [] as ISManager[],
+  manager: [] as IManager[],
   departments: [] as IDepartment[],
   roles: [] as IRole[],
   users: [] as IUser[],
@@ -27,9 +28,9 @@ const adminReducer = (
     case types.ADMIN_LOADED:
       return {
         ...state,
+        ...action.payload,
         isAuthenticated: true,
         loading: false,
-        admin: action.payload,
       };
 
     case types.ADMIN_ADDDEPARTMENT_SUCCESS:
@@ -81,7 +82,7 @@ const adminReducer = (
     case types.GET_MANAGER:
       return {
         ...state,
-        Manager: action.payload,
+        manager: action.payload,
       };
 
     case types.DELETE_MANAGER:
@@ -93,7 +94,7 @@ const adminReducer = (
     case types.UPDATE_MANAGER:
       return {
         ...state,
-        Manager: state.Manager.map((user) =>
+        manager: state.manager.map((user) =>
           user._id === action.payload.id ? { ...action.payload.user } : user
         ),
       };
@@ -102,7 +103,7 @@ const adminReducer = (
     case types.GET_SMANAGER:
       return {
         ...state,
-        sManager: action.payload,
+        smanager: action.payload,
       };
 
     case types.DELETE_SMANAGER:
@@ -114,7 +115,7 @@ const adminReducer = (
     case types.UPDATE_SMANAGER:
       return {
         ...state,
-        sManager: state.users.map((user) =>
+        smanager: state.users.map((user) =>
           user._id === action.payload.id ? { ...action.payload.user } : user
         ),
       };

@@ -23,18 +23,18 @@ const Smanager: React.FC = (): JSX.Element => {
   const [users, setUsers] = React.useState<IUser[]>([]);
   const [Managers, setManagers] = React.useState<IManager[]>([]);
   const [SManagers, setSManagers] = React.useState<ISManager[]>([]);
-  const SManager = useSelector((state: RootState) => state.SManager);
+  const SManager = useSelector((state: RootState) => state.smanager);
 
   React.useEffect(() => {
     dispatch(getUsers());
   }, [dispatch]);
 
   React.useEffect(() => {
-    setUsers(() => SManager?.users?.filter((user: any) => user.role === "user"));
+    setUsers(() => SManager?.users?.filter((user: any) => user.role.keyRole === "user"));
 
-    setManagers(() => SManager?.users?.filter((user: any) => user.role === "Manager"));
+    setManagers(() => SManager?.users?.filter((user: any) => user.role.keyRole === "manager"));
 
-    setSManagers(() => SManager?.users?.filter((user: any) => user.role === "SManager"));
+    setSManagers(() => SManager?.users?.filter((user: any) => user.role.keyRole === "smanager"));
   }, [SManager]);
 
   React.useEffect(() => {

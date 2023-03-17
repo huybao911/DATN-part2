@@ -35,25 +35,25 @@ const AppHeader: React.FC = (): JSX.Element => {
   const dispatch = useDispatch();
 
   const user = useSelector((state: RootState) => state.user);
-  const SManager = useSelector((state: RootState) => state.SManager);
-  const Manager = useSelector((state: RootState) => state.Manager);
+  const smanager = useSelector((state: RootState) => state.smanager);
+  const manager = useSelector((state: RootState) => state.manager);
   const admin = useSelector((state: RootState) => state.admin);
 
   const topLinks =
-    user.isAuthenticated && user.user.role === "user" ? (
+    user.isAuthenticated && user.getRole.keyRole === "user" ? (
       <NavLink exact to='/dashboard' className={`${classes.navLink} nav-link`}>
         NGƯỜI DÙNG
       </NavLink>
-    ) : Manager.isAuthenticated && Manager.Manager.role === "Manager" ? (
+    ) : manager.isAuthenticated && manager.getRole.keyRole === "manager" ? (
       <NavLink exact to='/manager' className={`${classes.navLink} nav-link`}>
         QUẢN LÝ
       </NavLink>
     )
-    : SManager.isAuthenticated && SManager.SManager.role === "SManager" ? (
+    : smanager.isAuthenticated && smanager.getRole.keyRole === "smanager" ? (
       <NavLink exact to='/smanager' className={`${classes.navLink} nav-link`}>
         QUẢN LÝ CẤP CAO
       </NavLink>
-    ): admin.isAuthenticated && admin.admin.role === "640cbf0573094a5e2e001859" ? (
+    ): admin.isAuthenticated && admin.getRole.keyRole === "admin" ? (
       <NavLink exact to='/users' className={`${classes.navLink} nav-link`}>
         ADMIN
       </NavLink>
@@ -67,11 +67,11 @@ const AppHeader: React.FC = (): JSX.Element => {
     <NavLink exact to='#' className={`${classes.navLink} nav-link`} onClick={(e) => dispatch(logOutAdmin())}>
       Đăng xuất
     </NavLink>
-  ) : SManager.isAuthenticated ? (
+  ) : smanager.isAuthenticated ? (
     <NavLink exact to='#' className={`${classes.navLink} nav-link`} onClick={(e) => dispatch(logOutSManager())}>
       Đăng xuất
     </NavLink>
-  ) : Manager.isAuthenticated ? (
+  ) : manager.isAuthenticated ? (
     <NavLink exact to='#' className={`${classes.navLink} nav-link`} onClick={(e) => dispatch(logOutManager())}>
       Đăng xuất
     </NavLink>

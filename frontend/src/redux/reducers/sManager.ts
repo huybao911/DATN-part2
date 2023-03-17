@@ -3,14 +3,16 @@ import { IUser } from "redux/types/user";
 import { IManager } from "redux/types/Manager";
 import { ISManager } from "redux/types/sManager";
 import { ISManagerState, SManagerActions } from "../types/sManager";
+import { IRole } from "redux/types/role";
 
 const initialState: ISManagerState = {
   token: localStorage.getItem("SManager__token"),
   loading: true,
   isAuthenticated: null,
-  SManager: {} as ISManager,
-  Manager: [] as IManager[],
+  smanager: {} as ISManager,
+  manager: [] as IManager[],
   users: [] as IUser[],
+  getRole: {} as IRole,
 };
 
 const sManagerReducer = (
@@ -21,9 +23,9 @@ const sManagerReducer = (
     case types.SMANAGER_LOADED:
       return {
         ...state,
+        ...action.payload,
         isAuthenticated: true,
         loading: false,
-        SManager: action.payload,
       };
 
     case types.SMANAGER_LOGIN_SUCCESS:
@@ -60,7 +62,7 @@ const sManagerReducer = (
         token: null,
         isAuthenticated: false,
         loading: false,
-        SManager: {} as ISManager,
+        smanager: {} as ISManager,
         users: [],
       };
 
