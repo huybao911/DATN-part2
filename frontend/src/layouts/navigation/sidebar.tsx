@@ -11,6 +11,7 @@ import { logOutManager } from "redux/actions/Manager";
 import { logOutAdmin } from "redux/actions/admin";
 import { RootState } from "redux/reducers";
 import { Box, Drawer, Stack } from "@mui/material";
+import NavSection from "./navSelection";
 
 const useStyles = makeStyles((theme) => ({
   toolbar: {
@@ -101,6 +102,8 @@ const SideBar: React.FC = (): JSX.Element => {
           <Box sx={{ px: 2.5, py: 6, display: 'inline-block', textAlign: 'center' }}>
             {topLinks}
           </Box>
+          
+          <NavSection/>
 
           <Box sx={{ px: 2.5, pb: 3, mt: 10 }}>
             <Stack alignItems="center" spacing={3} sx={{ pt: 5, borderRadius: 2, position: 'relative' }}>
