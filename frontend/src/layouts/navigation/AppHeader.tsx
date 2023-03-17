@@ -39,6 +39,9 @@ const AppHeader: React.FC = (): JSX.Element => {
   const manager = useSelector((state: RootState) => state.manager);
   const admin = useSelector((state: RootState) => state.admin);
 
+
+  
+
   const topLinks =
     user.isAuthenticated && user.getRole.keyRole === "user" ? (
       <NavLink exact to='/dashboard' className={`${classes.navLink} nav-link`}>
