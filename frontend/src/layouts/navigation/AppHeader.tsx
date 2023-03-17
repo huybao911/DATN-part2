@@ -57,6 +57,8 @@ const AppHeader: React.FC = (): JSX.Element => {
       <NavLink exact to='/users' className={`${classes.navLink} nav-link`}>
         ADMIN
       </NavLink>
+
+      
     ) :null;
 
   const bottomLinks = user.isAuthenticated ? (
@@ -76,7 +78,7 @@ const AppHeader: React.FC = (): JSX.Element => {
       Đăng xuất
     </NavLink>
 
-    
+
   ):(
     <>
       <NavLink exact to='/register' className={`${classes.navLink} nav-link`}>
