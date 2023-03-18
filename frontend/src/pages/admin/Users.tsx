@@ -8,9 +8,17 @@ import { IAdmin } from "redux/types/admin";
 import { ISManager } from "redux/types/sManager";
 import { IManager } from "redux/types/Manager";
 import { IUser } from "redux/types/user";
-import { AccordionSummary, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
+import { IconButton, Button, Card, Container, MenuItem, Popover, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography } from "@mui/material";
 import { Link } from 'react-router-dom';
 import UserForm from "./UserForm";
+import { forwardRef } from 'react';
+// icons
+import { Icon } from '@iconify/react';
+// @mui
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import Smanager from "pages/SManager/SManager";
 const useStyles = makeStyles((theme) => ({
   root: {
     maxWidth: "60%",
@@ -26,6 +34,7 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(1),
   },
 }));
+
 
 function refreshPage() {
   window.location.reload();
@@ -44,13 +53,41 @@ const Users: React.FC = (): JSX.Element => {
   const [admins, setAdmins] = React.useState<IAdmin[]>([]);
   const admin = useSelector((state: RootState) => state.admin);
 
+  const [open, setOpen] = React.useState(null);
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [filterName, setFilterName] = React.useState('');
+
+
+  const handleChangeRowsPerPage = (event: any) => {
+    setPage(0);
+    setRowsPerPage(parseInt(event.target.value, 10));
+  };
+
+  const handleChangePage = (event: any, newPage: any) => {
+    setPage(newPage);
+  };
+
+  const handleFilterByName = (event: any) => {
+    setPage(0);
+    setFilterName(event.target.value);
+  };
+
+  const handleOpenMenu = (event: any) => {
+    setOpen(event.currentTarget);
+  };
+
+  const handleCloseMenu = () => {
+    setOpen(null);
+  };
+
 
   React.useEffect(() => {
     dispatch(getUsers());
   }, [dispatch]);
 
   React.useEffect(() => {
-    setUsers(() => admin?.users?.filter((user: any) => user.role.keyRole === "user"));
+    setUsers(() => admin?.users?.filter((user: any) => user.role.keyRole === "user" || user.role.keyRole === "manager" || user.role.keyRole === "smanager"));
 
     setManagers(() => admin?.users?.filter((user: any) => user.role.keyRole === "manager"));
 
@@ -102,58 +139,101 @@ const Users: React.FC = (): JSX.Element => {
     //   </div>
 
     // </div>
+    <>
+      <Container>
+        <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
+          <Typography variant="h4" gutterBottom>
+            User
+          </Typography>
+          <Button variant="contained" >
+            New User
+          </Button>
+        </Stack>
 
-    <TableContainer>
-      {/* Table user */}
-      <Typography variant="h6" fontWeight="bold" sx={{ textAlign: "center", padding: "10px", marginTop: "10px" }} >User</Typography>
-      <Table component={Paper}>
-        <TableHead>
-          <TableRow >
-            <TableCell align="right">Tên User</TableCell>
-            <TableCell align="right">Email</TableCell>
-            <TableCell align="right">Role</TableCell>
-            <TableCell align="right">Department</TableCell>
-            <TableCell align="right" />
-            <TableCell align="right"></TableCell>
 
-          </TableRow>
-        </TableHead>
+        <Card>
+          <TableContainer>
+            {/* Table user */}
+            <Table component={Paper}>
+              <TableHead>
+                <TableRow >
+                  <TableCell align="right">Tên User</TableCell>
+                  <TableCell align="right">Email</TableCell>
+                  <TableCell align="right">Role</TableCell>
+                  <TableCell align="right">Department</TableCell>
+                  <TableCell align="right" />
+                  <TableCell align="right"></TableCell>
 
-        <TableBody>
-          {users.map((user: any) =>
+                </TableRow>
+              </TableHead>
 
-            <TableRow key={user.username}>
-              <TableCell align="right">
-                {user.username}
-              </TableCell>
+              <TableBody>
+                {users.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((user: any) =>
+                  <TableRow key={user.username}>
+                    <TableCell align="right">
+                      {user.username}
+                    </TableCell>
 
-              <TableCell align="right">
-                {user.email}
-              </TableCell>
+                    <TableCell align="right">
+                      {user.email}
+                    </TableCell>
 
-              <TableCell align="right">
-                {user.role.keyRole}
-              </TableCell>
+                    <TableCell align="right">
+                      {user.role.keyRole}
+                    </TableCell>
 
-              <TableCell align="right">
-                {user.department.nameDepartment}
-              </TableCell >
-              {/* Button delete */}
-              <TableCell align="center">
-                {
-                  <Button style={{backgroundColor:"black"}}
-                    type='button'
-                    variant='contained'
-                    color='secondary'
-                    size='small'
-                    onClick={(e) => dispatch(deleteUser(user._id))}
-                  >
-                    Xóa
-                  </Button>
-                }
-              </TableCell>
+                    <TableCell align="right">
+                      {user.department.nameDepartment}
+                    </TableCell >
+                    {/* Button delete */}
+                    {/* <TableCell align="center">
+                      {
+                        <Button style={{ backgroundColor: "black" }}
+                          type='button'
+                          variant='contained'
+                          color='secondary'
+                          size='small'
+                          onClick={(e) => dispatch(deleteUser(user._id))}
+                        >
+                          Xóa
+                        </Button>
+                      }
+                    </TableCell> */}
+                    <TableCell align="right">
+                      <IconButton size="large" color="inherit" onClick={handleOpenMenu}>
+                        <MoreVertIcon />
+                      </IconButton>
+                      <Popover
+                        open={Boolean(open)}
+                        anchorEl={open}
+                        onClose={handleCloseMenu}
+                        anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
+                        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                        PaperProps={{
+                          sx: {
+                            p: 1,
+                            width: 140,
+                            '& .MuiMenuItem-root': {
+                              px: 1,
+                              typography: 'body2',
+                              borderRadius: 0.75,
+                            },
+                          },
+                        }}
+                      >
+                        <MenuItem>
+                          <EditIcon sx={{ mr: 2 }} />
+                          Sửa
+                        </MenuItem>
 
-              <TableCell align="center">
+                        <MenuItem  onClick={(e) => dispatch(deleteUser(user._id))} sx={{ color: 'error.main' }}>
+                          <DeleteForeverIcon  sx={{ mr: 2 }} />
+                          Xóa
+                        </MenuItem>
+                      </Popover>
+                    </TableCell>
+
+                    {/* <TableCell align="center">
                 {
                   <Button style={{backgroundColor:"black"}}
                     type='button'
@@ -165,137 +245,45 @@ const Users: React.FC = (): JSX.Element => {
                     Chỉnh sửa
                   </Button>
                 }
-              </TableCell>
+              </TableCell> */}
 
-              {/* <TableCell>
+                    {/* <TableCell>
                  <UserForm user={user} key={user._id} />
               </TableCell> */}
 
-            </TableRow>
-          )}
-        </TableBody>
-
-      </Table>
-
-      {/* Table super manager */}
-      <Typography variant="h6" fontWeight="bold" sx={{ textAlign: "center", padding: "10px", marginTop: "10px" }} >Super Manager</Typography>
-      <Table component={Paper}>
-        <TableHead>
-          <TableRow >
-            <TableCell align="right">Tên User</TableCell>
-            <TableCell align="right">Email</TableCell>
-            <TableCell align="right">Role</TableCell>
-            <TableCell align="right">Department</TableCell>
-            <TableCell align="right" />
-          </TableRow>
-        </TableHead>
-
-        <TableBody>
-          {SManagers.map((user: any) =>
-
-            <TableRow key={user.username}>
-              <TableCell align="right">
-                {user.username}
-              </TableCell>
-
-              <TableCell align="right">
-                {user.email}
-              </TableCell>
-
-              <TableCell align="right">
-                {user.role.keyRole}
-              </TableCell>
-
-              <TableCell align="right">
-                {user.department.nameDepartment}
-              </TableCell >
-
-              <TableCell align="center">
-                {
-                  <Button style={{backgroundColor:"black"}}
-                    type='button'
-                    variant='contained'
-                    color='secondary'
-                    size='small'
-                    onClick={(e) => dispatch(deleteUser(user._id))}
-                  >
-                    Xóa
-                  </Button>
-                }
-              </TableCell>
-            </TableRow>
-          )}
-        </TableBody>
-
-      </Table>
-
-      {/* Table manager */}
-      <Typography variant="h6" fontWeight="bold" sx={{ textAlign: "center", padding: "10px", marginTop: "10px" }} >Manager</Typography>
-      <Table component={Paper}>
-        <TableHead>
-          <TableRow >
-            <TableCell align="right">Tên User</TableCell>
-            <TableCell align="right">Email</TableCell>
-            <TableCell align="right">Role</TableCell>
-            <TableCell align="right">Department</TableCell>
-            <TableCell align="right" />
-          </TableRow>
-        </TableHead>
-
-        <TableBody>
-          {Managers.map((user: any) =>
-
-            <TableRow key={user.username}>
-              <TableCell align="right">
-                {user.username}
-              </TableCell>
-
-              <TableCell align="right">
-                {user.email}
-              </TableCell>
-
-              <TableCell align="right">
-                {user.role.keyRole}
-              </TableCell>
-
-              <TableCell align="right">
-                {user.department.nameDepartment}
-              </TableCell >
-
-              <TableCell align="center">
-                {
-                  <Button style={{backgroundColor:"black"}}
-                    type='button'
-                    variant='contained'
-                    color='secondary'
-                    size='small'
-                    onClick={(e) => dispatch(deleteUser(user._id))}
-                  >
-                    Xóa
-                  </Button>
-                }
-              </TableCell>
-            </TableRow>
-          )}
-        </TableBody>
-
-      </Table>
+                  </TableRow>
 
 
-      {/* two button Create and Add */}
-      <div style={{ textAlign: "center", marginTop: "30px" }}>
-        <Link to="registerAdmin">
-          <button style={{ fontSize: "20px", backgroundColor: "#000", color: "#fff", border: "10px solid black" }}>TẠO TÀI KHOẢN</button>
-        </Link>
-      </div>
+                )}
+                <TablePagination
+                  rowsPerPageOptions={[5, 10, 25]}
+                  count={users.length}
+                  rowsPerPage={rowsPerPage}
+                  page={page}
+                  onPageChange={handleChangePage}
+                  onRowsPerPageChange={handleChangeRowsPerPage}
+                />
+              </TableBody>
+            </Table>
 
-      {/* button add */}
-      <div style={{ textAlign: "center", marginTop: "20px" }}>
-        <Link to="adddepartment">
-          <button style={{ fontSize: "20px", backgroundColor: "#000", color: "#fff", border: "10px solid black" }}>Thêm tòa nhà</button>
-        </Link>
-      </div>
-    </TableContainer>
+            {/* <div style={{ textAlign: "center", marginTop: "30px" }}>
+          <Link to="registerAdmin">
+            <button style={{ fontSize: "20px", backgroundColor: "#000", color: "#fff", border: "10px solid black" }}>TẠO TÀI KHOẢN</button>
+          </Link>
+        </div>
+
+       
+        <div style={{ textAlign: "center", marginTop: "20px" }}>
+          <Link to="adddepartment">
+            <button style={{ fontSize: "20px", backgroundColor: "#000", color: "#fff", border: "10px solid black" }}>Thêm tòa nhà</button>
+          </Link>
+        </div> */}
+
+
+          </TableContainer>
+        </Card>
+      </Container>
+    </>
   );
 };
 
