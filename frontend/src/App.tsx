@@ -3,6 +3,8 @@ import { BrowserRouter } from "react-router-dom";
 import { useDispatch } from "react-redux";
 
 import AppHeader from "layouts/navigation/AppHeader";
+import SideBar from "layouts/navigation/sidebar";
+
 import Alert from "layouts/alert/Alert";
 import Routes from "components/routing/Routes";
 import { styled } from '@mui/material/styles';
@@ -20,12 +22,6 @@ if (localStorage.Manager__token) setManagerAuthToken(localStorage.Manager__token
 if (localStorage.SManager__token) setSManagerAuthToken(localStorage.SManager__token);
 if (localStorage.user__token) setUserAuthToken(localStorage.user__token);
 
-const StyledRoot = styled('div')({
-  display: 'flex',
-  minHeight: '100%',
-  overflow: 'hidden',
-});
-
 const App: React.FC = (): JSX.Element => {
   const dispatch = useDispatch();
 
@@ -37,14 +33,11 @@ const App: React.FC = (): JSX.Element => {
   return (
     <BrowserRouter>
     <>
-     <StyledRoot>
-     <AppHeader />
+      <AppHeader />
       <main className='app'>
         <Routes />
         <Alert />
       </main>
-     </StyledRoot>
-      
     </>
     </BrowserRouter>
   );
