@@ -82,16 +82,16 @@ const AppHeader: React.FC = (): JSX.Element => {
     </NavLink>
 
 
-  ):(
-    <>
-      <NavLink exact to='/register' className={`${classes.navLink} nav-link`}>
-        Đăng Ký
-      </NavLink>
-      <NavLink exact to='/' className={`${classes.navLink} nav-link`}>
-        Đăng Nhập
-      </NavLink>
-    </>
-  );
+  ):null
+    // <>
+    //   <NavLink exact to='/register' className={`${classes.navLink} nav-link`}>
+    //     Đăng Ký
+    //   </NavLink>
+    //   <NavLink exact to='/' className={`${classes.navLink} nav-link`}>
+    //     Đăng Nhập
+    //   </NavLink>
+    // </>
+  
 
   return (
     <Toolbar className={classes.toolbar}>
