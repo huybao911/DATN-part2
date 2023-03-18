@@ -34,10 +34,10 @@ const App: React.FC = (): JSX.Element => {
     <BrowserRouter>
     <>
       <AppHeader />
-      <main className='app'>
+      <SideBar/>
+      
         <Routes />
         <Alert />
-      </main>
     </>
     </BrowserRouter>
   );
