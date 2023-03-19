@@ -53,7 +53,8 @@ export default function NavSection() {
                                     },
                                     '&.MuiButtonBase-root': {
                                         display: 'flex',
-                                        backgroundColor: 'rgba(0, 0, 0, 0.04)'
+                                        backgroundColor: 'rgba(0, 0, 0, 0.04)',
+                                        color: 'black'
                                     }
                                 }}>
                                 <StyledNavItemIcon >
