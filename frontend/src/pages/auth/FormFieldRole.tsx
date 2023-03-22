@@ -31,11 +31,6 @@ interface IValues {
     role: string;
 }
 
-// const Placeholder = ({ children }: { children: any }) => {
-//     const classes = useStyles();
-//     return <div className={classes.placeholder}>{children}</div>;
-// };
-
 const FormField: React.FC<Props> = ({ isRole = false }): JSX.Element => {
     const classes = useStyles();
     const dispatch = useDispatch();

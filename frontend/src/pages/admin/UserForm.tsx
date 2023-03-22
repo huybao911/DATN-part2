@@ -52,7 +52,6 @@ const UserForm: React.FC<Props> = ({ user }): JSX.Element => {
     role: user?.role ?? "",
     department: user?.department ?? ""
   };
-  
 
   const onHandleSubmit = (
     values: IInitialValues,
@@ -71,15 +70,9 @@ const UserForm: React.FC<Props> = ({ user }): JSX.Element => {
 
   return (
     <Accordion className={classes.accordion} elevation={0}>
-      <AccordionSummary
-        expandIcon={<ExpandMoreIcon />}
-        aria-controls='panel1a-content'
-        id={`panel1a-header-${user._id}`}
-      >
-        <Typography>{user.username}</Typography>
-      </AccordionSummary>
       <AccordionDetails>
         <Formik
+          
           enableReinitialize
           initialValues={initialValues}
           validationSchema={validationSchema}
@@ -97,20 +90,8 @@ const UserForm: React.FC<Props> = ({ user }): JSX.Element => {
                 size='small'
                 className={classes.btnLogin}
                 disabled={isSubmitting}
-
               >
                 {isSubmitting ? <CircularProgress size='1rem' /> : "Cập Nhật"}
-              </Button>
-              <Button 
-                type='button'
-                variant='contained'
-                color='secondary'
-                size='small'
-                style = {{backgroundColor:"black"}}
-                className={classes.btnLogin}
-                onClick={(e) => dispatch(deleteUser(user._id))}
-              >
-                Xóa
               </Button>
             </form>
           )}
@@ -118,51 +99,51 @@ const UserForm: React.FC<Props> = ({ user }): JSX.Element => {
       </AccordionDetails>
     </Accordion>
 
-/* <Accordion className={classes.accordion} elevation={0}>
-<AccordionSummary
-  expandIcon={<ExpandMoreIcon />}
-  aria-controls='panel1a-content'
-  id={`panel1a-header-${user._id}`}
->
-  <Typography>{user?.username ?? null}</Typography>
-</AccordionSummary>
-<AccordionDetails>
-  <Formik
-    enableReinitialize
-    initialValues={initialValues}
-    validationSchema={validationSchema}
-    onSubmit={onHandleSubmit}
-  >
-    {({ isSubmitting, handleSubmit }) => (
-      <form noValidate onSubmit={handleSubmit}>
-        <FormField isRegister={true} />
-        <FormFieldRole isRole={true} />
-        <FormFieldDepartment isDepartmentCbb={true} />
-        <Button
-          type='submit'
-          variant='contained'
-          color='primary'
-          size='small'
-          className={classes.btnLogin}
-          disabled={isSubmitting}
-        >
-          {isSubmitting ? <CircularProgress size='1rem' /> : "Cập Nhật"}
-        </Button>
-        <Button
-          type='button'
-          variant='contained'
-          color='secondary'
-          size='small'
-          className={classes.btnLogin}
-          onClick={(e) => dispatch(deleteUser(user._id))}
-        >
-          Xóa
-        </Button>
-      </form>
-    )}
-  </Formik>
-</AccordionDetails>
-</Accordion> */
+    /* <Accordion className={classes.accordion} elevation={0}>
+    <AccordionSummary
+      expandIcon={<ExpandMoreIcon />}
+      aria-controls='panel1a-content'
+      id={`panel1a-header-${user._id}`}
+    >
+      <Typography>{user?.username ?? null}</Typography>
+    </AccordionSummary>
+    <AccordionDetails>
+      <Formik
+        enableReinitialize
+        initialValues={initialValues}
+        validationSchema={validationSchema}
+        onSubmit={onHandleSubmit}
+      >
+        {({ isSubmitting, handleSubmit }) => (
+          <form noValidate onSubmit={handleSubmit}>
+            <FormField isRegister={true} />
+            <FormFieldRole isRole={true} />
+            <FormFieldDepartment isDepartmentCbb={true} />
+            <Button
+              type='submit'
+              variant='contained'
+              color='primary'
+              size='small'
+              className={classes.btnLogin}
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? <CircularProgress size='1rem' /> : "Cập Nhật"}
+            </Button>
+            <Button
+              type='button'
+              variant='contained'
+              color='secondary'
+              size='small'
+              className={classes.btnLogin}
+              onClick={(e) => dispatch(deleteUser(user._id))}
+            >
+              Xóa
+            </Button>
+          </form>
+        )}
+      </Formik>
+    </AccordionDetails>
+    </Accordion> */
 
   );
 };

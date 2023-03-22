@@ -14,7 +14,7 @@ export default function NavSection() {
         {
             icon: <LeaderboardIcon />,
             name: 'Bảng Điều Khiển',
-            path: '/users'
+            path: '/*'
         },
         {
             icon: <AccountCircleIcon />,
@@ -24,17 +24,17 @@ export default function NavSection() {
         {
             icon: <EventIcon />,
             name: 'Sự Kiện',
-            path: '/users'
+            path: '/*'
         },
         {
             icon: <PostAddIcon />,
             name: 'Bài Viết',
-            path: '/users'
+            path: '/*'
         },
         {
             icon: <SchoolIcon />,
             name: 'Khoa',
-            path: '/users'
+            path: '/*'
         },
     ];
 

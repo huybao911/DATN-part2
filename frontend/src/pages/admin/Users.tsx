@@ -1,4 +1,5 @@
 import * as React from "react";
+import clsx from "clsx";
 import { makeStyles, styled, alpha } from "@material-ui/core/styles";
 import { useDispatch, useSelector } from "react-redux";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
@@ -34,6 +35,40 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: theme.spacing(3),
     padding: theme.spacing(1),
   },
+  tableCell: {
+    position: 'absolute',
+    left: '50%',
+    top: '100%',
+    transform: 'translate(-50%, -50%)'
+  },
+  animatedItem: {
+    animation: `$myEffect 3000ms ${theme.transitions.easing.easeInOut}`
+  },
+  animatedItemExiting: {
+    animation: `$myEffectExit 3000ms ${theme.transitions.easing.easeInOut}`,
+    opacity: 0,
+    transform: "translateY(-200%)"
+  },
+  "@keyframes myEffect": {
+    "0%": {
+      opacity: 0,
+      transform: "translateY(-200%)"
+    },
+    "100%": {
+      opacity: 1,
+      transform: "translateY(0)"
+    }
+  },
+  "@keyframes myEffectExit": {
+    "0%": {
+      opacity: 1,
+      transform: "translateY(0)"
+    },
+    "100%": {
+      opacity: 0,
+      transform: "translateY(-200%)"
+    }
+  }
 }));
 
 const StyledRoot = styled(Toolbar)(({ theme }) => ({
@@ -76,9 +111,8 @@ const Users: React.FC = (): JSX.Element => {
   const [filterName, setFilterName] = React.useState('');
 
   const [nameDirection, setNameDirection] = React.useState("asc");
-
-
-
+  const [toggle, setToggle] = React.useState(false)
+  
   const handleChangeRowsPerPage = (event: any) => {
     setPage(0);
     setRowsPerPage(parseInt(event.target.value, 10));
@@ -173,47 +207,43 @@ const Users: React.FC = (): JSX.Element => {
     //   </div>
 
     // </div>
-    <>
-      <Container>
-        <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-          <Typography variant="h4" gutterBottom>
-            User
-          </Typography>
-          <Button style={{ backgroundColor: "black", padding: "6px 16px", color: "white" }} variant="contained" >
-            New User
-          </Button>
-        </Stack>
 
-        <Card>
-          <StyledRoot
-            sx={{
-              color: 'primary.main',
-              bgcolor: 'primary.lighter',
-            }}
-          >
-            <StyledSearch
-              value={filterName}
-              onChange={handleFilterByName}
-              placeholder="Tìm kiếm user..."
-              startAdornment={
-                <InputAdornment position="start">
-                  <SearchIcon sx={{ color: 'text.disabled', width: 20, height: 20 }} />
-                </InputAdornment>
-              }
-            />
-          </StyledRoot>
-          <TableContainer>
-            {/* Table user */}
-            <Table component={Paper}>
-              <TableHead>
-              <TableRow>
-                <TableCell align="right">User</TableCell>
-                <TableCell align="right">Email</TableCell>
-                <TableCell align="right">Role</TableCell>
-                <TableCell align="right">Department</TableCell>
-                <TableCell align="right" />
-                <TableCell align="right"></TableCell>
-              </TableRow>
+    <Container sx={{ position: 'relative' }}>
+      <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
+        <Typography variant="h4" gutterBottom>
+          User
+        </Typography>
+        <Link to={'/users/registerAdmin'}>
+        <Button style={{ backgroundColor: "black", padding: "6px 16px", color: "white" }} variant="contained" >
+          New User
+        </Button>
+        </Link>
+       
+      </Stack>
+
+      <Card>
+        <StyledRoot
+          sx={{
+            color: 'primary.main',
+            bgcolor: 'primary.lighter',
+          }}
+        >
+          <StyledSearch
+            value={filterName}
+            onChange={handleFilterByName}
+            placeholder="Tìm kiếm user..."
+            startAdornment={
+              <InputAdornment position="start">
+                <SearchIcon sx={{ color: 'text.disabled', width: 20, height: 20 }} />
+              </InputAdornment>
+            }
+          />
+        </StyledRoot>
+        <TableContainer>
+          {/* Table user */}
+          <Table>
+            <TableHead >
+              
             </TableHead>
             {users && users.length > 0 ? (
               <TableBody>
@@ -234,21 +264,8 @@ const Users: React.FC = (): JSX.Element => {
                     <TableCell align="right">
                       {user.department.nameDepartment}
                     </TableCell >
-                    {/* Button delete */}
-                    {/* <TableCell align="center">
-                      {
-                        <Button style={{ backgroundColor: "black", color: "white", padding: "4px 10px" }}
-                          type='button'
-                          variant='contained'
-                          color='secondary'
-                          size='small'
-                          onClick={(e) => dispatch(deleteUser(user._id))}
-                        >
-                          Xóa
-                        </Button>
-                      }
-                    </TableCell> */}
-                    <TableCell align="right">
+
+                    <TableCell align="right" >
                       <IconButton size="large" color="inherit" onClick={handleOpenMenu}>
                         <MoreVertIcon />
                       </IconButton>
@@ -270,7 +287,8 @@ const Users: React.FC = (): JSX.Element => {
                           },
                         }}
                       >
-                        <MenuItem>
+                        <MenuItem onClick={() => setToggle(!toggle)}>
+
                           <Box>
                             <EditIcon sx={{ mr: 2 }} />
                           </Box>
@@ -285,54 +303,53 @@ const Users: React.FC = (): JSX.Element => {
                         </MenuItem>
                       </Popover>
                     </TableCell>
+                    {/* <Box className={clsx(styles.animatedItem, {
+                        [styles.animatedItemExiting]: !toggle
+                      })}> */}
+                    <TableCell sx={{ borderBottom: '0px' }} className={styles.tableCell} >
+                      {toggle && (
+                        <Box>
+                          <UserForm user={user} key={user._id} />
+                          <Button onClick={() => setToggle(false)}>Click to exit</Button>
+                        </Box>
+                      )}
+                    </TableCell>
 
-                    {/* <TableCell align="center">
-                {
-                  <Button style={{backgroundColor:"black"}}
-                    type='button'
-                    variant='contained'
-                    color='secondary'
-                    size='small'
-                    onClick={e => {}}
-                  >
-                    Chỉnh sửa
-                  </Button>
-                }
-              </TableCell> */}
-
-                    {/* <TableCell>
-                 <UserForm user={user} key={user._id} />
-              </TableCell> */}
+                    {/* </Box> */}
 
                   </TableRow>
 
-
                 )}
-                <TablePagination
-                  rowsPerPageOptions={[5, 10, 25]}
-                  count={users.length}
-                  rowsPerPage={rowsPerPage}
-                  page={page}
-                  onPageChange={handleChangePage}
-                  onRowsPerPageChange={handleChangeRowsPerPage}
-                />
-              </TableBody>
-            ) : (
-              <TableBody>
                 <TableRow>
-                  <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
-                    <Typography variant="h6" paragraph>
-                      Không tồn tại user
-                    </Typography>
-
-                    <Typography variant="body2">
-                      Không tìm thấy kết quả &nbsp;
-                      <strong>&quot;{filterName}&quot;</strong>.
-                    </Typography>
-                  </TableCell>
+                  <TablePagination
+                    rowsPerPageOptions={[5, 10, 25]}
+                    count={users.length}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    onPageChange={handleChangePage}
+                    onRowsPerPageChange={handleChangeRowsPerPage}
+                  />
                 </TableRow>
+
               </TableBody>
-            )}
+            ) :
+              (
+                <TableBody>
+                  <TableRow>
+                    <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
+                      <Typography variant="h6" paragraph>
+                        Không tồn tại user
+                      </Typography>
+
+                      <Typography variant="body2">
+                        Không tìm thấy kết quả &nbsp;
+                        <strong>&quot;{filterName}&quot;</strong>.
+                      </Typography>
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
+              )}
+
           </Table>
 
           {/* <div style={{ textAlign: "center", marginTop: "30px" }}>
@@ -348,11 +365,9 @@ const Users: React.FC = (): JSX.Element => {
           </Link>
         </div> */}
 
-
         </TableContainer>
       </Card>
     </Container>
-    </>
   );
 };
 
