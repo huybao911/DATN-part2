@@ -48,6 +48,7 @@ const useStyles = makeStyles((theme) => ({
     animation: `$myEffectExit 3000ms ${theme.transitions.easing.easeInOut}`,
     opacity: 0,
     transform: "translateY(-200%)"
+    
   },
   "@keyframes myEffect": {
     "0%": {
