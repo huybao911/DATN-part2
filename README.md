@@ -1,4 +1,4 @@
-## Server auth multi 
+## CTV - multi auth
 
 1. Run "npm install" from the backend directory & Run "npm install" from the frontend directory.
 2. To start the development servers simultaneously for both backend and frontend, Run "npm run dev" from the backend directory.
