@@ -95,7 +95,7 @@ const SideBar: React.FC = (): JSX.Element => {
             sx: {
               width: 230,
               bgcolor: 'background.default',
-              borderRightStyle: 'dashed'
+              borderRightStyle: 'solid'
             }
           }}>
             
@@ -103,15 +103,15 @@ const SideBar: React.FC = (): JSX.Element => {
             {topLinks}
           </Box>
           
-          <NavSection/>
+          <NavSection />
 
           <Box sx={{ px: 2.5, pb: 3, mt: 10 }}>
             <Stack alignItems="center" spacing={3} sx={{ pt: 5, borderRadius: 2, position: 'relative' }}>
               <Box
                 sx={{ width: 100, position: 'absolute', }}
               />
-              <Box sx={{ textAlign: 'center' }}>
-                <Typography gutterBottom variant="h6">
+              <Box sx={{ textAlign: 'center'}}>
+                <Typography style={{ marginTop: "370px"}} gutterBottom variant="h6">
                   {bottomLinks}
                 </Typography>
               </Box>
