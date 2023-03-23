@@ -35,6 +35,41 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: theme.spacing(3),
     padding: theme.spacing(1),
   },
+  tableCell: {
+    position: 'absolute',
+    left: '50%',
+    top: '100%',
+    transform: 'translate(-50%, -50%)'
+  },
+  animatedItem: {
+    animation: `$myEffect 3000ms ${theme.transitions.easing.easeInOut}`
+  },
+  animatedItemExiting: {
+    animation: `$myEffectExit 3000ms ${theme.transitions.easing.easeInOut}`,
+    opacity: 0,
+    transform: "translateY(-200%)"
+
+  },
+  "@keyframes myEffect": {
+    "0%": {
+      opacity: 0,
+      transform: "translateY(-200%)"
+    },
+    "100%": {
+      opacity: 1,
+      transform: "translateY(0)"
+    }
+  },
+  "@keyframes myEffectExit": {
+    "0%": {
+      opacity: 1,
+      transform: "translateY(0)"
+    },
+    "100%": {
+      opacity: 0,
+      transform: "translateY(-200%)"
+    }
+  }
 }));
 
 const StyledRoot = styled(Toolbar)(({ theme }) => ({
@@ -199,6 +234,8 @@ const Users: React.FC = (): JSX.Element => {
 
   const [order, setOrder] = React.useState<Order>('asc');
   const [orderBy, setOrderBy] = React.useState<keyof DataUser>('username');
+  const [toggle, setToggle] = React.useState(false)
+
 
 
   const handleRequestSort = (
@@ -268,44 +305,7 @@ const Users: React.FC = (): JSX.Element => {
   }, []);
 
   return (
-    // <div className={styles.root}>
-    //   <div style={{ marginBottom: "5rem" }}>
-    //     <h4>Người Dùng</h4>
-    //     {users?.map((user: any) => <UserForm user={user} key={user._id} />) ?? (
-    //       <p>No Users Found.</p>
-    //     )}
-    //   </div>
-    //   <div>
-    //     <h4>Quản Lý</h4>
-    //     {Managers?.map((user: any) => (
-    //       <UserForm user={user} key={user._id} />
-    //     )) ?? <p>No Users Found.</p>}
-    //   </div>
-    //   <div>
-    //     <h4>Quản Lý Cấp Cao</h4>
-    //     {SManagers?.map((user: any) => (
-    //       <UserForm user={user} key={user._id} />
-    //     )) ?? <p>No Users Found.</p>}
-    //   </div>
-    //   <div>
-    //     <h4>Quản Trị Viên</h4>
-    //     {admins?.map((user: any) => (
-    //       <UserForm user={user} key={user._id} />
-    //     )) ?? <p>No Users Found.</p>}
-    //   </div>
-    //   <div style={{ textAlign: "center" }}>
-    //     <Link to="registerAdmin">
-    //       <button style={{fontSize:"20px", backgroundColor:"#000", color:"#fff",border:"10px solid black"}}>TẠO TÀI KHOẢN</button>
-    //     </Link>
-    //   </div>
 
-    //   <div style={{ textAlign: "center", marginTop: "20px" }}>
-    //     <Link to="adddepartment">
-    //       <button style={{fontSize:"20px", backgroundColor:"#000", color:"#fff",border:"10px solid black"}}>Thêm tòa nhà</button>
-    //     </Link>
-    //   </div>
-
-    // </div>
     <>
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
@@ -316,8 +316,6 @@ const Users: React.FC = (): JSX.Element => {
             New User
           </Button>
         </Stack>
-
-        
 
         <Card>
           <StyledRoot
@@ -340,16 +338,6 @@ const Users: React.FC = (): JSX.Element => {
           <TableContainer>
             {/* Table user */}
             <Table >
-              {/* <TableHead>
-                <TableRow>
-                  <TableCell align="right">User</TableCell>
-                  <TableCell align="right">Email</TableCell>
-                  <TableCell align="right">Role</TableCell>
-                  <TableCell align="right">Department</TableCell>
-                  <TableCell align="right" />
-                  <TableCell align="right"></TableCell>
-                </TableRow>
-              </TableHead> */}
               <EnhancedTableHead
                 order={order}
                 orderBy={orderBy}
@@ -411,7 +399,7 @@ const Users: React.FC = (): JSX.Element => {
                             },
                           }}
                         >
-                          <MenuItem>
+                          <MenuItem onClick={() => setToggle(!toggle)}>
                             <Box>
                               <EditIcon sx={{ mr: 2 }} />
                             </Box>
@@ -427,37 +415,28 @@ const Users: React.FC = (): JSX.Element => {
                           </MenuItem>
                         </Popover>
                       </TableCell>
-
-                      {/* <TableCell align="center">
-                {
-                  <Button style={{backgroundColor:"black"}}
-                    type='button'
-                    variant='contained'
-                    color='secondary'
-                    size='small'
-                    onClick={e => {}}
-                  >
-                    Chỉnh sửa
-                  </Button>
-                }
-              </TableCell> */}
-
-                      {/* <TableCell>
-                 <UserForm user={user} key={user._id} />
-              </TableCell> */}
+                      <TableCell sx={{ borderBottom: '0px' }} className={styles.tableCell} >
+                        {toggle && (
+                          <Box>
+                            <UserForm user={user} key={user._id} />
+                            <Button onClick={() => setToggle(false)}>Click to exit</Button>
+                          </Box>
+                        )}
+                      </TableCell>
 
                     </TableRow>
-
-
                   )}
-                  <TablePagination
-                    rowsPerPageOptions={[5, 10, 25]}
-                    count={users.length}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    onPageChange={handleChangePage}
-                    onRowsPerPageChange={handleChangeRowsPerPage}
-                  />
+
+                  <TableRow>
+                    <TablePagination
+                      rowsPerPageOptions={[5, 10, 25]}
+                      count={users.length}
+                      rowsPerPage={rowsPerPage}
+                      page={page}
+                      onPageChange={handleChangePage}
+                      onRowsPerPageChange={handleChangeRowsPerPage}
+                    />
+                  </TableRow>
                 </TableBody>
               ) : (
                 <TableBody>
