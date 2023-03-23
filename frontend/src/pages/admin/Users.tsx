@@ -21,6 +21,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import SearchIcon from '@mui/icons-material/Search';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { Box } from "@mui/system";
+import { visuallyHidden } from '@mui/utils';
 const useStyles = makeStyles((theme) => ({
   root: {
     maxWidth: "60%",
@@ -93,6 +94,127 @@ const StyledSearch = styled(OutlinedInput)(({ theme }) => ({
   },
 }));
 
+function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
+  if (b[orderBy] < a[orderBy]) {
+    return -1;
+  }
+  if (b[orderBy] > a[orderBy]) {
+    return 1;
+  }
+  return 0;
+}
+
+type Order = 'asc' | 'desc';
+
+function getComparator<Key extends keyof any>(
+  order: Order,
+  orderBy: Key,
+): (
+  a: { [key in Key]: number | string },
+  b: { [key in Key]: number | string },
+) => number {
+  return order === 'desc'
+    ? (a, b) => descendingComparator(a, b, orderBy)
+    : (a, b) => -descendingComparator(a, b, orderBy);
+}
+
+function stableSort<T>(array: T[], comparator: (a: T, b: T) => number) {
+  const stabilizedThis = array.map((el, index) => [el, index] as [T, number]);
+  stabilizedThis.sort((a, b) => {
+    const order = comparator(a[0], b[0]);
+    if (order !== 0) {
+      return order;
+    }
+    return a[1] - b[1];
+  });
+  return stabilizedThis.map((el) => el[0]);
+}
+
+interface DataUser {
+  _id: keyof IUser;
+  username: keyof IUser;
+  email: keyof IUser;
+  department: keyof IUser;
+  role: keyof IUser;
+}
+
+interface HeadCell {
+  disablePadding: boolean;
+  _id: keyof DataUser;
+  label: string;
+  numeric: boolean;
+}
+
+const headCells: HeadCell[] = [
+  {
+    _id: 'username',
+    numeric: false,
+    disablePadding: true,
+    label: 'Username',
+  },
+  {
+    _id: 'email',
+    numeric: true,
+    disablePadding: false,
+    label: 'Email',
+  },
+  {
+    _id: 'role',
+    numeric: true,
+    disablePadding: false,
+    label: 'Role',
+  },
+  {
+    _id: 'department',
+    numeric: true,
+    disablePadding: false,
+    label: 'Department',
+  }
+];
+
+
+interface EnhancedTableProps {
+  onRequestSort: (event: React.MouseEvent<unknown>, property: keyof DataUser) => void;
+  order: Order;
+  orderBy: string;
+}
+
+function EnhancedTableHead(props: EnhancedTableProps) {
+  const { order, orderBy, onRequestSort } =
+    props;
+  const createSortHandler =
+    (property: keyof DataUser) => (event: React.MouseEvent<unknown>) => {
+      onRequestSort(event, property);
+    };
+  return (
+    <TableHead>
+      <TableRow>
+        {headCells.map((headCell) => (
+          <TableCell
+            key={headCell._id}
+            align={headCell.numeric ? 'right' : 'left'}
+            padding={headCell.disablePadding ? 'none' : 'normal'}
+            sortDirection={orderBy === headCell._id ? order : false}
+          >
+            <TableSortLabel
+              active={orderBy === headCell._id}
+              direction={orderBy === headCell._id ? order : 'asc'}
+              onClick={createSortHandler(headCell._id)}
+            >
+              {headCell.label}
+              {orderBy === headCell._id ? (
+                <Box component="span" sx={visuallyHidden}>
+                  {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
+                </Box>
+              ) : null}
+            </TableSortLabel>
+          </TableCell>
+        ))}
+      </TableRow>
+    </TableHead>
+  );
+}
+
 const Users: React.FC = (): JSX.Element => {
 
   const styles = useStyles();
@@ -110,9 +232,6 @@ const Users: React.FC = (): JSX.Element => {
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [filterName, setFilterName] = React.useState('');
 
-  const [nameDirection, setNameDirection] = React.useState("asc");
-  const [toggle, setToggle] = React.useState(false)
-  
   const handleChangeRowsPerPage = (event: any) => {
     setPage(0);
     setRowsPerPage(parseInt(event.target.value, 10));
@@ -149,6 +268,8 @@ const Users: React.FC = (): JSX.Element => {
     setOpen(null);
   };
 
+
+  const sortUser = stableSort(users, getComparator(order, orderBy));
 
   React.useEffect(() => {
     dispatch(getUsers());
@@ -208,119 +329,11 @@ const Users: React.FC = (): JSX.Element => {
 
     // </div>
 
-    <Container sx={{ position: 'relative' }}>
-      <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-        <Typography variant="h4" gutterBottom>
-          User
-        </Typography>
-        <Link to={'/users/registerAdmin'}>
-        <Button style={{ backgroundColor: "black", padding: "6px 16px", color: "white" }} variant="contained" >
-          New User
-        </Button>
-        </Link>
-       
-      </Stack>
 
-      <Card>
-        <StyledRoot
-          sx={{
-            color: 'primary.main',
-            bgcolor: 'primary.lighter',
-          }}
-        >
-          <StyledSearch
-            value={filterName}
-            onChange={handleFilterByName}
-            placeholder="Tìm kiếm user..."
-            startAdornment={
-              <InputAdornment position="start">
-                <SearchIcon sx={{ color: 'text.disabled', width: 20, height: 20 }} />
-              </InputAdornment>
-            }
-          />
-        </StyledRoot>
-        <TableContainer>
-          {/* Table user */}
-          <Table>
-            <TableHead >
-              
-            </TableHead>
-            {users && users.length > 0 ? (
-              <TableBody>
-                {users.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((user: any) =>
-                  <TableRow key={user.username}>
-                    <TableCell align="right">
-                      {user.username}
-                    </TableCell>
+                    </TableRow>
 
-                    <TableCell align="right">
-                      {user.email}
-                    </TableCell>
 
-                    <TableCell align="right">
-                      {user.role.keyRole}
-                    </TableCell>
-
-                    <TableCell align="right">
-                      {user.department.nameDepartment}
-                    </TableCell >
-
-                    <TableCell align="right" >
-                      <IconButton size="large" color="inherit" onClick={handleOpenMenu}>
-                        <MoreVertIcon />
-                      </IconButton>
-                      <Popover
-                        open={Boolean(open)}
-                        anchorEl={open}
-                        onClick={handleCloseMenu}
-                        anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
-                        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-                        PaperProps={{
-                          sx: {
-                            p: 1,
-                            width: 140,
-                            '& .MuiMenuItem-root': {
-                              px: 1,
-                              typography: 'body2',
-                              borderRadius: 0.75,
-                            },
-                          },
-                        }}
-                      >
-                        <MenuItem onClick={() => setToggle(!toggle)}>
-
-                          <Box>
-                            <EditIcon sx={{ mr: 2 }} />
-                          </Box>
-                          <Box>
-                            Sửa
-                          </Box>
-                        </MenuItem>
-
-                        <MenuItem onClick={(e) => dispatch(deleteUser(user._id))} sx={{ color: 'error.main' }}>
-                          <DeleteForeverIcon sx={{ mr: 2 }} />
-                          Xóa
-                        </MenuItem>
-                      </Popover>
-                    </TableCell>
-                    {/* <Box className={clsx(styles.animatedItem, {
-                        [styles.animatedItemExiting]: !toggle
-                      })}> */}
-                    <TableCell sx={{ borderBottom: '0px' }} className={styles.tableCell} >
-                      {toggle && (
-                        <Box>
-                          <UserForm user={user} key={user._id} />
-                          <Button onClick={() => setToggle(false)}>Click to exit</Button>
-                        </Box>
-                      )}
-                    </TableCell>
-
-                    {/* </Box> */}
-
-                  </TableRow>
-
-                )}
-                <TableRow>
+                  )}
                   <TablePagination
                     rowsPerPageOptions={[5, 10, 25]}
                     count={users.length}
@@ -329,11 +342,8 @@ const Users: React.FC = (): JSX.Element => {
                     onPageChange={handleChangePage}
                     onRowsPerPageChange={handleChangeRowsPerPage}
                   />
-                </TableRow>
-
-              </TableBody>
-            ) :
-              (
+                </TableBody>
+              ) : (
                 <TableBody>
                   <TableRow>
                     <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
@@ -349,10 +359,8 @@ const Users: React.FC = (): JSX.Element => {
                   </TableRow>
                 </TableBody>
               )}
+            </Table>
 
-          </Table>
-
-          {/* <div style={{ textAlign: "center", marginTop: "30px" }}>
           <Link to="registerAdmin">
             <button style={{ fontSize: "20px", backgroundColor: "#000", color: "#fff", border: "10px solid black" }}>TẠO TÀI KHOẢN</button>
           </Link>
@@ -365,9 +373,6 @@ const Users: React.FC = (): JSX.Element => {
           </Link>
         </div> */}
 
-        </TableContainer>
-      </Card>
-    </Container>
   );
 };
 
