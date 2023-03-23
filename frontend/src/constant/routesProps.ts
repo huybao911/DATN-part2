@@ -35,6 +35,14 @@ const routesProps: ROUTES[] = [
     auth: true,
   },
   {
+    name: "register",
+    path: "/users/registerAdmin",
+    component: React.lazy(() => import("pages/auth/Register")),
+    exact: true,
+    keyRole: "admin",
+    auth: true,
+  },
+  {
     name: "registerUser",
     path: "/register",
     component: React.lazy(() => import("pages/auth/RegisterUser")),

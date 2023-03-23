@@ -1,4 +1,5 @@
 import * as React from "react";
+import clsx from "clsx";
 import { makeStyles, styled, alpha } from "@material-ui/core/styles";
 import { useDispatch, useSelector } from "react-redux";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
@@ -35,6 +36,40 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: theme.spacing(3),
     padding: theme.spacing(1),
   },
+  tableCell: {
+    position: 'absolute',
+    left: '50%',
+    top: '100%',
+    transform: 'translate(-50%, -50%)'
+  },
+  animatedItem: {
+    animation: `$myEffect 3000ms ${theme.transitions.easing.easeInOut}`
+  },
+  animatedItemExiting: {
+    animation: `$myEffectExit 3000ms ${theme.transitions.easing.easeInOut}`,
+    opacity: 0,
+    transform: "translateY(-200%)"
+  },
+  "@keyframes myEffect": {
+    "0%": {
+      opacity: 0,
+      transform: "translateY(-200%)"
+    },
+    "100%": {
+      opacity: 1,
+      transform: "translateY(0)"
+    }
+  },
+  "@keyframes myEffectExit": {
+    "0%": {
+      opacity: 1,
+      transform: "translateY(0)"
+    },
+    "100%": {
+      opacity: 0,
+      transform: "translateY(-200%)"
+    }
+  }
 }));
 
 const StyledRoot = styled(Toolbar)(({ theme }) => ({
@@ -197,19 +232,6 @@ const Users: React.FC = (): JSX.Element => {
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [filterName, setFilterName] = React.useState('');
 
-  const [order, setOrder] = React.useState<Order>('asc');
-  const [orderBy, setOrderBy] = React.useState<keyof DataUser>('username');
-
-
-  const handleRequestSort = (
-    event: React.MouseEvent<unknown>,
-    property: keyof DataUser,
-  ) => {
-    const isAsc = orderBy === property && order === 'asc';
-    setOrder(isAsc ? 'desc' : 'asc');
-    setOrderBy(property);
-  };
-
   const handleChangeRowsPerPage = (event: any) => {
     setPage(0);
     setRowsPerPage(parseInt(event.target.value, 10));
@@ -306,17 +328,8 @@ const Users: React.FC = (): JSX.Element => {
     //   </div>
 
     // </div>
-    <>
-      <Container>
-        <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-          <Typography variant="h4" gutterBottom>
-            User
-          </Typography>
-          <Button style={{ backgroundColor: "black", padding: "6px 16px", color: "white" }} variant="contained" >
-            New User
-          </Button>
-        </Stack>
 
+<<<<<<< HEAD
         <Card>
           <StyledRoot
             sx={{
@@ -442,6 +455,8 @@ const Users: React.FC = (): JSX.Element => {
                       {/* <TableCell>
                  <UserForm user={user} key={user._id} />
               </TableCell> */}
+=======
+>>>>>>> 217ca69a27fd3a34d59dcf4206b03f37ef5bd3f3
 
                     </TableRow>
 
@@ -476,7 +491,6 @@ const Users: React.FC = (): JSX.Element => {
               )}
             </Table>
 
-            {/* <div style={{ textAlign: "center", marginTop: "30px" }}>
           <Link to="registerAdmin">
             <button style={{ fontSize: "20px", backgroundColor: "#000", color: "#fff", border: "10px solid black" }}>TẠO TÀI KHOẢN</button>
           </Link>
@@ -489,11 +503,6 @@ const Users: React.FC = (): JSX.Element => {
           </Link>
         </div> */}
 
-
-          </TableContainer>
-        </Card>
-      </Container>
-    </>
   );
 };
 
