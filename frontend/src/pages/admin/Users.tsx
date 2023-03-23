@@ -369,7 +369,6 @@ const Users: React.FC = (): JSX.Element => {
                         {user.role.keyRole}
                       </TableCell>
 
-                      
 
                       <TableCell align="right">
                         {user.department.nameDepartment}
@@ -464,6 +463,8 @@ const Users: React.FC = (): JSX.Element => {
                       <Typography variant="h6" paragraph>
                         Không tồn tại user
                       </Typography>
+
+                      
 
                       <Typography variant="body2">
                         Không tìm thấy kết quả &nbsp;
