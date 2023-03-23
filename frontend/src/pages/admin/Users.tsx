@@ -369,6 +369,8 @@ const Users: React.FC = (): JSX.Element => {
                         {user.role.keyRole}
                       </TableCell>
 
+                      
+
                       <TableCell align="right">
                         {user.department.nameDepartment}
                       </TableCell >
