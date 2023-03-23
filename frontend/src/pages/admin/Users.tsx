@@ -1,5 +1,4 @@
 import * as React from "react";
-import clsx from "clsx";
 import { makeStyles, styled, alpha } from "@material-ui/core/styles";
 import { useDispatch, useSelector } from "react-redux";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
@@ -36,40 +35,6 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: theme.spacing(3),
     padding: theme.spacing(1),
   },
-  tableCell: {
-    position: 'absolute',
-    left: '50%',
-    top: '100%',
-    transform: 'translate(-50%, -50%)'
-  },
-  animatedItem: {
-    animation: `$myEffect 3000ms ${theme.transitions.easing.easeInOut}`
-  },
-  animatedItemExiting: {
-    animation: `$myEffectExit 3000ms ${theme.transitions.easing.easeInOut}`,
-    opacity: 0,
-    transform: "translateY(-200%)"
-  },
-  "@keyframes myEffect": {
-    "0%": {
-      opacity: 0,
-      transform: "translateY(-200%)"
-    },
-    "100%": {
-      opacity: 1,
-      transform: "translateY(0)"
-    }
-  },
-  "@keyframes myEffectExit": {
-    "0%": {
-      opacity: 1,
-      transform: "translateY(0)"
-    },
-    "100%": {
-      opacity: 0,
-      transform: "translateY(-200%)"
-    }
-  }
 }));
 
 const StyledRoot = styled(Toolbar)(({ theme }) => ({
@@ -232,6 +197,19 @@ const Users: React.FC = (): JSX.Element => {
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [filterName, setFilterName] = React.useState('');
 
+  const [order, setOrder] = React.useState<Order>('asc');
+  const [orderBy, setOrderBy] = React.useState<keyof DataUser>('username');
+
+
+  const handleRequestSort = (
+    event: React.MouseEvent<unknown>,
+    property: keyof DataUser,
+  ) => {
+    const isAsc = orderBy === property && order === 'asc';
+    setOrder(isAsc ? 'desc' : 'asc');
+    setOrderBy(property);
+  };
+
   const handleChangeRowsPerPage = (event: any) => {
     setPage(0);
     setRowsPerPage(parseInt(event.target.value, 10));
@@ -328,7 +306,145 @@ const Users: React.FC = (): JSX.Element => {
     //   </div>
 
     // </div>
+    <>
+      <Container>
+        <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
+          <Typography variant="h4" gutterBottom>
+            User
+          </Typography>
+          <Button style={{ backgroundColor: "black", padding: "6px 16px", color: "white" }} variant="contained" >
+            New User
+          </Button>
+        </Stack>
 
+        
+
+        <Card>
+          <StyledRoot
+            sx={{
+              color: 'primary.main',
+              bgcolor: 'primary.lighter',
+            }}
+          >
+            <StyledSearch
+              value={filterName}
+              onChange={handleFilterByName}
+              placeholder="Tìm kiếm user..."
+              startAdornment={
+                <InputAdornment position="start">
+                  <SearchIcon sx={{ color: 'text.disabled', width: 20, height: 20 }} />
+                </InputAdornment>
+              }
+            />
+          </StyledRoot>
+          <TableContainer>
+            {/* Table user */}
+            <Table >
+              {/* <TableHead>
+                <TableRow>
+                  <TableCell align="right">User</TableCell>
+                  <TableCell align="right">Email</TableCell>
+                  <TableCell align="right">Role</TableCell>
+                  <TableCell align="right">Department</TableCell>
+                  <TableCell align="right" />
+                  <TableCell align="right"></TableCell>
+                </TableRow>
+              </TableHead> */}
+              <EnhancedTableHead
+                order={order}
+                orderBy={orderBy}
+                onRequestSort={handleRequestSort}
+              />
+              {users && users.length > 0 ? (
+                <TableBody>
+                  {sortUser.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((user: any) =>
+                    <TableRow key={user.username}>
+                      <TableCell align="right">
+                        {user.username}
+                      </TableCell>
+
+                      <TableCell align="right">
+                        {user.email}
+                      </TableCell>
+
+                      <TableCell align="right">
+                        {user.role.keyRole}
+                      </TableCell>
+
+
+                      <TableCell align="right">
+                        {user.department.nameDepartment}
+                      </TableCell >
+                      {/* Button delete */}
+                      {/* <TableCell align="center">
+                      {
+                        <Button style={{ backgroundColor: "black", color: "white", padding: "4px 10px" }}
+                          type='button'
+                          variant='contained'
+                          color='secondary'
+                          size='small'
+                          onClick={(e) => dispatch(deleteUser(user._id))}
+                        >
+                          Xóa
+                        </Button>
+                      }
+                    </TableCell> */}
+                      <TableCell align="right">
+                        <IconButton size="large" color="inherit" onClick={handleOpenMenu}>
+                          <MoreVertIcon />
+                        </IconButton>
+                        <Popover
+                          open={Boolean(open)}
+                          anchorEl={open}
+                          onClick={handleCloseMenu}
+                          anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
+                          transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                          PaperProps={{
+                            sx: {
+                              p: 1,
+                              width: 140,
+                              '& .MuiMenuItem-root': {
+                                px: 1,
+                                typography: 'body2',
+                                borderRadius: 0.75,
+                              },
+                            },
+                          }}
+                        >
+                          <MenuItem>
+                            <Box>
+                              <EditIcon sx={{ mr: 2 }} />
+                            </Box>
+                            <Box>
+                              Sửa
+
+                            </Box>
+                          </MenuItem>
+
+                          <MenuItem onClick={(e) => dispatch(deleteUser(user._id))} sx={{ color: 'error.main' }}>
+                            <DeleteForeverIcon sx={{ mr: 2 }} />
+                            Xóa
+                          </MenuItem>
+                        </Popover>
+                      </TableCell>
+
+                      {/* <TableCell align="center">
+                {
+                  <Button style={{backgroundColor:"black"}}
+                    type='button'
+                    variant='contained'
+                    color='secondary'
+                    size='small'
+                    onClick={e => {}}
+                  >
+                    Chỉnh sửa
+                  </Button>
+                }
+              </TableCell> */}
+
+                      {/* <TableCell>
+                 <UserForm user={user} key={user._id} />
+              </TableCell> */}
 
                     </TableRow>
 
@@ -361,6 +477,7 @@ const Users: React.FC = (): JSX.Element => {
               )}
             </Table>
 
+            {/* <div style={{ textAlign: "center", marginTop: "30px" }}>
           <Link to="registerAdmin">
             <button style={{ fontSize: "20px", backgroundColor: "#000", color: "#fff", border: "10px solid black" }}>TẠO TÀI KHOẢN</button>
           </Link>
@@ -373,6 +490,11 @@ const Users: React.FC = (): JSX.Element => {
           </Link>
         </div> */}
 
+
+          </TableContainer>
+        </Card>
+      </Container>
+    </>
   );
 };
 
