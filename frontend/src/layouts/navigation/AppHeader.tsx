@@ -1,8 +1,7 @@
 import React from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { styled } from '@mui/material/styles';
 
-import { makeStyles } from "@material-ui/core/styles";
 import { RootState } from "redux/reducers";
 import { Stack, AppBar, Box } from '@mui/material';
 
@@ -18,9 +17,7 @@ const StyledRoot = styled(AppBar)(() => ({
 }));
 
 const AppHeader: React.FC = (): JSX.Element => {
-  const dispatch = useDispatch();
 
-  const user = useSelector((state: RootState) => state.user);
   const smanager = useSelector((state: RootState) => state.smanager);
   const manager = useSelector((state: RootState) => state.manager);
   const admin = useSelector((state: RootState) => state.admin);

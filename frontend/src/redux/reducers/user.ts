@@ -24,6 +24,13 @@ const userReducer = (state = initialState, action: UserActions): IUserState => {
       };
 
     case types.USER_REGISTER_SUCCESS:
+      localStorage.setItem("user__token", action.payload.token);
+      return {
+        ...state,
+        ...action.payload,
+        isAuthenticated: true,
+        loading: false,
+      };
     case types.USER_LOGIN_SUCCESS:
       localStorage.setItem("user__token", action.payload.token);
       return {

@@ -4,6 +4,7 @@ import { IManager } from "redux/types/Manager";
 import { ISManager } from "redux/types/sManager";
 import { ISManagerState, SManagerActions } from "../types/sManager";
 import { IRole } from "redux/types/role";
+import { IPost } from "redux/types/post";
 
 const initialState: ISManagerState = {
   token: localStorage.getItem("SManager__token"),
@@ -12,6 +13,7 @@ const initialState: ISManagerState = {
   smanager: {} as ISManager,
   manager: [] as IManager[],
   users: [] as IUser[],
+  posts: [] as IPost[],
   getRole: {} as IRole,
 };
 
@@ -50,6 +52,12 @@ const sManagerReducer = (
       return {
         ...state,
         users: action.payload,
+      };
+
+    case types.GET_POST:
+      return {
+        ...state,
+        posts: action.payload,
       };
 
     case types.SMANAGER_LOGIN_FAIL:

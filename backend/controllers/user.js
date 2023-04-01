@@ -18,11 +18,12 @@ exports.register = async (req, res, next) => {
       let getRole = await Role.findById(userObj.role);
 
       let getDepartment = await Department.findById(userObj.department);
+      // userObj.department = getDepartment;
 
-      const token = sign({ [role]: user }, process.env.JWT_SECRET, { expiresIn: 360000 });
+      const token = sign({ user, getRole }, process.env.JWT_SECRET, { expiresIn: 360000 });
       return res
       .status(201)
-      .json(getRole.keyRole === "user" ? { token, user: { ...user._doc, password: null}} : { token, admin: { ...user._doc, password: null}} ) //role: getRole, department: getDepartment
+      .json(getRole.keyRole === "user" ? { token, user: { ...user._doc, password: null}, getRole} : { token, admin: { ...user._doc, password: null}, getRole} ) //role: getRole, department: getDepartment
    
   } catch (error) {
     return res.status(500).send(error.message);

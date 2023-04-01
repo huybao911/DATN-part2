@@ -1,6 +1,6 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { FormControl, FormLabel, TextField } from "@material-ui/core";
+import { FormControl, FormLabel,Grid } from "@material-ui/core";
 import { useFormikContext } from "formik";
 import { MenuItem } from "@mui/material";
 import Select from '@mui/material/Select';
@@ -28,7 +28,7 @@ type Props = {
 };
 
 interface IValues {
-    role: string;
+    role?: string;
 }
 
 const FormField: React.FC<Props> = ({ isRole = false }): JSX.Element => {
@@ -44,34 +44,36 @@ const FormField: React.FC<Props> = ({ isRole = false }): JSX.Element => {
     }, [dispatch]);
 
     React.useEffect(() => {
-        setRoles(() => Role?.roles?.filter((role: any) => role.nameRole));
+        setRoles(() => Role?.roles?.filter((role: any) => role._id));
     }, [Role]);
     return (
         <>
             {isRole ? (
-                <FormControl fullWidth className={classes.formControl}>
-                    <FormLabel classes={{ root: classes.formLabel }}>Vai trò</FormLabel>
-                    <Select
-                        name="role"
-                        labelId="demo-simple-select-label"
-                        id="handle-role"
-                        value={values.role}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        error={touched.role ? Boolean(errors.role) : false}
+                <Grid item xs={12}>
+                    <FormControl fullWidth className={classes.formControl}>
+                        <FormLabel classes={{ root: classes.formLabel }}>Vai trò</FormLabel>
+                        <Select
+                            name='role'
+                            labelId="demo-simple-select-label"
+                            id="handle-role"
+                            value={values.role}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            error={touched.role ? Boolean(errors.role) : false}
 
-                    // renderValue={
-                    //     role !== "" ? undefined : () => <Placeholder>Role</Placeholder>
-                    // }
-                    >
-                        {roles?.map((role: any) => (
-                            <MenuItem value={role._id} key={role.keyRole}>
-                                {role.nameRole}
-                            </MenuItem>
-                        ))}
+                        // renderValue={
+                        //     role !== "" ? undefined : () => <Placeholder>Role</Placeholder>
+                        // }
+                        >
+                            {roles?.map((role: any) => (
+                                <MenuItem value={role._id} key={role._id}>
+                                    {role.nameRole}
+                                </MenuItem>
+                            ))}
 
-                    </Select>
-                </FormControl>
+                        </Select>
+                    </FormControl>
+                </Grid>
             ) : null}
 
         </>

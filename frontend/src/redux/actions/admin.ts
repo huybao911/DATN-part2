@@ -168,6 +168,29 @@ export const getUsers =
     }
   };
 
+// GET USER
+export const getUser =
+  () => async (dispatch: Dispatch<AdminActions | AlertActions>) => {
+    const config: any = {
+      header: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    try {
+      const { data } = await axios.get(`${URI}/user`, config);
+      dispatch({ type: types.GET_USER, payload: data });
+    } catch (error: any) {
+      dispatch<any>(
+        setAlert({
+          msg: "Xảy ra lỗi khi lấy dữ liệu người dùng!",
+          status: error.response.status,
+          alertType: "error",
+        })
+      );
+    }
+  };
+
 // GET DEPARTMENTS
 export const getDepartments =
   () => async (dispatch: Dispatch<AdminActions | AlertActions>) => {
@@ -212,7 +235,7 @@ export const getRoles =
         })
       );
     }
-  };  
+  };
 
 
 // UPDATE USER DATA

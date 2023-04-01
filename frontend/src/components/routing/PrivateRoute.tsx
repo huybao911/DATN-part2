@@ -1,7 +1,6 @@
 import React from "react";
 import { Route, Redirect, RouteProps } from "react-router-dom";
 import { useSelector } from "react-redux";
-
 import AppLoader from "layouts/AppLoader";
 import { RootState } from "redux/reducers";
 
@@ -25,7 +24,7 @@ const PrivateRoute: React.FC<Props> = ({
           return <AppLoader />;
         }
         if (!user.isAuthenticated) {
-          return <Redirect to='/' />;
+          return <Redirect to='/loginuser' />;
         }
         if (admin.isAuthenticated && admin.getRole.keyRole === "admin") {
           return <Redirect to='/users' />;

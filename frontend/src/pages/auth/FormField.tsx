@@ -1,6 +1,6 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { FormControl, FormLabel, TextField } from "@material-ui/core";
+import { FormControl, FormLabel, TextField, Grid } from "@material-ui/core";
 import { useFormikContext } from "formik";
 
 const useStyles = makeStyles((theme) => ({
@@ -30,50 +30,54 @@ const FormField: React.FC<Props> = ({ isRegister = false }): JSX.Element => {
 
   return (
     <>
-      <FormControl fullWidth className={classes.formControl}>
-        <FormLabel classes={{ root: classes.formLabel }}>Tên đăng nhập</FormLabel>
-        <TextField
-          fullWidth
-          name='username'
-          value={values.username}
-          onChange={handleChange}
-          onBlur={handleBlur}
-          placeholder='Nhập tên đăng nhập'
-          helperText={touched.username ? errors.username : ""}
-          error={touched.username ? Boolean(errors.username) : false}
-        />
-      </FormControl>
-      {isRegister ? (
-        <FormControl fullWidth className={classes.formControl}>
-          <FormLabel classes={{ root: classes.formLabel }}>Email</FormLabel>
-          <TextField
-            fullWidth
-            name='email'
-            value={values.email}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            placeholder='Nhập email'
-            helperText={touched.email ? errors.email : ""}
-            error={touched.email ? Boolean(errors.email) : false}
-          />
-        </FormControl>
-      ) : null}
-      <FormControl fullWidth className={classes.formControl}>
-        <FormLabel classes={{ root: classes.formLabel }}>Mật khẩu</FormLabel>
-        <TextField
-          fullWidth
-          type='password'
-          name='password'
-          value={values.password}
-          onChange={handleChange}
-          onBlur={handleBlur}
-          placeholder='Nhập mật khẩu'
-          helperText={touched.password ? errors.password : ""}
-          error={touched.password ? Boolean(errors.password) : false}
-        />
-      </FormControl>
-
-      
+        <Grid item xs={12}>
+          <FormControl fullWidth className={classes.formControl}>
+            <FormLabel classes={{ root: classes.formLabel }}>Tên đăng nhập</FormLabel>
+            <TextField
+              fullWidth
+              name='username'
+              value={values.username}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              placeholder='Nhập tên đăng nhập'
+              helperText={touched.username ? errors.username : ""}
+              error={touched.username ? Boolean(errors.username) : false}
+            />
+          </FormControl>
+        </Grid>
+        {isRegister ? (
+          <Grid item xs={12}>
+            <FormControl fullWidth className={classes.formControl}>
+              <FormLabel classes={{ root: classes.formLabel }}>Email</FormLabel>
+              <TextField
+                fullWidth
+                name='email'
+                value={values.email}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                placeholder='Nhập email'
+                helperText={touched.email ? errors.email : ""}
+                error={touched.email ? Boolean(errors.email) : false}
+              />
+            </FormControl>
+          </Grid>
+        ) : null}
+        <Grid item xs={12}>
+          <FormControl fullWidth className={classes.formControl}>
+            <FormLabel classes={{ root: classes.formLabel }}>Mật khẩu</FormLabel>
+            <TextField
+              fullWidth
+              type='password'
+              name='password'
+              value={values.password}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              placeholder='Nhập mật khẩu'
+              helperText={touched.password ? errors.password : ""}
+              error={touched.password ? Boolean(errors.password) : false}
+            />
+          </FormControl>
+        </Grid>
     </>
   );
 };

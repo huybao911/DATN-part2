@@ -56,8 +56,8 @@ export const loginSManager =
         dispatch({ type: types.SMANAGER_LOGIN_FAIL });
         dispatch<any>(
           setAlert({
-            msg: error.response.data,
-            status: error.response.status,
+            msg: "Đăng nhập tài khoản Quản Lý Cấp Cao thất bại!",
+            status: 200,
             alertType: "error",
           })
         );
@@ -94,8 +94,8 @@ export const registerSManager =
         dispatch({ type: types.SMANAGER_REGISTER_FAIL });
         dispatch<any>(
           setAlert({
-            msg: error.response.data,
-            status: error.response.status,
+            msg: "Đăng ký tài khoản Quản Lý Cấp Cao thất bại!",
+            status: 200,
             alertType: "error",
           })
         );
@@ -131,8 +131,8 @@ export const registerSManagerAdmin =
         dispatch({ type: types.SMANAGER_REGISTER_FAIL });
         dispatch<any>(
           setAlert({
-            msg: error.response.data,
-            status: error.response.status,
+            msg: "Đăng ký tài khoản Quản Lý Cấp Cao thất bại!",
+            status: 200,
             alertType: "error",
           })
         );
@@ -157,6 +157,29 @@ export const getUsers =
       dispatch<any>(
         setAlert({
           msg: "Xảy ra lỗi khi lấy dữ liệu người dùng!",
+          status: error.response.status,
+          alertType: "error",
+        })
+      );
+    }
+  };
+
+// GET POST
+export const getPost =
+  () => async (dispatch: Dispatch<SManagerActions | AlertActions>) => {
+    const config: any = {
+      header: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    try {
+      const { data } = await axios.get(`${URI}/post`, config);
+      dispatch({ type: types.GET_POST, payload: data });
+    } catch (error: any) {
+      dispatch<any>(
+        setAlert({
+          msg: "Xảy ra lỗi khi lấy dữ liệu post!",
           status: error.response.status,
           alertType: "error",
         })

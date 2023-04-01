@@ -1,14 +1,13 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { Grid, Button, CircularProgress } from "@material-ui/core";
-import Checkbox from "@mui/material/Checkbox";
+import { Grid, Button, CircularProgress, Typography } from "@material-ui/core";
 import { Formik } from "formik";
 import * as Yup from "yup";
 
 import { useDispatch } from "react-redux";
 import { loginUser } from "redux/actions/user";
-import { loginAdmin } from "redux/actions/admin";
 import FormField from "pages/auth/FormField";
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -22,6 +21,7 @@ const useStyles = makeStyles((theme) => ({
   btnLogin: {
     marginTop: theme.spacing(2),
     padding: theme.spacing(1, 2),
+    textDecoration: 'none'
   },
   checkboxWrapper: {
     display: "flex",
@@ -38,7 +38,7 @@ interface IInitialValues {
 const LoginUser: React.FC = (): JSX.Element => {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const [checked, setChecked] = React.useState<boolean>(false);
+  // const [checked, setChecked] = React.useState<boolean>(false);
 
   const initialValues: IInitialValues = {
     username: "",
@@ -46,14 +46,7 @@ const LoginUser: React.FC = (): JSX.Element => {
   };
 
   const onHandleSubmit = (values: IInitialValues, { setSubmitting }: any) => {
-      // check
-      // ? 
-      dispatch(loginUser(values, setSubmitting))
-      // : dispatch(loginUser(values, setSubmitting));
-  };
-
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setChecked(event.target.checked);
+    dispatch(loginUser(values, setSubmitting));
   };
 
   const validationSchema = Yup.object({
@@ -73,6 +66,10 @@ const LoginUser: React.FC = (): JSX.Element => {
       alignItems='center'
       justifyContent='center'
     >
+      <img style={{ height: "96px", width: "90px" }} src="https://cdn.haitrieu.com/wp-content/uploads/2021/09/Logo-DH-CONG-NGHE-THANH-PHO-HO-CHI-MINH-HUTECH.png" />
+      <Typography style={{ fontWeight: "bold", fontSize: "20px", marginTop: "5px" }} >
+        ĐĂNG NHẬP
+      </Typography>
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
@@ -80,16 +77,31 @@ const LoginUser: React.FC = (): JSX.Element => {
       >
         {({ isSubmitting, handleSubmit }) => (
           <form noValidate onSubmit={handleSubmit}>
-            <FormField />
+            <Grid container spacing={2}>
+              <FormField isRegister={false} />
+            </Grid>
             <Button
+              fullWidth
               type='submit'
               variant='contained'
-              color='secondary'
+              style={{ backgroundColor: 'black', color: "white" }}
               className={classes.btnLogin}
               disabled={isSubmitting}
             >
               {isSubmitting ? <CircularProgress size='1rem' /> : "Đăng Nhập"}
             </Button>
+            <Grid style={{ marginTop: "10px" }} container>
+              <Grid item xs>
+                <Link to="/login" style={{ color: 'black', float: 'left', textDecoration: "none" }}>
+                  Bạn quên mật khẩu?
+                </Link>
+              </Grid>
+              <Grid item>
+                <Link to="/register" style={{ color: 'black', textDecoration: "none" }}>
+                  Tạo tài khoản
+                </Link>
+              </Grid>
+            </Grid>
           </form>
         )}
       </Formik>

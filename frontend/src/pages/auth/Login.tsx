@@ -1,7 +1,6 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { Grid, Button, CircularProgress } from "@material-ui/core";
-import Checkbox from "@mui/material/Checkbox";
+import { Grid, Button, CircularProgress, Typography } from "@material-ui/core";
 import { Formik } from "formik";
 import * as Yup from "yup";
 
@@ -53,11 +52,11 @@ const Login: React.FC = (): JSX.Element => {
   };
 
   const onHandleSubmit = (values: IInitialValues, { setSubmitting }: any) => {
-    if(checked1 === "admin"){
+    if (checked1 === "admin") {
       dispatch(loginAdmin(values, setSubmitting))
-    }else if (checked2 === "smanager"){
+    } else if (checked2 === "smanager") {
       dispatch(loginSManager(values, setSubmitting))
-    }else if (checked3 === "manager"){
+    } else if (checked3 === "manager") {
       dispatch(loginManager(values, setSubmitting))
     }
   };
@@ -87,6 +86,10 @@ const Login: React.FC = (): JSX.Element => {
       alignItems='center'
       justifyContent='center'
     >
+      <img style={{ height: "96px", width: "90px" }} src="https://cdn.haitrieu.com/wp-content/uploads/2021/09/Logo-DH-CONG-NGHE-THANH-PHO-HO-CHI-MINH-HUTECH.png" />
+      <Typography style={{ fontWeight: "bold", fontSize: "20px", marginTop: "5px" }} >
+        ĐĂNG NHẬP QUYỀN HẠN CAO
+      </Typography>
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
@@ -94,11 +97,14 @@ const Login: React.FC = (): JSX.Element => {
       >
         {({ isSubmitting, handleSubmit }) => (
           <form noValidate onSubmit={handleSubmit}>
-            <FormField />
+            <Grid container spacing={2}>
+              <FormField />
+            </Grid>
             <Button
+              fullWidth
               type='submit'
               variant='contained'
-              color='secondary'
+              style={{ backgroundColor: 'black', color: "white" }}
               className={classes.btnLogin}
               disabled={isSubmitting}
             >
@@ -108,16 +114,16 @@ const Login: React.FC = (): JSX.Element => {
         )}
       </Formik>
       <div className={classes.checkboxWrapper}>
-      <RadioGroup
-        aria-labelledby="demo-radio-buttons-group-label"
-        defaultValue="admin"
-        name="radio-buttons-group"
-      >
-        
-        <FormControlLabel value="admin" control={<Radio onChange={handleChange}/>} label="Admin" />
-        <FormControlLabel value="smanager" control={<Radio onChange={handleChange} />} label="Quản Lý Cấp Cao" />
-        <FormControlLabel value="manager" control={<Radio  onChange={handleChange}/>} label="Quản Lý" />
-      </RadioGroup>
+        <RadioGroup
+          aria-labelledby="demo-radio-buttons-group-label"
+          defaultValue="admin"
+          name="radio-buttons-group"
+        >
+
+          <FormControlLabel value="admin" control={<Radio onChange={handleChange} />} label="Admin" />
+          <FormControlLabel value="smanager" control={<Radio onChange={handleChange} />} label="Quản Lý Cấp Cao" />
+          <FormControlLabel value="manager" control={<Radio onChange={handleChange} />} label="Quản Lý" />
+        </RadioGroup>
 
       </div>
 

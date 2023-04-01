@@ -4,6 +4,11 @@ const logger = require("morgan");
 const cors = require("cors");
 require("colors");
 
+const helmet = require("helmet");
+const morgan = require("morgan");
+const multer = require("multer");
+const path = require("path");
+
 const db = require("./config/db");
 
 const app = express();
@@ -21,6 +26,32 @@ db(app);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
+//Upload 
+app.use("/images", express.static(path.join(__dirname, "public/images")));
+
+//middleware
+app.use(express.json());
+app.use(helmet());
+app.use(morgan("common"));
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "public/images");
+  },
+  filename: (req, file, cb) => {
+    cb(null, req.body.name);
+  },
+});
+
+const upload = multer({ storage: storage });
+app.post("/api/upload", upload.single("file"), (req, res) => {
+  try {
+    return res.status(200).json("File uploded successfully");
+  } catch (error) {
+    console.error(error);
+  }
+});
 
 app.use("/api/v1/user", require("./routes/user"));
 app.use("/api/v1/smanager", require("./routes/superManager"));

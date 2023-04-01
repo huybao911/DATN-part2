@@ -2,6 +2,7 @@ import types from "redux/actions/types";
 import { IUser } from "./user";
 import { IManager } from "./Manager";
 import { IRole } from "./role";
+import { IPost } from "./post";
 
 export interface ISManager {
   _id: any;
@@ -30,6 +31,11 @@ interface IGetUsers {
   payload: IUser[];
 }
 
+interface IGetPost {
+  type: typeof types.GET_POST;
+  payload: IPost[];
+}
+
 interface ISManagerRegisterFail {
   type: typeof types.SMANAGER_REGISTER_FAIL;
 }
@@ -55,6 +61,7 @@ export type SManagerActions =
   | ISManagerAuthError
   | ISManagerLogout
   | IGetUsers
+  | IGetPost
 
 
 export type SManagerAdminActions =
@@ -69,4 +76,5 @@ export interface ISManagerState {
   getRole: IRole;
   manager: IManager[];
   users: IUser[];
+  posts: IPost[];
 }
