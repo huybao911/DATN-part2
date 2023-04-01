@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
     textDecoration: 'none',
     color: 'black',
     fontFamily: "Roboto",
-    padding: theme.spacing(1, 2)
+    padding: theme.spacing(1, 2),
   }
 }));
 
@@ -42,24 +42,19 @@ const SideBar: React.FC = (): JSX.Element => {
   const admin = useSelector((state: RootState) => state.admin);
 
   const topLinks =
-    user.isAuthenticated && user.getRole.keyRole === "user" ? (
-      <NavLink exact to='/dashboard' className={`${classes.navLink} nav-link`}>
-        NGƯỜI DÙNG
-      </NavLink>
-    ) : manager.isAuthenticated && manager.getRole.keyRole === "manager" ? (
+    manager.isAuthenticated && manager.getRole.keyRole === "manager" ? (
       <NavLink exact to='/manager' className={`${classes.navLink} nav-link`}>
         QUẢN LÝ
       </NavLink>
-    )
-      : smanager.isAuthenticated && smanager.getRole.keyRole === "smanager" ? (
-        <NavLink exact to='/smanager' className={`${classes.navLink} nav-link`}>
-          QUẢN LÝ CẤP CAO
-        </NavLink>
-      ) : admin.isAuthenticated && admin.getRole.keyRole === "admin" ? (
-        <NavLink exact to='/users' className={`${classes.navLink} nav-link`}>
-          ADMIN
-        </NavLink>
-      ) : null;
+    ) : smanager.isAuthenticated && smanager.getRole.keyRole === "smanager" ? (
+      <NavLink exact to='/smanager' className={`${classes.navLink} nav-link`}>
+        QUẢN LÝ CẤP CAO
+      </NavLink>
+    ) : admin.isAuthenticated && admin.getRole.keyRole === "admin" ? (
+      <NavLink exact to='/users' className={`${classes.navLink} nav-link`}>
+        ADMIN
+      </NavLink>
+    ) : null;
 
 
 
@@ -82,12 +77,12 @@ const SideBar: React.FC = (): JSX.Element => {
   ) : null
 
   const sideBar = admin.isAuthenticated || smanager.isAuthenticated || manager.isAuthenticated ? (
-    <> 
+    <>
       <Box component="nav"
         sx={{
-        flexShrink: { lg: 0 },
-        width: { lg: NAV_WIDTH },
-      }}>
+          flexShrink: { lg: 0 },
+          width: { lg: NAV_WIDTH },
+        }}>
         <Drawer
           open
           variant='permanent'
@@ -98,11 +93,11 @@ const SideBar: React.FC = (): JSX.Element => {
               borderRightStyle: 'solid'
             }
           }}>
-            
+
           <Box sx={{ px: 2.5, py: 6, display: 'inline-block', textAlign: 'center' }}>
             {topLinks}
           </Box>
-          
+
           <NavSection />
 
           <Box sx={{ px: 2.5, pb: 3, mt: 10 }}>
@@ -110,14 +105,14 @@ const SideBar: React.FC = (): JSX.Element => {
               <Box
                 sx={{ width: 100, position: 'absolute', }}
               />
-              <Box sx={{ textAlign: 'center'}}>
-                <Typography style={{ marginTop: "370px"}} gutterBottom variant="h6">
+              <Box sx={{ textAlign: 'center' }}>
+                <Typography style={{ marginTop: "100px" }} gutterBottom variant="h6">
                   {bottomLinks}
                 </Typography>
               </Box>
             </Stack>
           </Box>
-          
+
 
         </Drawer>
       </Box>
@@ -127,7 +122,7 @@ const SideBar: React.FC = (): JSX.Element => {
 
   return (
     <>
-    {sideBar}
+      {sideBar}
     </>
   );
 };

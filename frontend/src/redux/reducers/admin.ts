@@ -53,6 +53,11 @@ const adminReducer = (
         ...state,
         users: action.payload,
       };
+    case types.GET_USER:
+      return {
+        ...state,
+        users: action.payload,
+      };
 
     case types.GET_DEPARTMENTS:
       return {

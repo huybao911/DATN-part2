@@ -11,7 +11,6 @@ import { RootState } from "redux/reducers";
 import { addDepartment, getDepartments } from "redux/actions/admin";
 import FormFieldDepartment from "pages/admin/FormFieldDepartment";
 import DepartmentForm from "pages/admin/DepartmentForm";
-import { FormControlLabel, Radio, RadioGroup } from "@mui/material";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -53,10 +52,6 @@ const AddDepartment: React.FC = (): JSX.Element => {
 
   const onHandleSubmit = (values: IInitialValues, { setSubmitting }: any) => {
          dispatch(addDepartment({ ...values, role: ADMIN }, setSubmitting))
-  };
-
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-   
   };
 
   const validationSchema = Yup.object({

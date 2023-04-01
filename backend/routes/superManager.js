@@ -9,6 +9,7 @@ const router = Router({ strict: true });
 router.post("/login", sManagerController.login);
 router.get("/auth-SManager", isAuth, sManagerController.getAuthsuperManager);
 router.get("/users", isAuth, sManagerController.getUsers);
+router.get("/post", isAuth, sManagerController.getPost);
 // router
 //   .route("/users/:id")
 //   .patch(isAuth, sManagerController.updateUser)

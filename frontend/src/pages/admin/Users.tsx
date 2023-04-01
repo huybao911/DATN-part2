@@ -1,76 +1,21 @@
 import * as React from "react";
-import { makeStyles, styled, alpha } from "@material-ui/core/styles";
+import { styled, alpha } from "@material-ui/core/styles";
 import { useDispatch, useSelector } from "react-redux";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { getUsers, deleteUser, updateUser } from "redux/actions/admin";
+import { getUsers, deleteUser } from "redux/actions/admin";
 import { RootState } from "redux/reducers";
 import { IAdmin } from "redux/types/admin";
 import { ISManager } from "redux/types/sManager";
 import { IManager } from "redux/types/Manager";
 import { IUser } from "redux/types/user";
-import { IconButton, TableSortLabel, Toolbar, OutlinedInput, InputAdornment, Button, Card, Container, MenuItem, Popover, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography } from "@mui/material";
+import { TableSortLabel, Toolbar, OutlinedInput, InputAdornment, Button, Card, Container, Popover, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography } from "@mui/material";
 import { Link } from 'react-router-dom';
 import UserForm from "./UserForm";
-import { forwardRef } from 'react';
-// icons
-import { Icon } from '@iconify/react';
 // @mui
-import MoreVertIcon from '@mui/icons-material/MoreVert';
 import EditIcon from '@mui/icons-material/Edit';
 import SearchIcon from '@mui/icons-material/Search';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { Box } from "@mui/system";
 import { visuallyHidden } from '@mui/utils';
-const useStyles = makeStyles((theme) => ({
-  root: {
-    maxWidth: "60%",
-    margin: "auto",
-  },
-  btnLogin: {
-    marginTop: theme.spacing(1.5),
-    marginRight: theme.spacing(1),
-    padding: theme.spacing(1, 2),
-  },
-  accordion: {
-    marginBottom: theme.spacing(3),
-    padding: theme.spacing(1),
-  },
-  tableCell: {
-    position: 'absolute',
-    left: '50%',
-    top: '100%',
-    transform: 'translate(-50%, -50%)'
-  },
-  animatedItem: {
-    animation: `$myEffect 3000ms ${theme.transitions.easing.easeInOut}`
-  },
-  animatedItemExiting: {
-    animation: `$myEffectExit 3000ms ${theme.transitions.easing.easeInOut}`,
-    opacity: 0,
-    transform: "translateY(-200%)"
-
-  },
-  "@keyframes myEffect": {
-    "0%": {
-      opacity: 0,
-      transform: "translateY(-200%)"
-    },
-    "100%": {
-      opacity: 1,
-      transform: "translateY(0)"
-    }
-  },
-  "@keyframes myEffectExit": {
-    "0%": {
-      opacity: 1,
-      transform: "translateY(0)"
-    },
-    "100%": {
-      opacity: 0,
-      transform: "translateY(-200%)"
-    }
-  }
-}));
 
 const StyledRoot = styled(Toolbar)(({ theme }) => ({
   height: 96,
@@ -217,7 +162,6 @@ function EnhancedTableHead(props: EnhancedTableProps) {
 
 const Users: React.FC = (): JSX.Element => {
 
-  const styles = useStyles();
   const dispatch = useDispatch();
 
 
@@ -227,14 +171,13 @@ const Users: React.FC = (): JSX.Element => {
   const [admins, setAdmins] = React.useState<IAdmin[]>([]);
   const admin = useSelector((state: RootState) => state.admin);
 
-  const [open, setOpen] = React.useState(null);
+  const [anchorEl, setAnchorEl] = React.useState([null]);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [filterName, setFilterName] = React.useState('');
 
   const [order, setOrder] = React.useState<Order>('asc');
   const [orderBy, setOrderBy] = React.useState<keyof DataUser>('username');
-  const [toggle, setToggle] = React.useState(false)
 
 
 
@@ -275,12 +218,22 @@ const Users: React.FC = (): JSX.Element => {
     setFilterName(keyword);
   };
 
-  const handleOpenMenu = (event: any) => {
-    setOpen(event.currentTarget);
+  const handleOpenMenu = (event: any, index: any) => {
+    const newAnchorEls = [
+      ...anchorEl.slice(0, index),
+      event.currentTarget,
+      ...anchorEl.slice(index + 1)
+    ];
+    setAnchorEl(newAnchorEls);
   };
 
-  const handleCloseMenu = () => {
-    setOpen(null);
+  const handleCloseMenu = (index: any) => {
+    const newAnchorEls = [
+      ...anchorEl.slice(0, index),
+      null,
+      ...anchorEl.slice(index + 1)
+    ];
+    setAnchorEl(newAnchorEls);
   };
 
 
@@ -312,9 +265,11 @@ const Users: React.FC = (): JSX.Element => {
           <Typography variant="h4" gutterBottom>
             User
           </Typography>
-          <Button style={{ backgroundColor: "black", padding: "6px 16px", color: "white" }} variant="contained" >
-            New User
-          </Button>
+          <Link to="/users/registerAdmin">
+            <Button style={{ backgroundColor: "black", padding: "6px 16px", color: "white" }} variant="contained" >
+              New User
+            </Button>
+          </Link>
         </Stack>
 
         <Card>
@@ -345,8 +300,8 @@ const Users: React.FC = (): JSX.Element => {
               />
               {users && users.length > 0 ? (
                 <TableBody>
-                  {sortUser.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((user: any) =>
-                    <TableRow key={user.username}>
+                  {sortUser.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((user: any, index) =>
+                    <TableRow key={user._id}>
                       <TableCell align="right">
                         {user.username}
                       </TableCell>
@@ -363,34 +318,20 @@ const Users: React.FC = (): JSX.Element => {
                       <TableCell align="right">
                         {user.department.nameDepartment}
                       </TableCell >
-                      {/* Button delete */}
-                      {/* <TableCell align="center">
-                      {
-                        <Button style={{ backgroundColor: "black", color: "white", padding: "4px 10px" }}
-                          type='button'
-                          variant='contained'
-                          color='secondary'
-                          size='small'
-                          onClick={(e) => dispatch(deleteUser(user._id))}
-                        >
-                          Xóa
-                        </Button>
-                      }
-                    </TableCell> */}
                       <TableCell align="right">
-                        <IconButton size="large" color="inherit" onClick={handleOpenMenu}>
-                          <MoreVertIcon />
-                        </IconButton>
+                        <Button size="large" color="inherit" onClick={(event) => handleOpenMenu(event, index)} >
+                          <EditIcon/>
+                        </Button>
                         <Popover
-                          open={Boolean(open)}
-                          anchorEl={open}
-                          onClick={handleCloseMenu}
+                          open={!!anchorEl[index]}
+                          anchorEl={anchorEl[index]}
+                          onClose={() => handleCloseMenu(index)}
                           anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
                           transformOrigin={{ vertical: 'top', horizontal: 'right' }}
                           PaperProps={{
                             sx: {
                               p: 1,
-                              width: 140,
+                              width: 340,
                               '& .MuiMenuItem-root': {
                                 px: 1,
                                 typography: 'body2',
@@ -399,31 +340,16 @@ const Users: React.FC = (): JSX.Element => {
                             },
                           }}
                         >
-                          <MenuItem onClick={() => setToggle(!toggle)}>
-                            <Box>
-                              <EditIcon sx={{ mr: 2 }} />
-                            </Box>
-                            <Box>
-                              Sửa
-
-                            </Box>
-                          </MenuItem>
-
-                          <MenuItem onClick={(e) => dispatch(deleteUser(user._id))} sx={{ color: 'error.main' }}>
-                            <DeleteForeverIcon sx={{ mr: 2 }} />
-                            Xóa
-                          </MenuItem>
-                        </Popover>
-                      </TableCell>
-                      <TableCell sx={{ borderBottom: '0px' }} className={styles.tableCell} >
-                        {toggle && (
                           <Box>
                             <UserForm user={user} key={user._id} />
-                            <Button onClick={() => setToggle(false)}>Click to exit</Button>
                           </Box>
-                        )}
+                        </Popover>
                       </TableCell>
-
+                      <TableCell >
+                        <Button style={{color:"red"}} onClick={(e) => dispatch(deleteUser(user._id))} >
+                          <DeleteForeverIcon/>
+                        </Button>
+                      </TableCell>
                     </TableRow>
                   )}
 
@@ -455,21 +381,6 @@ const Users: React.FC = (): JSX.Element => {
                 </TableBody>
               )}
             </Table>
-
-            {/* <div style={{ textAlign: "center", marginTop: "30px" }}>
-          <Link to="registerAdmin">
-            <button style={{ fontSize: "20px", backgroundColor: "#000", color: "#fff", border: "10px solid black" }}>TẠO TÀI KHOẢN</button>
-          </Link>
-        </div>
-
-       
-        <div style={{ textAlign: "center", marginTop: "20px" }}>
-          <Link to="adddepartment">
-            <button style={{ fontSize: "20px", backgroundColor: "#000", color: "#fff", border: "10px solid black" }}>Thêm tòa nhà</button>
-          </Link>
-        </div> */}
-
-
           </TableContainer>
         </Card>
       </Container>

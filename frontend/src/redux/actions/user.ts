@@ -82,7 +82,7 @@ export const registerUser =
         });
         dispatch<any>(
           setAlert({
-            msg: "Đăng ký thành công!",
+            msg: "Đăng ký tài khoản User thành công!",
             status: 200,
             alertType: "success",
           })
@@ -92,8 +92,8 @@ export const registerUser =
         dispatch({ type: types.USER_REGISTER_FAIL });
         dispatch<any>(
           setAlert({
-            msg: error.response.data,
-            status: error.response.status,
+            msg: "Đăng ký tài khoản User thất bại!",
+            status: 200,
             alertType: "error",
           })
         );

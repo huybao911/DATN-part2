@@ -21,7 +21,7 @@ module.exports = (req, res, next) => {
       return res.status(401).send("Authorization failed..");
     }
 
-    if (String(decoded?.smanager?.role) !== '640cc3c229937ffacc4359f8') {
+    if (String(decoded?.getRole?.keyRole) !== 'smanager') {
       req.isAuth = false;
       return res.status(401).send("Authorization failed..");
     }

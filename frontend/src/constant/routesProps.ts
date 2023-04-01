@@ -10,6 +10,7 @@ type ROUTES = {
 };
 
 const routesProps: ROUTES[] = [
+  //GUEST
   {
     name: "login",
     path: "/login",
@@ -19,13 +20,31 @@ const routesProps: ROUTES[] = [
     auth: false,
   },
   {
-    name: "loginUser",
+    name: "homepageUser",
     path: "/",
+    component: React.lazy(() => import("pages/homepage/Homepage")),
+    exact: true,
+    // keyRole: "guest",
+    auth: false,
+  },
+  {
+    name: "loginUser",
+    path: "/loginuser",
     component: React.lazy(() => import("pages/auth/LoginUser")),
     exact: true,
     keyRole: "guest",
     auth: false,
   },
+  {
+    name: "registerUser",
+    path: "/register",
+    component: React.lazy(() => import("pages/auth/RegisterUser")),
+    exact: true,
+    keyRole: "guest",
+    auth: false,
+  },
+
+  //ADMIN
   {
     name: "register",
     path: "/registerAdmin",
@@ -43,38 +62,6 @@ const routesProps: ROUTES[] = [
     auth: true,
   },
   {
-    name: "registerUser",
-    path: "/register",
-    component: React.lazy(() => import("pages/auth/RegisterUser")),
-    exact: true,
-    keyRole: "guest",
-    auth: false,
-  },
-  {
-    name: "dashboard",
-    path: "/dashboard",
-    component: React.lazy(() => import("pages/dashboard/Dashboard")),
-    exact: true,
-    keyRole: "user",
-    auth: true,
-  },
-  {
-    name: "smanager",
-    path: "/smanager",
-    component: React.lazy(() => import("pages/SManager/SManager")),
-    exact: true,
-    keyRole: "smanager",
-    auth: true,
-  },
-  {
-    name: "manager",
-    path: "/manager",
-    component: React.lazy(() => import("pages/Manager/Manager")),
-    exact: true,
-    keyRole: "manager",
-    auth: true,
-  },
-  {
     name: "users",
     path: "/users",
     component: React.lazy(() => import("pages/admin/Users")),
@@ -88,6 +75,60 @@ const routesProps: ROUTES[] = [
     component: React.lazy(() => import("pages/admin/AddDepartment")),
     exact: true,
     keyRole: "admin",
+    auth: true,
+  },
+
+  //SMANAGER
+  {
+    name: "smanager",
+    path: "/smanager",
+    component: React.lazy(() => import("pages/SManager/SManager")),
+    exact: true,
+    keyRole: "smanager",
+    auth: true,
+  },
+  {
+    name: "postsSManager",
+    path: "/postsSManager",
+    component: React.lazy(() => import("pages/SManager/Posts")),
+    exact: true,
+    keyRole: "smanager",
+    auth: true,
+  },
+
+  //MANAGER
+  {
+    name: "manager",
+    path: "/manager",
+    component: React.lazy(() => import("pages/Manager/Manager")),
+    exact: true,
+    keyRole: "manager",
+    auth: true,
+  },
+  {
+    name: "postsManager",
+    path: "/postsManager",
+    component: React.lazy(() => import("pages/Manager/Posts")),
+    exact: true,
+    keyRole: "manager",
+    auth: true,
+  },
+  {
+    name: "newpost",
+    path: "/posts/newpost",
+    component: React.lazy(() => import("pages/Manager/NewPost")),
+    exact: true,
+    keyRole: "manager",
+    auth: true,
+  },
+
+  //USER
+  {
+    name: "dashboard",
+    path: "/dashboard",
+    component: React.lazy(() => import("pages/dashboard/Dashboard")),
+    exact: true,
+    keyRole: "user",
     auth: true,
   },
   {

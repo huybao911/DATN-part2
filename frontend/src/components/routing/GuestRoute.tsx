@@ -3,7 +3,6 @@ import { Route, Redirect, RouteProps } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 import AppLoader from "layouts/AppLoader";
-import Login from "pages/auth/Login";
 import { RootState } from "redux/reducers";
 
 type Props = {
@@ -28,7 +27,7 @@ const GuestRoute: React.FC<Props> = ({
         // } else if (admin.isAuthenticated && user.isAuthenticated && SManager.isAuthenticated && Manager.isAuthenticated) {
         //     return <Login />;
         } else if (user.isAuthenticated && user.getRole.keyRole === "user") {
-          return <Redirect to='/dashboard' />;
+          return <Redirect to='/'/>;
         } else if (Manager.isAuthenticated && Manager.getRole.keyRole === "manager") {
           return <Redirect to='/manager' />;
         } else if (SManager.isAuthenticated && SManager.getRole.keyRole === "smanager") {

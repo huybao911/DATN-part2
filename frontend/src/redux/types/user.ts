@@ -17,6 +17,11 @@ interface IUserLoaded {
   payload: { getRole: IRole; user: IUser };
 }
 
+interface IUserRegisterSuccess {
+  type: typeof types.USER_REGISTER_SUCCESS;
+  payload: { token: string; user: IUser };
+}
+
 interface IUserLoginSuccess {
   type: typeof types.USER_LOGIN_SUCCESS;
   payload: { token: string; user: IUser };
@@ -24,11 +29,6 @@ interface IUserLoginSuccess {
 
 interface IUserLoginFail {
   type: typeof types.USER_LOGIN_FAIL;
-}
-
-interface IUserRegisterSuccess {
-  type: typeof types.USER_REGISTER_SUCCESS;
-  payload: { token: string; user: IUser };
 }
 
 interface IGetDepartments {

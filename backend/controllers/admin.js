@@ -77,6 +77,15 @@ exports.getUsers = async (req, res, next) => {
   }
 };
 
+exports.getUser = async (req, res, next) => {
+  try {
+    if (!req.admin) return res.status(400).send("You dont have permission");
+    return res.status(200).json([await User.findOne().populate("role").populate("department")]);//.populate("department")
+  } catch (error) {
+    return res.status(500).json(error);
+  }
+};
+
 
 exports.getDepartments = async (req, res, next) => {
   try {

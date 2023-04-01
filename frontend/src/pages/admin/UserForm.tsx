@@ -1,18 +1,16 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Button, CircularProgress } from "@material-ui/core";
-import { Formik, useFormik } from "formik";
+import { Formik } from "formik";
 import * as Yup from "yup";
 import Accordion from "@mui/material/Accordion";
-import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
-import Typography from "@mui/material/Typography";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useDispatch } from "react-redux";
 import FormField from "pages/auth/FormField";
-import { updateUser, deleteUser } from "redux/actions/admin";
+import { updateUser } from "redux/actions/admin";
 import FormFieldRole from "pages/auth/FormFieldRole";
 import FormFieldDepartment from "pages/auth/FormDepartment_Admin";
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -38,7 +36,7 @@ interface IInitialValues {
   email?: string;
   password: string;
   role?: string;
-  department?: any;
+  department?: string;
 }
 
 const UserForm: React.FC<Props> = ({ user }): JSX.Element => {
@@ -50,8 +48,9 @@ const UserForm: React.FC<Props> = ({ user }): JSX.Element => {
     email: user?.email ?? "",
     password: "",
     role: user?.role ?? "",
-    department: user?.department ?? ""
+    department: user?.department ?? "",
   };
+  
 
   const onHandleSubmit = (
     values: IInitialValues,
@@ -72,7 +71,6 @@ const UserForm: React.FC<Props> = ({ user }): JSX.Element => {
     <Accordion className={classes.accordion} elevation={0}>
       <AccordionDetails>
         <Formik
-          
           enableReinitialize
           initialValues={initialValues}
           validationSchema={validationSchema}
@@ -82,7 +80,7 @@ const UserForm: React.FC<Props> = ({ user }): JSX.Element => {
             <form noValidate onSubmit={handleSubmit}>
               <FormField isRegister={true} />
               <FormFieldRole isRole={true} />
-              <FormFieldDepartment isDepartmentCbb={true} />
+              <FormFieldDepartment isDepartmentCbb={true}/>
               <Button
                 type='submit'
                 variant='contained'
@@ -93,58 +91,21 @@ const UserForm: React.FC<Props> = ({ user }): JSX.Element => {
               >
                 {isSubmitting ? <CircularProgress size='1rem' /> : "Cập Nhật"}
               </Button>
+              {/* <Button
+                type='button'
+                variant='contained'
+                color='secondary'
+                size='small'
+                className={classes.btnLogin}
+                onClick={(e) => dispatch(deleteUser(user._id))}
+              >
+                Xóa
+              </Button> */}
             </form>
           )}
         </Formik>
       </AccordionDetails>
     </Accordion>
-
-    /* <Accordion className={classes.accordion} elevation={0}>
-    <AccordionSummary
-      expandIcon={<ExpandMoreIcon />}
-      aria-controls='panel1a-content'
-      id={`panel1a-header-${user._id}`}
-    >
-      <Typography>{user?.username ?? null}</Typography>
-    </AccordionSummary>
-    <AccordionDetails>
-      <Formik
-        enableReinitialize
-        initialValues={initialValues}
-        validationSchema={validationSchema}
-        onSubmit={onHandleSubmit}
-      >
-        {({ isSubmitting, handleSubmit }) => (
-          <form noValidate onSubmit={handleSubmit}>
-            <FormField isRegister={true} />
-            <FormFieldRole isRole={true} />
-            <FormFieldDepartment isDepartmentCbb={true} />
-            <Button
-              type='submit'
-              variant='contained'
-              color='primary'
-              size='small'
-              className={classes.btnLogin}
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? <CircularProgress size='1rem' /> : "Cập Nhật"}
-            </Button>
-            <Button
-              type='button'
-              variant='contained'
-              color='secondary'
-              size='small'
-              className={classes.btnLogin}
-              onClick={(e) => dispatch(deleteUser(user._id))}
-            >
-              Xóa
-            </Button>
-          </form>
-        )}
-      </Formik>
-    </AccordionDetails>
-    </Accordion> */
-
   );
 };
 

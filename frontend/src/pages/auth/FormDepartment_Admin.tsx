@@ -1,7 +1,7 @@
 import React from "react";
 
 import { makeStyles } from "@material-ui/core/styles";
-import { FormControl, FormLabel, TextField } from "@material-ui/core";
+import { FormControl, FormLabel } from "@material-ui/core";
 import { useFormikContext } from "formik";
 import { MenuItem } from "@mui/material";
 import Select from '@mui/material/Select';
@@ -47,6 +47,7 @@ const FormField: React.FC<Props> = ({ isDepartmentCbb = false }): JSX.Element =>
     const [departments, setDepartments] = React.useState<IDepartment[]>([]);
     const Department = useSelector((state: RootState) => state.admin);
 
+
     React.useEffect(() => {
         dispatch(getDepartments());
     }, [dispatch]);
@@ -57,6 +58,7 @@ const FormField: React.FC<Props> = ({ isDepartmentCbb = false }): JSX.Element =>
 
     return (
         <>
+
             {isDepartmentCbb ? (
                 <FormControl fullWidth className={classes.formControl}>
                     <FormLabel classes={{ root: classes.formLabel }}>Khoa</FormLabel>

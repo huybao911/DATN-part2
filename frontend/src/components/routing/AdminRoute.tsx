@@ -13,9 +13,6 @@ const AdminRoute: React.FC<Props> = ({
   component: Component,
   ...rest
 }): JSX.Element => {
-  const user = useSelector((state: RootState) => state.user);
-  const SManager = useSelector((state: RootState) => state.smanager);
-  const Manager = useSelector((state: RootState) => state.manager);
   const admin = useSelector((state: RootState) => state.admin);
 
   return (
@@ -30,10 +27,10 @@ const AdminRoute: React.FC<Props> = ({
         // if (user.isAuthenticated && user.user.role === "user") {
         //   return <Redirect to='/dashboard' />;
         // }
-        // if (SManager.isAuthenticated && SManager.SManager.role === "SManager") {
+        // if (SManager.isAuthenticated && SManager.getRole.keyRole === "smanager") {
         //   return <Redirect to='/smanager' />;
         // }
-        // if (Manager.isAuthenticated && Manager.Manager.role === "Manager") {
+        // if (Manager.isAuthenticated && Manager.getRole.keyRole === "manager") {
         //   return <Redirect to='/manager' />;
         // }
         if (admin.isAuthenticated && admin.getRole.keyRole === "admin") {

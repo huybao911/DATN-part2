@@ -40,6 +40,11 @@ interface IGetUsers {
   payload: IUser[];
 }
 
+interface IGetUser {
+  type: typeof types.GET_USER;
+  payload: IUser[];
+}
+
 interface IGetDepartments {
   type: typeof types.GET_DEPARTMENTS;
   payload: IDepartment[];
@@ -130,6 +135,7 @@ export type AdminActions =
   | IAdminAuthError
   | IAdminLogout
   | IGetUsers
+  | IGetUser
   | IGetDepartments
   | IGetRoles
   | IUpdateUser
