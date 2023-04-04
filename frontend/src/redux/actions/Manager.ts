@@ -234,7 +234,6 @@ export const getPosts =
   };
 
 // CREATE POST
-
 export const createPost =
   (body: any, id: number, setSubmitting: any) =>
     async (dispatch: Dispatch<ManagerActions | AlertActions>) => {

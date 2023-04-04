@@ -5,6 +5,7 @@ import { setUserAuthToken } from "utils/headers";
 import { UserActions } from "redux/types/user";
 import { AlertActions } from "redux/types/alert";
 import { setAlert } from "./alert";
+import { NumberSchema } from "yup";
 
 const URI = "http://localhost:5000/api/v1/user";
 
@@ -137,3 +138,120 @@ export const getDepartments =
       );
     }
   };
+
+// GET POSTS
+export const getPosts =
+  () => async (dispatch: Dispatch<UserActions | AlertActions>) => {
+    const config: any = {
+      header: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    try {
+      const { data } = await axios.get(`${URI}/posts`, config);
+      dispatch({ type: types.GET_POSTS, payload: data });
+    } catch (error: any) {
+      dispatch<any>(
+        setAlert({
+          msg: "Xảy ra lỗi khi lấy dữ liệu posts!",
+          status: error.response.status,
+          alertType: "error",
+        })
+      );
+    }
+  };
+
+// GET STORAGE POST
+export const getPostStorage =
+  () => async (dispatch: Dispatch<UserActions | AlertActions>) => {
+    const config: any = {
+      header: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    try {
+      const { data } = await axios.get(`${URI}/postStorage`, config);
+      dispatch({ type: types.GET_POSTSTORAGE, payload: data });
+    } catch (error: any) {
+      dispatch<any>(
+        setAlert({
+          msg: "Xảy ra lỗi khi lấy dữ liệu posts!",
+          status: error.response.status,
+          alertType: "error",
+        })
+      );
+    }
+  };
+
+// STORAGE POST
+export const storagePost =
+  (id: NumberSchema) =>
+    async (dispatch: Dispatch<UserActions | AlertActions>) => {
+      const config: any = {
+        header: {
+          "Content-Type": "application/json",
+        },
+      };
+
+      try {
+        const { data } = await axios.put(`${URI}/storage/${id}`, config);
+        dispatch({
+          type: types.STORAGE_POST,
+          payload: data,
+        });
+        // dispatch<any>(getPostStorage());
+        // dispatch<any>(
+        //   setAlert({
+        //     msg: "Lưu post thành công!",
+        //     status: 200,
+        //     alertType: "success",
+        //   })
+        // );
+      } catch (error: any) {
+        dispatch<any>(
+          setAlert({
+            msg: "Xảy ra lỗi khi lưu post!",
+            status: error.response.status,
+            alertType: "error",
+          })
+        );
+      }
+    };
+
+// STORAGE POST
+export const unstoragePost =
+  (id: NumberSchema) =>
+    async (dispatch: Dispatch<UserActions | AlertActions>) => {
+      const config: any = {
+        header: {
+          "Content-Type": "application/json",
+        },
+      };
+
+      try {
+        const { data } = await axios.put(`${URI}/unstorage/${id}`, config);
+        dispatch({
+          type: types.UNSTORAGE_POST,
+          payload: data,
+        });
+        dispatch<any>(getPostStorage());
+        dispatch<any>(
+          setAlert({
+            msg: "Bỏ lưu post thành công!",
+            status: 200,
+            alertType: "success",
+          })
+        );
+      } catch (error: any) {
+        dispatch<any>(
+          setAlert({
+            msg: "Xảy ra lỗi khi bỏ lưu post!",
+            status: error.response.status,
+            alertType: "error",
+          })
+        );
+      }
+    };
+

@@ -28,7 +28,7 @@ type Props = {
 };
 
 interface IValues {
-    role?: string;
+    role?: any;
 }
 
 const FormField: React.FC<Props> = ({ isRole = false }): JSX.Element => {
@@ -56,7 +56,7 @@ const FormField: React.FC<Props> = ({ isRole = false }): JSX.Element => {
                             name='role'
                             labelId="demo-simple-select-label"
                             id="handle-role"
-                            value={values.role}
+                            value={values.role._id}
                             onChange={handleChange}
                             onBlur={handleBlur}
                             error={touched.role ? Boolean(errors.role) : false}

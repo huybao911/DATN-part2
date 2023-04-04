@@ -68,7 +68,7 @@ const LoginUser: React.FC = (): JSX.Element => {
     >
       <img style={{ height: "96px", width: "90px" }} src="https://cdn.haitrieu.com/wp-content/uploads/2021/09/Logo-DH-CONG-NGHE-THANH-PHO-HO-CHI-MINH-HUTECH.png" />
       <Typography style={{ fontWeight: "bold", fontSize: "20px", marginTop: "5px" }} >
-        ĐĂNG NHẬP
+        Đăng Nhập
       </Typography>
       <Formik
         initialValues={initialValues}

@@ -34,10 +34,10 @@ exports.getUsers = async (req, res, next) => {
   }
 };
 
-exports.getPost = async (req, res) => {
+exports.getPostApprove = async (req, res) => {
   const smanagerUser = await User.findById(req?.smanager?._id);
   const smanagerDepartment = await User.find({department:smanagerUser.department});
-  const smanagerPost = await Post.find({poster:smanagerDepartment}).populate("poster");
+  const smanagerPost = await Post.find({poster:smanagerDepartment, approver:null}).populate("poster");
   try {
     if (!req.smanager) return res.status(400).send("You dont have permission");
     return res.status(200).json(smanagerPost);
@@ -45,6 +45,39 @@ exports.getPost = async (req, res) => {
     return res.status(500).json(error);
   }
 };
+
+exports.approvePost = async (req, res) => {
+  const { id } = req.params;
+  const userApprove = await User.findById(req?.smanager?._id);
+  const { poster,title, content, image } = req.body;
+  try {
+    if (!req.smanager) return res.status(400).send("You dont have permission");
+    const post = await Post.findById(id).lean();
+    if (!post) return res.status(400).send("Post does not exist");
+    const postObj = {
+      poster: poster,
+      approver:userApprove,
+      title:title,
+      content:content,
+      image:image,
+    };
+    const newPost = await Post.findByIdAndUpdate(
+      { _id: id },
+      { poster: postObj.poster,
+        approver: postObj.approver,
+        title: postObj.title,
+        content: postObj.content,
+        image: postObj.image,
+       },
+      { new: true }
+    );
+    return res.status(200).json(newPost);
+  } catch (error) {
+    console.log(error.message);
+    return res.status(500).json(error);
+  }
+};
+
 
 exports.getAuthsuperManager = async (req, res, next) => {
   try {

@@ -1,10 +1,12 @@
 const mongoose = require("mongoose");
-const filter = require("../util/filter");
-const PostStorage = require("./PostStorage");
 
 const PostSchema = new mongoose.Schema(
   {
     poster: {
+      type: mongoose.Types.ObjectId,
+      ref: "User",
+    },
+    approver: {
       type: mongoose.Types.ObjectId,
       ref: "User",
     },
@@ -21,6 +23,9 @@ const PostSchema = new mongoose.Schema(
     image: {
       type: String,
       required: true,
+    },
+    storages: {
+      type: Boolean,
     },
   },
   { timestamps: true }

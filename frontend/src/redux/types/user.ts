@@ -1,13 +1,14 @@
 import types from "redux/actions/types";
 import { IDepartment } from "./department";
 import { IRole } from "./role";
+import { IPost } from "./post";
 
 export interface IUser {
   _id: any;
   username: string;
   email: string;
   password: string | null;
-  department:any;
+  department: any;
   role: any;
   date: string;
 }
@@ -31,6 +32,30 @@ interface IUserLoginFail {
   type: typeof types.USER_LOGIN_FAIL;
 }
 
+interface IGetPosts {
+  type: typeof types.GET_POSTS;
+  payload: IPost[];
+}
+
+interface IGetPostStorage {
+  type: typeof types.GET_POSTSTORAGE;
+  payload: IPost[];
+}
+
+interface storagePost {
+  type: typeof types.STORAGE_POST;
+  payload: {
+    post: IPost;
+    id: number;
+  };
+}
+interface unstoragePost {
+  type: typeof types.UNSTORAGE_POST;
+  payload: {
+    post: IPost;
+    id: number;
+  };
+}
 interface IGetDepartments {
   type: typeof types.GET_DEPARTMENTS;
   payload: IDepartment[];
@@ -56,6 +81,10 @@ export type UserActions =
   | IUserRegisterFail
   | IUserAuthError
   | IGetDepartments
+  | IGetPosts
+  | IGetPostStorage
+  | storagePost
+  | unstoragePost
   | IUserLogout;
 
 export interface IUserState {
@@ -65,4 +94,5 @@ export interface IUserState {
   user: IUser;
   getRole: IRole;
   departments: IDepartment[];
+  posts: IPost[];
 }

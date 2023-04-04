@@ -29,7 +29,7 @@ type Props = {
 };
 
 interface IInitialValues {
-    department: string;
+    department: any;
 }
 
 // const Placeholder = ({ children }: { children: any }) => {
@@ -66,7 +66,7 @@ const FormField: React.FC<Props> = ({ isDepartmentCbb = false }): JSX.Element =>
                         name="department"
                         labelId="demo-simple-select-label"
                         id="handle-department"
-                        value={values.department}
+                        value={values.department._id}
                         onChange={handleChange}
                         onBlur={handleBlur}
                         error={touched.department ? Boolean(errors.department) : false}

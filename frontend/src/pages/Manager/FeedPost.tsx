@@ -13,7 +13,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 type Props = {
   post: any;
 };
-const ManagerForm: React.FC<Props> = ({ post }): JSX.Element => {
+const FeedPost: React.FC<Props> = ({ post }): JSX.Element => {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   const text = post?.poster.username ?? null;
   const letter = text.charAt(0).toUpperCase();
@@ -43,22 +43,25 @@ const ManagerForm: React.FC<Props> = ({ post }): JSX.Element => {
               <MoreVertIcon />
             </IconButton>
           }
-          title={post?.title ?? null}
+          title={post?.poster.username ?? null}
           subheader={formatDate(lettercreatedAt)}
         />
+        <CardContent>
+        <Typography variant="body2" color="text.secondary">
+            {post?.title ?? null}
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            {post?.content ?? null}
+          </Typography>
+        </CardContent>
         <CardMedia
           component="img"
           height="194"
           image={PF + post?.image ?? null}
           alt="Paella dish"
         />
-        <CardContent>
-          <Typography variant="body2" color="text.secondary">
-            {post?.content ?? null}
-          </Typography>
-        </CardContent>
       </Card>
     </Container>
   )
 };
-export default ManagerForm;
+export default FeedPost;

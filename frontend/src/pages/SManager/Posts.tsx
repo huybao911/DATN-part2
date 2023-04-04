@@ -1,9 +1,10 @@
 import * as React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getPost } from "redux/actions/sManager";
+import { getPostApprove } from "redux/actions/sManager";
 import { RootState } from "redux/reducers";
 import { IPost } from "redux/types/post";
-import ManagerForm from "pages/Manager/ManagerForm";
+import SManagerForm from "pages/SManager/SManagerForm";
+import FeedPost from "pages/Manager/FeedPost";
 const Posts: React.FC = (): JSX.Element => {
 
     const dispatch = useDispatch();
@@ -12,26 +13,25 @@ const Posts: React.FC = (): JSX.Element => {
     const smanager = useSelector((state: RootState) => state.smanager);
 
     React.useEffect(() => {
-        dispatch(getPost());
+        dispatch(getPostApprove());
     }, [dispatch]);
 
     React.useEffect(() => {
         setPosts(() =>
             smanager?.posts?.filter((post: any) =>
-                post.title || post.content || post.image
+                post.title || post.content || post.image || post.poster
             ));
     }, [smanager]);
 
     React.useEffect(() => {
-        document.title = "GET POST MANAGER DEPARTMENT";
+        document.title = "POST";
     }, []);
 
     return (
 
         <>
             {posts.map((post: any) =>
-                <ManagerForm post={post} key={post._id} />) ?? (
-                    <p>No Department Found.</p>
+                <SManagerForm post={post} key={post._id} />
                 )}
         </>
     );
