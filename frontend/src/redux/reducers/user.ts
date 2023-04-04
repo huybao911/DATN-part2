@@ -3,6 +3,7 @@ import { IUserState, UserActions } from "../types/user";
 import { IUser } from "redux/types/user";
 import { IRole } from "redux/types/role";
 import { IDepartment } from "redux/types/department";
+import { IPost } from "redux/types/post";
 
 const initialState: IUserState = {
   token: localStorage.getItem("user__token"),
@@ -10,6 +11,7 @@ const initialState: IUserState = {
   isAuthenticated: null,
   user: {} as IUser,
   getRole: {} as IRole,
+  posts: [] as IPost[],
   departments: [] as IDepartment[],
 };
 
@@ -44,6 +46,30 @@ const userReducer = (state = initialState, action: UserActions): IUserState => {
       return {
         ...state,
         departments: action.payload,
+      };
+    case types.GET_POSTS:
+      return {
+        ...state,
+        posts: action.payload,
+      };
+    case types.GET_POSTSTORAGE:
+      return {
+        ...state,
+        posts: action.payload,
+      };
+    case types.STORAGE_POST:
+      return {
+        ...state,
+        posts: state.posts.map((post) =>
+          post._id === action.payload.id ? { ...action.payload.post } : post
+        ),
+      };
+    case types.UNSTORAGE_POST:
+      return {
+        ...state,
+        posts: state.posts.map((post) =>
+          post._id === action.payload.id ? { ...action.payload.post } : post
+        ),
       };
 
     case types.USER_REGISTER_FAIL:

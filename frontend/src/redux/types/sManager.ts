@@ -31,10 +31,19 @@ interface IGetUsers {
   payload: IUser[];
 }
 
-interface IGetPost {
-  type: typeof types.GET_POST;
+interface IGetPostApprove {
+  type: typeof types.GET_POSTAPPROVE_SMANAGER;
   payload: IPost[];
 }
+
+interface IApprovePost {
+  type: typeof types.APPROVE_POSTER;
+  payload: {
+    post: IPost;
+    id: number;
+  };
+}
+
 
 interface ISManagerRegisterFail {
   type: typeof types.SMANAGER_REGISTER_FAIL;
@@ -61,7 +70,8 @@ export type SManagerActions =
   | ISManagerAuthError
   | ISManagerLogout
   | IGetUsers
-  | IGetPost
+  | IGetPostApprove
+  | IApprovePost;
 
 
 export type SManagerAdminActions =

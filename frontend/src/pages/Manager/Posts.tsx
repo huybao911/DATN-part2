@@ -5,7 +5,7 @@ import { RootState } from "redux/reducers";
 import { IPost } from "redux/types/post";
 import { Button, Container, Typography, Stack } from "@mui/material";
 import { Link } from 'react-router-dom';
-import ManagerForm from "pages/Manager/ManagerForm";
+import FeedPost from "pages/Manager/FeedPost";
 const Posts: React.FC = (): JSX.Element => {
 
     const dispatch = useDispatch();
@@ -44,7 +44,7 @@ const Posts: React.FC = (): JSX.Element => {
                 </Stack>
             </Container>
             {posts.map((post: any) =>
-                <ManagerForm post={post} key={post._id} />) ?? (
+                <FeedPost post={post} key={post._id} />) ?? (
                     <p>No Department Found.</p>
                 )}
         </>

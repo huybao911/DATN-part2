@@ -53,11 +53,18 @@ const sManagerReducer = (
         ...state,
         users: action.payload,
       };
-
-    case types.GET_POST:
+      
+    case types.GET_POSTAPPROVE_SMANAGER:
       return {
         ...state,
         posts: action.payload,
+      };
+    case types.APPROVE_POSTER:
+      return {
+        ...state,
+        posts: state.posts.map((post) =>
+          post._id === action.payload.id ? { ...action.payload.post } : post
+        ),
       };
 
     case types.SMANAGER_LOGIN_FAIL:

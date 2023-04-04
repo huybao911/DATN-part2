@@ -35,8 +35,8 @@ interface IInitialValues {
   username: string;
   email?: string;
   password: string;
-  role?: string;
-  department?: string;
+  role?: any;
+  department?: any;
 }
 
 const UserForm: React.FC<Props> = ({ user }): JSX.Element => {

@@ -75,7 +75,7 @@ const Login: React.FC = (): JSX.Element => {
   });
 
   React.useEffect(() => {
-    document.title = "ĐĂNG NHẬP QUYỀN HẠN CAO";
+    document.title = "ĐĂNG NHẬP QUYỀN CẤP CAO";
   }, []);
 
   return (
@@ -88,7 +88,7 @@ const Login: React.FC = (): JSX.Element => {
     >
       <img style={{ height: "96px", width: "90px" }} src="https://cdn.haitrieu.com/wp-content/uploads/2021/09/Logo-DH-CONG-NGHE-THANH-PHO-HO-CHI-MINH-HUTECH.png" />
       <Typography style={{ fontWeight: "bold", fontSize: "20px", marginTop: "5px" }} >
-        ĐĂNG NHẬP QUYỀN HẠN CAO
+        Đăng Nhập Quyền Cấp Cao
       </Typography>
       <Formik
         initialValues={initialValues}
@@ -100,6 +100,19 @@ const Login: React.FC = (): JSX.Element => {
             <Grid container spacing={2}>
               <FormField />
             </Grid>
+            <div className={classes.checkboxWrapper}>
+              <RadioGroup
+                aria-labelledby="demo-radio-buttons-group-label"
+                defaultValue="admin"
+                name="radio-buttons-group"
+              >
+
+                <FormControlLabel value="admin" control={<Radio onChange={handleChange} />} label="Admin" />
+                <FormControlLabel value="smanager" control={<Radio onChange={handleChange} />} label="Quản Lý Cấp Cao" />
+                <FormControlLabel value="manager" control={<Radio onChange={handleChange} />} label="Quản Lý" />
+              </RadioGroup>
+
+            </div>
             <Button
               fullWidth
               type='submit'
@@ -113,19 +126,6 @@ const Login: React.FC = (): JSX.Element => {
           </form>
         )}
       </Formik>
-      <div className={classes.checkboxWrapper}>
-        <RadioGroup
-          aria-labelledby="demo-radio-buttons-group-label"
-          defaultValue="admin"
-          name="radio-buttons-group"
-        >
-
-          <FormControlLabel value="admin" control={<Radio onChange={handleChange} />} label="Admin" />
-          <FormControlLabel value="smanager" control={<Radio onChange={handleChange} />} label="Quản Lý Cấp Cao" />
-          <FormControlLabel value="manager" control={<Radio onChange={handleChange} />} label="Quản Lý" />
-        </RadioGroup>
-
-      </div>
 
       {/* <div className={classes.checkboxWrapper}>
         <Checkbox

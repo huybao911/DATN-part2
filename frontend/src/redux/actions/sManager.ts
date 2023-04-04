@@ -164,8 +164,8 @@ export const getUsers =
     }
   };
 
-// GET POST
-export const getPost =
+//GET_POSTAPPROVE_SMANAGER
+export const getPostApprove =
   () => async (dispatch: Dispatch<SManagerActions | AlertActions>) => {
     const config: any = {
       header: {
@@ -174,8 +174,8 @@ export const getPost =
     };
 
     try {
-      const { data } = await axios.get(`${URI}/post`, config);
-      dispatch({ type: types.GET_POST, payload: data });
+      const { data } = await axios.get(`${URI}/postApprove`, config);
+      dispatch({ type: types.GET_POSTAPPROVE_SMANAGER, payload: data });
     } catch (error: any) {
       dispatch<any>(
         setAlert({
@@ -186,6 +186,43 @@ export const getPost =
       );
     }
   };
+// APPROVE POST
+export const approvePost =
+  (body: any, id: number, setSubmitting: any) =>
+    async (dispatch: Dispatch<SManagerActions | AlertActions>) => {
+      const config: any = {
+        header: {
+          "Content-Type": "application/json",
+        },
+      };
+
+      try {
+        const { data } = await axios.patch(`${URI}/post/${id}`, body, config);
+        dispatch({
+          type: types.APPROVE_POSTER,
+          payload: data,
+        });
+        dispatch<any>(getPostApprove());
+        dispatch<any>(
+          setAlert({
+            msg: "Duyệt post thành công!",
+            status: 200,
+            alertType: "success",
+          })
+        );
+      } catch (error: any) {
+        dispatch<any>(
+          setAlert({
+            msg: "Xảy ra lỗi khi duyệt post!",
+            status: error.response.status,
+            alertType: "error",
+          })
+        );
+      } finally {
+        setSubmitting(false);
+      }
+    };
+
 
 // LOGOUT SMANAGER
 export const logOutSManager =

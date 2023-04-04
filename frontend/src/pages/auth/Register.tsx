@@ -87,7 +87,7 @@ const Register: React.FC = (): JSX.Element => {
       justifyContent='center'
     >
       <Typography style={{ fontWeight: "bold", fontSize: "20px", marginTop: "5px" }} >
-        TẠO TÀI KHOẢN
+        Tạo Tài Khoản
       </Typography>
       <Formik
         initialValues={initialValues}

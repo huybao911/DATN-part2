@@ -124,9 +124,9 @@ const routesProps: ROUTES[] = [
 
   //USER
   {
-    name: "dashboard",
-    path: "/dashboard",
-    component: React.lazy(() => import("pages/dashboard/Dashboard")),
+    name: "storagePost",
+    path: "/storagePost",
+    component: React.lazy(() => import("pages/User/StoragePost")),
     exact: true,
     keyRole: "user",
     auth: true,

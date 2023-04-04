@@ -3,10 +3,8 @@ const { sign } = require("jsonwebtoken");
 
 const User = require("../models/User");
 const Role = require("../models/Role");
-const PostStorage = require("../models/PostStorage");
 const Post = require("../models/Post");
 paginate = require("../util/paginate");
-const cooldown = new Set();
 
 exports.login = async (req, res, next) => {
   const { username, password } = req.body;
@@ -59,7 +57,7 @@ exports.getAuthManager = async (req, res, next) => {
 };
 
 exports.createPost = async (req, res) => {
-  const { poster, title, content, image } = req.body;
+  const { poster, approver, title, content, image } = req.body;
   const { id } = req.params;
   const userPost = await User.findById({_id:id});
   const imagePath = image.replace(/^.*\\/, "");
@@ -68,9 +66,11 @@ exports.createPost = async (req, res) => {
   try {
     const newPost = new Post({
       poster: userPost,
+      approver: null,
       title,
       content,
       image:imagePath,
+      storages:false,
     });
     await newPost.save();
 
@@ -108,7 +108,7 @@ exports.getPost = async (req, res) => {
 exports.getPosts = async (req, res) => {
   try {
     if (!req.manager) return res.status(400).send("You dont have permission");
-    return res.status(200).json(await Post.find().populate("poster"));
+    return res.status(200).json(await Post.find().populate("poster").populate("approver"));
   } catch (error) {
     return res.status(500).json(error);
   }
@@ -132,7 +132,6 @@ exports.updatePost = async (req, res) => {
     return res.status(500).json(error);
   }
 };
-
 exports.deletePost = async (req, res) => {
   const { id } = req.params;
   try {
@@ -141,112 +140,5 @@ exports.deletePost = async (req, res) => {
     return res.status(200).send("Post has been deleted");
   } catch (error) {
     return res.status(500).json(error);
-  }
-};
-
-exports.setStoraged = async (posts, userId) => {
-  let searchCondition = {};
-  if (userId) searchCondition = { userId };
-
-  const userPostStorages = await PostStorage.find(searchCondition); //userId needed
-
-  posts.forEach((post) => {
-    userPostStorages.forEach((userPostStorage) => {
-      if (userPostStorage.postId.equals(post._id)) {
-        post.liked = true;
-        return;
-      }
-    });
-  });
-};
-
-exports.getUserStoragedPosts = async (req, res) => {
-  try {
-    const likerId = req.params.id;
-    const { userId } = req.body;
-    let { page, sortBy } = req.query;
-
-    if (!sortBy) sortBy = "-createdAt";
-    if (!page) page = 1;
-
-    let posts = await PostStorage.find({ userId: likerId })
-      .sort(sortBy)
-      .populate({ path: "postId", populate: { path: "poster" } })
-      .lean();
-
-    posts = paginate(posts, 10, page);
-
-    const count = posts.length;
-
-    let responsePosts = [];
-    posts.forEach((post) => {
-      responsePosts.push(post.postId);
-    });
-
-    if (userId) {
-      await setLiked(responsePosts, userId);
-    }
-
-    return res.json({ data: responsePosts, count });
-  } catch (err) {
-    console.log(err);
-    return res.status(400).json({ error: err.message });
-  }
-};
-
-exports.storagePost = async (req, res) => {
-  try {
-    const postId = req.params.id;
-    const { userId } = req.body;
-
-    const post = await Post.findById(postId);
-
-    if (!post) {
-      throw new Error("Post does not exist");
-    }
-
-    const existingPostStorage = await PostStorage.findOne({ postId, userId }).populate("Post").populate("User");
-
-    if (existingPostStorage) {
-      throw new Error("Post is already storage");
-    }
-
-    await PostStorage.create({
-      postId,
-      userId,
-    });
-
-    await post.save();
-
-    return res.json({ success: true });
-  } catch (err) {
-    return res.status(400).json({ error: err.message });
-  }
-};
-
-exports.unstoragePost = async (req, res) => {
-  try {
-    const postId = req.params.id;
-    const { userId } = req.body;
-
-    const post = await Post.findById(postId);
-
-    if (!post) {
-      throw new Error("Post does not exist");
-    }
-
-    const existingPostStorage = await PostStorage.findOne({ postId, userId });
-
-    if (!existingPostStorage) {
-      throw new Error("Post is already not storage");
-    }
-
-    await existingPostStorage.remove();
-
-    await post.save();
-
-    return res.json({ success: true });
-  } catch (err) {
-    return res.status(400).json({ error: err.message });
   }
 };

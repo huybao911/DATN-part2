@@ -17,9 +17,6 @@ router.post("/createPost/:id", isAuth, ManagerController.createPost);
 router.patch("/post/:id", isAuth, ManagerController.updatePost);
 router.delete("/post/:id", isAuth, ManagerController.deletePost);
 
-router.post("/storage/:id", ManagerController.storagePost);
-router.delete("/storage/:id", ManagerController.unstoragePost);
-router.get("/storage/:id", ManagerController.getUserStoragedPosts);
 // router
 //   .route("/users/:id")
 //   .patch(isAuth, ManagerController.updateUser)
