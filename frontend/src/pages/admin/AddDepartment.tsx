@@ -10,7 +10,7 @@ import { RootState } from "redux/reducers";
 
 import { addDepartment, getDepartments } from "redux/actions/admin";
 import FormFieldDepartment from "pages/admin/FormFieldDepartment";
-import DepartmentForm from "pages/admin/DepartmentForm";
+import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
 
 interface IInitialValues {
     nameDepartment: string;
-
+    keyDepartment: string;
 }
 
 const AddDepartment: React.FC = (): JSX.Element => {
@@ -47,7 +47,7 @@ const AddDepartment: React.FC = (): JSX.Element => {
 
   const initialValues: IInitialValues = {
    nameDepartment: "",
-    
+   keyDepartment: "",
   };
 
   const onHandleSubmit = (values: IInitialValues, { setSubmitting }: any) => {
@@ -56,7 +56,7 @@ const AddDepartment: React.FC = (): JSX.Element => {
 
   const validationSchema = Yup.object({
     nameDepartment: Yup.string().required("Invalid nameDepartment!"),
-   
+    keyDepartment: Yup.string().required("Invalid keyDepartment!"),
   });
 
   React.useEffect(() => {
@@ -79,12 +79,6 @@ const AddDepartment: React.FC = (): JSX.Element => {
       alignItems='center'
       justifyContent='center'
     >
-      <div style={{ marginBottom: "5rem" }}>
-        <h4>Department</h4>
-        {departments?.map((department: any) => <DepartmentForm department={department} key={department._id} />) ?? (
-          <p>No Department Found.</p>
-        )}
-      </div>
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
@@ -92,7 +86,7 @@ const AddDepartment: React.FC = (): JSX.Element => {
       >
         {({ isSubmitting, handleSubmit }) => (
           <form noValidate onSubmit={handleSubmit}>
-            <FormFieldDepartment isDepartment={true} />
+            <FormFieldDepartment />
             <Button
               type='submit'
               variant='contained'
@@ -100,15 +94,15 @@ const AddDepartment: React.FC = (): JSX.Element => {
               className={classes.btnRegister}
               disabled={isSubmitting}
             >
-              {isSubmitting ? <CircularProgress size='1rem' /> : "Thêm"}
+              {isSubmitting ? <CircularProgress size='1rem' /> : "Thêm Khoa"}
             </Button>
           </form>
         )}
       </Formik>
       <div style={{marginTop: "40px"}}>
-        <a href="/users">
+        <Link to={"/department"}>
           <button style={{fontSize:"20px", backgroundColor:"#000", color:"#fff",border:"10px solid black"}}>QUAY LẠI</button>
-        </a>
+        </Link>
       </div>
     </Grid>
   );

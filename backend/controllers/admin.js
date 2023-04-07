@@ -4,6 +4,7 @@ const { sign } = require("jsonwebtoken");
 const User = require("../models/User");
 const Department = require("../models/Department");
 const Role = require("../models/Role");
+const Post = require("../models/Post");
 
 
 exports.login = async (req, res, next) => {
@@ -28,41 +29,41 @@ exports.login = async (req, res, next) => {
   }
 };
 
-exports.addDepartment = async(req, res) => {
-  const {nameDepartment, keyDepartment} = req.body;
+exports.addDepartment = async (req, res) => {
+  const { nameDepartment, keyDepartment } = req.body;
   try {
-    if(!nameDepartment || !keyDepartment){
+    if (!nameDepartment || !keyDepartment) {
       return res.status(400).send("Please fill in all the required fields!")
     }
-    if (!req.admin){
+    if (!req.admin) {
       return res.status(400).send("You dont have permission");
-    } 
-    const departmentObj = {nameDepartment, keyDepartment}
+    }
+    const departmentObj = { nameDepartment, keyDepartment }
     const department = await new Department(departmentObj).save();
     return res
       .status(201)
       .json(department)
-  } 
+  }
   catch (error) {
     return res.status(500).send(error.message);
   }
 }
 
-exports.addRole = async(req, res) => {
-  const {nameRole, keyRole} = req.body;
+exports.addRole = async (req, res) => {
+  const { nameRole, keyRole } = req.body;
   try {
-    if(!nameRole || !keyRole){
+    if (!nameRole || !keyRole) {
       return res.status(400).send("Please fill in all the required fields!")
     }
-    if (!req.admin){
+    if (!req.admin) {
       return res.status(400).send("You dont have permission");
-    } 
-    const roleObj = {nameRole, keyRole}
+    }
+    const roleObj = { nameRole, keyRole }
     const role = await new Role(roleObj).save();
     return res
       .status(201)
       .json(role)
-  } 
+  }
   catch (error) {
     return res.status(500).send(error.message);
   }
@@ -139,13 +140,23 @@ exports.deleteUser = async (req, res, next) => {
   }
 };
 
+exports.getPosts = async (req, res) => {
+  try {
+    if (!req.admin) return res.status(400).send("You dont have permission");
+    return res.status(200).json(await Post.find().populate({ path: "poster", populate: [{ path: "department" }] }).populate("approver"));
+  } catch (error) {
+    return res.status(500).json(error);
+  }
+};
+
+
 exports.getAuthAdmin = async (req, res, next) => {
   try {
     const admin = await User.findById(req?.admin?._id).select("-password").lean();
     let getRole = await Role.findById(admin.role);
     if (!admin)
       return res.status(400).send("Admin not found, Authorization denied..");
-    return res.status(200).json({ admin:{...admin}, getRole });
+    return res.status(200).json({ admin: { ...admin }, getRole });
   } catch (error) {
     return res.status(500).send(error.message);
   }

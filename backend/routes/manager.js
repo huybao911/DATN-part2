@@ -12,10 +12,13 @@ router.get("/user", isAuth, ManagerController.getUser);
 router.get("/post", isAuth, ManagerController.getPost);
 
 router.get("/posts", isAuth, ManagerController.getPosts);
+router.get("/postUserApply", isAuth, ManagerController.getPostUserApply);
 router.post("/createPost/:id", isAuth, ManagerController.createPost);
-// router.get("/post/:id", isAuth, ManagerController.getPost);
+
 router.patch("/post/:id", isAuth, ManagerController.updatePost);
 router.delete("/post/:id", isAuth, ManagerController.deletePost);
+
+router.get("/events", isAuth, ManagerController.getEvents);
 
 // router
 //   .route("/users/:id")

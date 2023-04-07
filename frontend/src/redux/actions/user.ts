@@ -196,7 +196,7 @@ export const storagePost =
       };
 
       try {
-        const { data } = await axios.put(`${URI}/storage/${id}`, config);
+        const { data } = await axios.post(`${URI}/post/${id}`, config);
         dispatch({
           type: types.STORAGE_POST,
           payload: data,
@@ -220,7 +220,7 @@ export const storagePost =
       }
     };
 
-// STORAGE POST
+// UNSTORAGE POST
 export const unstoragePost =
   (id: NumberSchema) =>
     async (dispatch: Dispatch<UserActions | AlertActions>) => {
@@ -231,7 +231,42 @@ export const unstoragePost =
       };
 
       try {
-        const { data } = await axios.put(`${URI}/unstorage/${id}`, config);
+        const { data } = await axios.delete(`${URI}/post/${id}`, config);
+        dispatch({
+          type: types.UNSTORAGE_POST,
+          payload: data,
+        });
+        dispatch<any>(getPosts());
+        dispatch<any>(
+          setAlert({
+            msg: "Bỏ lưu post thành công!",
+            status: 200,
+            alertType: "success",
+          })
+        );
+      } catch (error: any) {
+        dispatch<any>(
+          setAlert({
+            msg: "Xảy ra lỗi khi bỏ lưu post!",
+            status: error.response.status,
+            alertType: "error",
+          })
+        );
+      }
+    };
+
+// UNSTORAGE POST IN LIST
+export const unstoragePostInList =
+  (id: NumberSchema) =>
+    async (dispatch: Dispatch<UserActions | AlertActions>) => {
+      const config: any = {
+        header: {
+          "Content-Type": "application/json",
+        },
+      };
+
+      try {
+        const { data } = await axios.delete(`${URI}/post/${id}`, config);
         dispatch({
           type: types.UNSTORAGE_POST,
           payload: data,
@@ -255,3 +290,147 @@ export const unstoragePost =
       }
     };
 
+// GET APPLY JOB POST
+export const getPostApplyJob =
+  () => async (dispatch: Dispatch<UserActions | AlertActions>) => {
+    const config: any = {
+      header: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    try {
+      const { data } = await axios.get(`${URI}/postApply`, config);
+      dispatch({ type: types.GET_POST_APPLY_JOB, payload: data });
+    } catch (error: any) {
+      dispatch<any>(
+        setAlert({
+          msg: "Xảy ra lỗi khi lấy dữ liệu post apply!",
+          status: error.response.status,
+          alertType: "error",
+        })
+      );
+    }
+  };
+
+// APPLY JOB
+export const applyJob =
+  (id: NumberSchema) =>
+    async (dispatch: Dispatch<UserActions | AlertActions>) => {
+      const config: any = {
+        header: {
+          "Content-Type": "application/json",
+        },
+      };
+
+      try {
+        const { data } = await axios.post(`${URI}/postApply/${id}`, config);
+        dispatch({
+          type: types.APPLY_JOB,
+          payload: data,
+        });
+      } catch (error: any) {
+        dispatch<any>(
+          setAlert({
+            msg: "Xảy ra lỗi khi ứng tuyển!",
+            status: error.response.status,
+            alertType: "error",
+          })
+        );
+      }
+    };
+
+// UNAPPLY JOB
+export const unapplyJob =
+  (id: NumberSchema) =>
+    async (dispatch: Dispatch<UserActions | AlertActions>) => {
+      const config: any = {
+        header: {
+          "Content-Type": "application/json",
+        },
+      };
+
+      try {
+        const { data } = await axios.delete(`${URI}/postApply/${id}`, config);
+        dispatch({
+          type: types.UNAPPLY_JOB,
+          payload: data,
+        });
+        dispatch<any>(getPosts());
+        dispatch<any>(
+          setAlert({
+            msg: "Bỏ ứng tuyển thành công!",
+            status: 200,
+            alertType: "success",
+          })
+        );
+      } catch (error: any) {
+        dispatch<any>(
+          setAlert({
+            msg: "Xảy ra lỗi khi bỏ ứng tuyển!",
+            status: error.response.status,
+            alertType: "error",
+          })
+        );
+      }
+    };
+
+// GET PROFILE
+export const getProfile =
+  () => async (dispatch: Dispatch<UserActions | AlertActions>) => {
+    const config: any = {
+      header: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    try {
+      const { data } = await axios.get(`${URI}/profile`, config);
+      dispatch({ type: types.GET_PROFILE, payload: data });
+    } catch (error: any) {
+      dispatch<any>(
+        setAlert({
+          msg: "Xảy ra lỗi khi lấy dữ liệu người dùng!",
+          status: error.response.status,
+          alertType: "error",
+        })
+      );
+    }
+  };
+
+// UPDATE PROFILE
+export const updateProfile =
+  (body: any, id: number, setSubmitting: any) =>
+    async (dispatch: Dispatch<UserActions | AlertActions>) => {
+      const config: any = {
+        header: {
+          "Content-Type": "application/json",
+        },
+      };
+
+      try {
+        const { data } = await axios.put(`${URI}/profile/${id}`, body, config);
+        dispatch({
+          type: types.UPDATE_PROFILE,
+          payload: data,
+        });
+        dispatch<any>(getProfile());
+        dispatch<any>(
+          setAlert({
+            msg: "Cập nhật thông tin thành công!",
+            status: 200,
+            alertType: "success",
+          })
+        );
+      } catch (error: any) {
+        dispatch<any>(
+          setAlert({
+            msg: "Xảy ra lỗi khi cập nhật thông tin!",
+            status: error.response.status,
+            alertType: "error",
+          })
+        );
+      } finally {
+        setSubmitting(false);
+      }
+    };

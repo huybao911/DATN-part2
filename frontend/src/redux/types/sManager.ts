@@ -2,7 +2,10 @@ import types from "redux/actions/types";
 import { IUser } from "./user";
 import { IManager } from "./Manager";
 import { IRole } from "./role";
+import { IDepartment } from "./department";
 import { IPost } from "./post";
+import { IEvent } from "./event";
+import { IJobEvent } from "./jobEvent";
 
 export interface ISManager {
   _id: any;
@@ -31,6 +34,16 @@ interface IGetUsers {
   payload: IUser[];
 }
 
+interface IGetUser {
+  type: typeof types.GET_USER;
+  payload: IUser[];
+}
+
+interface IGetDepartments {
+  type: typeof types.GET_DEPARTMENTS;
+  payload: IDepartment[];
+}
+
 interface IGetPostApprove {
   type: typeof types.GET_POSTAPPROVE_SMANAGER;
   payload: IPost[];
@@ -44,6 +57,59 @@ interface IApprovePost {
   };
 }
 
+interface IGetEvents {
+  type: typeof types.GET_EVENTS;
+  payload: IEvent[];
+}
+
+interface ICreateEventSuccess {
+  type: typeof types.CREATE_EVENT_SUCCESS;
+  payload: IEvent[];
+}
+
+interface IUpdateEvent {
+  type: typeof types.UPDATE_EVENT;
+  payload: {
+    post: IEvent;
+    id: number;
+  };
+}
+
+interface IDeleteEvent {
+  type: typeof types.DELETE_EVENT;
+  payload: number;
+}
+
+interface IGetJobEvents {
+  type: typeof types.GET_JOBEVENTS;
+  payload: IJobEvent[];
+}
+
+interface ICreateJobEventSuccess {
+  type: typeof types.CREATE_JOBEVENT_SUCCESS;
+  payload: IJobEvent[];
+}
+
+interface IUpdateJobEvent {
+  type: typeof types.UPDATE_JOBEVENT;
+  payload: {
+    post: IJobEvent;
+    id: number;
+  };
+}
+
+interface IDeleteJobEvent {
+  type: typeof types.DELETE_JOBEVENT;
+  payload: number;
+}
+
+interface ICreateEventFail {
+  type: typeof types.CREATE_EVENT_FAIL;
+}
+
+interface ICreateJobEventFail {
+  type: typeof types.CREATE_JOBEVENT_FAIL;
+}
 
 interface ISManagerRegisterFail {
   type: typeof types.SMANAGER_REGISTER_FAIL;
@@ -69,10 +135,21 @@ export type SManagerActions =
   | ISManagerLoginFail
   | ISManagerAuthError
   | ISManagerLogout
+  | IGetUser
   | IGetUsers
+  | IGetDepartments
   | IGetPostApprove
-  | IApprovePost;
-
+  | IApprovePost
+  | IGetEvents
+  | ICreateEventSuccess
+  | ICreateEventFail
+  | IUpdateEvent
+  | IDeleteEvent
+  | IGetJobEvents
+  | ICreateJobEventSuccess
+  | ICreateJobEventFail
+  | IUpdateJobEvent
+  | IDeleteJobEvent;
 
 export type SManagerAdminActions =
 | ISManagerRegisterSuccess
@@ -83,8 +160,11 @@ export interface ISManagerState {
   loading: boolean;
   isAuthenticated: boolean | null;
   smanager: ISManager;
+  departments: IDepartment[];
   getRole: IRole;
   manager: IManager[];
   users: IUser[];
   posts: IPost[];
+  events: IEvent[];
+  jobevents: IJobEvent[];
 }

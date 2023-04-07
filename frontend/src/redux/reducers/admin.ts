@@ -5,6 +5,7 @@ import { ISManager } from "redux/types/sManager";
 import { IManager } from "redux/types/Manager";
 import { IDepartment } from "redux/types/department";
 import { IRole } from "redux/types/role";
+import { IPost } from "redux/types/post";
 import { IAdminState, AdminActions } from "../types/admin";
 
 const initialState: IAdminState = {
@@ -17,6 +18,7 @@ const initialState: IAdminState = {
   manager: [] as IManager[],
   departments: [] as IDepartment[],
   roles: [] as IRole[],
+  posts: [] as IPost[],
   users: [] as IUser[],
 };
 
@@ -69,6 +71,12 @@ const adminReducer = (
         ...state,
         roles: action.payload,
       };
+      
+    case types.GET_POSTS:
+      return {
+        ...state,
+        posts: action.payload,
+      };
 
     case types.DELETE_USER:
       return {
@@ -80,47 +88,6 @@ const adminReducer = (
       return {
         ...state,
         users: state.users.map((user) =>
-          user._id === action.payload.id ? { ...action.payload.user } : user
-        ),
-      };
-
-    case types.GET_MANAGER:
-      return {
-        ...state,
-        manager: action.payload,
-      };
-
-    case types.DELETE_MANAGER:
-      return {
-        ...state,
-        users: state.users.filter((user) => user._id !== action.payload),
-      };
-
-    case types.UPDATE_MANAGER:
-      return {
-        ...state,
-        manager: state.manager.map((user) =>
-          user._id === action.payload.id ? { ...action.payload.user } : user
-        ),
-      };
-
-
-    case types.GET_SMANAGER:
-      return {
-        ...state,
-        smanager: action.payload,
-      };
-
-    case types.DELETE_SMANAGER:
-      return {
-        ...state,
-        users: state.users.filter((user) => user._id !== action.payload),
-      };
-
-    case types.UPDATE_SMANAGER:
-      return {
-        ...state,
-        smanager: state.users.map((user) =>
           user._id === action.payload.id ? { ...action.payload.user } : user
         ),
       };

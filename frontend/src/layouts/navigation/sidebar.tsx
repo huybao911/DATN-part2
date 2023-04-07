@@ -94,7 +94,7 @@ const SideBar: React.FC = (): JSX.Element => {
             }
           }}>
 
-          <Box sx={{ px: 2.5, py: 6, display: 'inline-block', textAlign: 'center' }}>
+          <Box sx={{ px: 2.5, py: 6, display: 'inline-block', textAlign: 'center', fontWeight:"bold" }}>
             {topLinks}
           </Box>
 
@@ -106,7 +106,7 @@ const SideBar: React.FC = (): JSX.Element => {
                 sx={{ width: 100, position: 'absolute', }}
               />
               <Box sx={{ textAlign: 'center' }}>
-                <Typography style={{ marginTop: "100px" }} gutterBottom variant="h6">
+                <Typography style={{ marginTop: "55px" }} gutterBottom variant="h6">
                   {bottomLinks}
                 </Typography>
               </Box>

@@ -8,6 +8,7 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import { useDispatch } from "react-redux";
 import { createPost } from "redux/actions/Manager";
 import FormPost from "pages/Manager/FormPost";
+import FormEvent from "pages/auth/FormEvent-Manager";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -31,6 +32,8 @@ type Props = {
 interface IInitialValues {
     title: string;
     content: string;
+    event: any;
+    image:string;
 }
 
 const CreatePost: React.FC<Props> = ({ post }): JSX.Element => {
@@ -40,6 +43,8 @@ const CreatePost: React.FC<Props> = ({ post }): JSX.Element => {
     const initialValues: IInitialValues = {
         title: post?.title ?? "",
         content: post?.content ?? "",
+        event: post?.event ?? "",
+        image: post?.image ?? "",
     };
 
 
@@ -51,8 +56,9 @@ const CreatePost: React.FC<Props> = ({ post }): JSX.Element => {
 
     const validationSchema = Yup.object({
         title: Yup.string().required("required!"),
-        content: Yup.string().required("required!")
-
+        content: Yup.string().required("required!"),
+        event: Yup.string().required("required!"),
+        image: Yup.string().required("required!"),
     });
 
     return (
@@ -73,7 +79,8 @@ const CreatePost: React.FC<Props> = ({ post }): JSX.Element => {
                 >
                     {({ isSubmitting, handleSubmit }) => (
                         <form noValidate onSubmit={handleSubmit}>
-                            <FormPost />          
+                            <FormPost />  
+                            <FormEvent isEvent={true}/>        
                             <Button
                                 type='submit'
                                 variant='contained'

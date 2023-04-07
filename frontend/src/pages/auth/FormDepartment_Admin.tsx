@@ -63,7 +63,7 @@ const FormField: React.FC<Props> = ({ isDepartmentCbb = false }): JSX.Element =>
                 <FormControl fullWidth className={classes.formControl}>
                     <FormLabel classes={{ root: classes.formLabel }}>Khoa</FormLabel>
                     <Select
-                        name="department"
+                        name="department._id"
                         labelId="demo-simple-select-label"
                         id="handle-department"
                         value={values.department._id}

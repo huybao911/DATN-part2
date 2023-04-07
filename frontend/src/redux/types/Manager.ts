@@ -2,6 +2,8 @@ import types from "redux/actions/types";
 import { IUser } from "./user";
 import { IRole } from "./role";
 import { IPost } from "./post";
+import { IApplyJob } from "./applyJob";
+import { IEvent } from "./event";
 
 export interface IManager {
   _id: any;
@@ -45,6 +47,11 @@ interface IGetPosts {
   payload: IPost[];
 }
 
+interface IGetPostUserApplys {
+  type: typeof types.GET_POST_USERAPPLY;
+  payload: IApplyJob[];
+}
+
 interface ICreatePostSuccess {
   type: typeof types.CREATE_POSTER_SUCCESS;
   payload: {
@@ -66,6 +73,10 @@ interface IDeletePost {
   payload: number;
 }
 
+interface IGetEvents {
+  type: typeof types.GET_EVENTS;
+  payload: IEvent[];
+}
 
 interface IManagerRegisterFail {
   type: typeof types.MANAGER_REGISTER_FAIL;
@@ -99,10 +110,12 @@ export type ManagerActions =
   | IGetUser
   | IGetPost
   | IGetPosts
+  | IGetPostUserApplys
   | ICreatePostSuccess
   | ICreatePostFail
   | IUpdatePost
-  | IDeletePost;
+  | IDeletePost
+  | IGetEvents;
 
 export type ManagerAdminActions =
 | IManagerRegisterSuccess
@@ -116,4 +129,6 @@ export interface IManagerState {
   manager: IManager;
   users: IUser[];
   posts: IPost[];
+  events: IEvent[];
+  appyjobs: IApplyJob[];
 }

@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getPostApprove } from "redux/actions/sManager";
 import { RootState } from "redux/reducers";
 import { IPost } from "redux/types/post";
-import SManagerForm from "pages/SManager/SManagerForm";
+import ApprovePost from "pages/SManager/ApprovePost";
 import FeedPost from "pages/Manager/FeedPost";
 const Posts: React.FC = (): JSX.Element => {
 
@@ -31,7 +31,7 @@ const Posts: React.FC = (): JSX.Element => {
 
         <>
             {posts.map((post: any) =>
-                <SManagerForm post={post} key={post._id} />
+                <ApprovePost post={post} key={post._id} />
                 )}
         </>
     );
