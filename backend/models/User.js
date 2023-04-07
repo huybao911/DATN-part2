@@ -30,7 +30,31 @@ const userSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       trim: true,
       ref: "Department",
-    }
+    },
+    fullName: {
+      type: String,
+      trim: true,
+    },
+    birthday: {
+      type: String,
+      trim: true,
+    },
+    mssv: {
+      type: String,
+      trim: true,
+    },
+    classUser: {
+      type: String,
+      trim: true,
+    },
+    phone: {
+      type: String,
+      trim: true,
+    },
+    address: {
+      type: String,
+      trim: true,
+    },
   },
   { timestamps: { createdAt: "created_at", updatedAt: "updated_at" } }
 );

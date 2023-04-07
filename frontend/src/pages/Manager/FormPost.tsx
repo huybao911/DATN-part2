@@ -1,6 +1,6 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { FormControl, FormLabel, TextField } from "@material-ui/core";
+import { FormControl, FormLabel, TextField,Button } from "@material-ui/core";
 import { useFormikContext } from "formik";
 
 const useStyles = makeStyles((theme) => ({
@@ -47,6 +47,8 @@ const FormPost: React.FC = (): JSX.Element => {
         <FormLabel classes={{ root: classes.formLabel }}>Nội dung bài viết</FormLabel>
         <TextField
           fullWidth
+          maxRows={10}
+          multiline
           variant="outlined"
           name='content'
           value={values.content}
@@ -60,6 +62,21 @@ const FormPost: React.FC = (): JSX.Element => {
 
       <FormControl fullWidth className={classes.formControl}>
         <FormLabel classes={{ root: classes.formLabel }}>Hình ảnh</FormLabel>
+        {/* <Button
+          variant="contained"
+          component="label"
+        >
+          Upload File
+          <input
+            type="file"
+            accept=".png,.jpg"
+            name='image'
+            value={values.image}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            hidden
+          />
+        </Button> */}
         <input
           // fullWidth
           // variant="outlined"
@@ -70,7 +87,7 @@ const FormPost: React.FC = (): JSX.Element => {
           onChange={handleChange}
           onBlur={handleBlur}
         />
-      </FormControl>
+      </FormControl>  
     </>
   );
 };

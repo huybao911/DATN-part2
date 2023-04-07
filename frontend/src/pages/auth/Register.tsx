@@ -71,7 +71,7 @@ const Register: React.FC = (): JSX.Element => {
     username: Yup.string().required("Invalid username!"),
     email: Yup.string().email("Invalid email!").required("Invalid email!"),
     password: Yup.string().required("Invalid password!"),
-    department: Yup.string().required("Invalid department!"),
+    // department: Yup.string().required("Invalid department!"),
   });
 
   React.useEffect(() => {

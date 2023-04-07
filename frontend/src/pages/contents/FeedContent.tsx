@@ -7,9 +7,12 @@ import TabContext from '@mui/lab/TabContext';
 import TabPanel from '@mui/lab/TabPanel';
 import { green } from '@mui/material/colors';
 import { Box } from '@mui/material';
-import { storagePost, unstoragePost } from "redux/actions/user";
+import { storagePost, unstoragePost, applyJob, unapplyJob } from "redux/actions/user";
 
-import { useDispatch } from "react-redux";
+import { formatDistance } from 'date-fns';
+
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "redux/reducers";
 
 type Props = {
     post: any;
@@ -37,9 +40,8 @@ const useStyles = makeStyles((theme) => ({
         height: '500px',
     },
     myMedia: {
-        height: "282px",
+        height: "250px",
         // paddingTop: '56.25%', // 16:9,
-        marginTop: '30'
     },
     cardHold: {
         justifyContent: 'center',
@@ -105,100 +107,143 @@ const FeedContent: React.FC<Props> = ({ post }): JSX.Element => {
 
     const [clicked, setClicked] = React.useState(true);
 
+    const [clickedApply, setClickedApply] = React.useState(true);
+
     const PF = process.env.REACT_APP_PUBLIC_FOLDER;
 
     const textAvatar = post?.poster.username ?? null;
     const letterAvatar = textAvatar.charAt(0).toUpperCase();
 
-    const textcreatedAt = post?.createdAt ?? null;
-    const lettercreatedAt = textcreatedAt.slice(0, 10);
-
-    function formatDate(input: any) {
-        var datePart = input.match(/\d+/g),
-            year = datePart[0].substring(0),
-            month = datePart[1], day = datePart[2];
-
-        return day + '/' + month + '/' + year;
-    }
+    const lettercreatedAt = (formatDistance(new Date(post?.createdAt), Date.now(), { addSuffix: true })).split("about");
 
     const classes = useStyles();
 
+    const user = useSelector((state: RootState) => state.user);
+
+    const bottomLinks = user.isAuthenticated ? (
+        <Toolbar className={classes.toolBar}>
+            <Box className={classes.toolbarContent}>
+                <TabContext value={value}>
+                    <TabPanel value="1" >
+                        {/* de rieng ra 1 component */}
+                        <Card className={classes.card}>
+                            <CardHeader
+                                avatar={
+                                    <Avatar sx={{ bgcolor: green[500] }} aria-label="recipe">
+                                        {letterAvatar}
+                                    </Avatar>
+                                }
+                                action={
+                                    <IconButton aria-label='settings'>
+                                        <MoreVert />
+                                    </IconButton>
+                                }
+                                title={post?.poster.username ?? null}
+                                titleTypographyProps={{ align: 'left', fontSize: '16px', fontWeight: 'bold', paddingBottom: '2px' }}
+                                subheader={lettercreatedAt}
+                                subheaderTypographyProps={{ align: 'left', fontSize: '12px' }}
+                            >
+                            </CardHeader>
+
+                            <CardContent>
+                                <Typography sx={{ textAlign: 'left', fontSize: '24px', fontWeight: "bold" }}>
+                                    {post?.title ?? null}
+                                </Typography>
+                                <Typography sx={{ textAlign: 'left', fontSize: '14px' }}>
+                                    {post?.content ?? null}
+                                </Typography>
+                            </CardContent >
+                            <CardMedia
+                                className={classes.myMedia}
+                                component="img"
+                                image={PF + post?.image ?? null}
+                                alt="Paella dish"
+                            >
+                            </CardMedia>
+
+                            <CardActions disableSpacing >
+                                <IconButton onClick={() => setClicked(!clicked)} sx={{ border: '0px solid black', backgroundColor: '#D9D9D9', borderRadius: '4px' }} >
+                                    {clicked ? <FavoriteBorder onClick={(e) => dispatch(storagePost(post._id))} sx={{ fontSize: '24px', color: 'red' }} /> : <Favorite onClick={(e) => dispatch(unstoragePost(post._id))} sx={{ fontSize: '24px', color: 'red' }} />}
+                                    {/* <button onClick={(e) => dispatch(storagePost(post._id))}>Like</button>:<button>Unlike</button> */}
+                                </IconButton>
+
+                                <IconButton>
+                                    <Rating />
+                                </IconButton>
+
+                                <IconButton onClick={() => setClickedApply(!clickedApply)} sx={{ border: '0px solid black', backgroundColor: '#D9D9D9', borderRadius: '4px' }} >
+                                {clickedApply ?<button style={{backgroundColor:"black", color:"white", height:"30px", width:"90px",fontWeight:"bold",  borderRadius:"6px"}} onClick={(e) => dispatch(applyJob(post._id))}>Ứng Tuyển</button>:<button style={{backgroundColor:"red", color:"white", height:"30px", width:"90px",fontWeight:"bold", borderRadius:"6px"}} onClick={(e) => dispatch(unapplyJob(post._id))}>Hủy Ứng Tuyển</button>}
+                                </IconButton>
+
+                            </CardActions>
+
+                            <Collapse>
+                            </Collapse>
+
+                        </Card>
+                    </TabPanel>
+                </TabContext>
+
+            </Box>
+        </Toolbar >
+    ) : (
+        <Toolbar className={classes.toolBar}>
+            <Box className={classes.toolbarContent}>
+                <TabContext value={value}>
+                    <TabPanel value="1" >
+                        {/* de rieng ra 1 component */}
+                        <Card className={classes.card}>
+                            <CardHeader
+                                avatar={
+                                    <Avatar sx={{ bgcolor: green[500] }} aria-label="recipe">
+                                        {letterAvatar}
+                                    </Avatar>
+                                }
+                                action={
+                                    <IconButton aria-label='settings'>
+                                        <MoreVert />
+                                    </IconButton>
+                                }
+                                title={post?.poster.username ?? null}
+                                titleTypographyProps={{ align: 'left', fontSize: '16px', fontWeight: 'bold', paddingBottom: '2px' }}
+                                subheader={lettercreatedAt}
+                                subheaderTypographyProps={{ align: 'left', fontSize: '12px' }}
+                            >
+                            </CardHeader>
+
+                            <CardContent>
+                                <Typography sx={{ textAlign: 'left', fontSize: '24px', fontWeight: "bold" }}>
+                                    {post?.title ?? null}
+                                </Typography>
+                                <Typography sx={{ textAlign: 'left', fontSize: '14px' }}>
+                                    {post?.content ?? null}
+                                </Typography>
+                            </CardContent >
+                            <CardMedia
+                                className={classes.myMedia}
+                                component="img"
+                                image={PF + post?.image ?? null}
+                                alt="Paella dish"
+                            >
+                            </CardMedia>
+                        </Card>
+                    </TabPanel>
+                </TabContext>
+            </Box>
+        </Toolbar >
+    )
+
     return (
         <>
-            <Toolbar className={classes.toolBar}>
-                <Box className={classes.toolbarContent}>
-                    <TabContext value={value}>
-                        <TabPanel value="1" >
-                            {/* de rieng ra 1 component */}
-                            <Card className={classes.card}>
-                                <CardHeader
-                                    avatar={
-                                        <Avatar sx={{ bgcolor: green[500] }} aria-label="recipe">
-                                            {letterAvatar}
-                                        </Avatar>
-                                    }
-                                    action={
-                                        <IconButton aria-label='settings'>
-                                            <MoreVert />
-                                        </IconButton>
-                                    }
-                                    title={post?.poster.username ?? null}
-                                    titleTypographyProps={{ align: 'left', fontSize: '16px', fontWeight: 'bold', paddingBottom: '2px' }}
-                                    subheader={formatDate(lettercreatedAt)}
-                                    subheaderTypographyProps={{ align: 'left', fontSize: '12px' }}
-                                >
-                                </CardHeader>
-
-                                <CardContent>
-                                <Typography sx={{ textAlign: 'left', fontSize: '24px', fontWeight:"bold" }}>
-                                        {post?.title ?? null}
-                                    </Typography>
-                                    <Typography sx={{ textAlign: 'left', fontSize: '14px' }}>
-                                        {post?.content ?? null}
-                                    </Typography>
-                                </CardContent >
-                                <CardMedia
-                                    className={classes.myMedia}
-                                    component="img"
-                                    image={PF + post?.image ?? null}
-                                    alt="Paella dish"
-                                >
-                                </CardMedia>
-
-                                <CardActions style={{marginTop:"10px"}} disableSpacing >
-                                        <IconButton onClick={() => setClicked(!clicked)} sx={{ border: '0px solid black', backgroundColor: '#D9D9D9', borderRadius: '4px' }} >
-                                            {clicked  ? <FavoriteBorder onClick={(e) => dispatch(storagePost(post._id))}  sx={{ fontSize: '24px', color: 'red' }} /> : <Favorite onClick={(e) => dispatch(unstoragePost(post._id))} sx={{ fontSize: '24px', color: 'red' }} />}
-                                            {/* <button onClick={(e) => dispatch(storagePost(post._id))}>Like</button>:<button>Unlike</button> */}
-                                        </IconButton>
-
-                                        <IconButton>
-                                            <Rating />
-                                        </IconButton>
-
-                                        <IconButton sx={{ ml: 'auto' }}>
-                                            <ArrowRight />
-                                        </IconButton>
-
-                                </CardActions>
-
-                                <Collapse>
-                                </Collapse>
-
-                            </Card>
-                        </TabPanel>
-                    </TabContext>
-
-                </Box>
-
-
-                {/* trang nay la trang can giu lai position={'fixed'} overflow='hidden'*/}
-                {/* <Box sx={{ marginBottom: 'auto', flexDirection: 'column', zIndex: '1' }} >
+            {bottomLinks}
+            {/* trang nay la trang can giu lai position={'fixed'} overflow='hidden'*/}
+            {/* <Box sx={{ marginBottom: 'auto', flexDirection: 'column', zIndex: '1' }} >
 
                     <TabContext value={value}>
 
                         <TabPanel value="1" sx={{ margin: '0' }}> */}
-                {/* de rieng ra 1 component */}
-                {/* <Card className={classes.cardHold}>
+            {/* de rieng ra 1 component */}
+            {/* <Card className={classes.cardHold}>
                                 <CardHeader
                                     title='Đây là tên bài viết chi tiết'
                                     titleTypographyProps={{ align: 'left' }}
@@ -206,8 +251,8 @@ const FeedContent: React.FC<Props> = ({ post }): JSX.Element => {
 
                                 </CardHeader> */}
 
-                {/* day la thanh ngach ngang phan cach */}
-                {/* <Box sx={{ maxWidth: '100%', height: '1px', width: '100%', backgroundColor: '#E8E8E8' }}>
+            {/* day la thanh ngach ngang phan cach */}
+            {/* <Box sx={{ maxWidth: '100%', height: '1px', width: '100%', backgroundColor: '#E8E8E8' }}>
 
                                 </Box>
 
@@ -219,8 +264,6 @@ const FeedContent: React.FC<Props> = ({ post }): JSX.Element => {
                         </TabPanel>
                     </TabContext>
                 </Box> */}
-
-            </Toolbar >
         </>
     );
 };

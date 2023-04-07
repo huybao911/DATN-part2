@@ -244,7 +244,7 @@ const Users: React.FC = (): JSX.Element => {
 
   React.useEffect(() => {
     dispatch(getUsers());
-    
+
   }, [dispatch]);
 
   React.useEffect(() => {
@@ -329,6 +329,7 @@ const Users: React.FC = (): JSX.Element => {
                   <TableRow>
                     <TablePagination
                       rowsPerPageOptions={[5, 10, 25]}
+                      labelRowsPerPage={"Số lượng hàng:"}
                       count={users.length}
                       rowsPerPage={rowsPerPage}
                       page={page}

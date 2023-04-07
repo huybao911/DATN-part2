@@ -7,12 +7,13 @@ import TabContext from '@mui/lab/TabContext';
 import TabPanel from '@mui/lab/TabPanel';
 import { green } from '@mui/material/colors';
 import { Box } from '@mui/material';
-import { storagePost, unstoragePost } from "redux/actions/user";
+import { storagePost, unstoragePostInList } from "redux/actions/user";
+import { formatDistance} from 'date-fns';
 
 import { useDispatch } from "react-redux";
 
 type Props = {
-    post: any;
+    postStorage: any;
 };
 
 const useStyles = makeStyles((theme) => ({
@@ -37,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
         height: '500px',
     },
     myMedia: {
-        height: "282px",
+        height: "250px",
         // paddingTop: '56.25%', // 16:9,
         marginTop: '30'
     },
@@ -98,28 +99,19 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
-const FeedStoragePost: React.FC<Props> = ({ post }): JSX.Element => {
+const FeedStoragePost: React.FC<Props> = ({ postStorage }): JSX.Element => {
 
     const dispatch = useDispatch();
     const [value, setValue] = React.useState('1');
 
-    const [clicked, setClicked] = React.useState(true);
+    const [clicked, setClicked] = React.useState(false);
 
     const PF = process.env.REACT_APP_PUBLIC_FOLDER;
 
-    const textAvatar = post?.poster.username ?? null;
+    const textAvatar = postStorage?.postId.poster.username ?? null;
     const letterAvatar = textAvatar.charAt(0).toUpperCase();
 
-    const textcreatedAt = post?.createdAt ?? null;
-    const lettercreatedAt = textcreatedAt.slice(0, 10);
-
-    function formatDate(input: any) {
-        var datePart = input.match(/\d+/g),
-            year = datePart[0].substring(0),
-            month = datePart[1], day = datePart[2];
-
-        return day + '/' + month + '/' + year;
-    }
+    const lettercreatedAt = (formatDistance(new Date(postStorage?.postId.createdAt), Date.now(), {addSuffix: true})).split("about");
 
     const classes = useStyles();
 
@@ -142,32 +134,32 @@ const FeedStoragePost: React.FC<Props> = ({ post }): JSX.Element => {
                                             <MoreVert />
                                         </IconButton>
                                     }
-                                    title={post?.poster.username ?? null}
+                                    title={postStorage?.postId.poster.username ?? null}
                                     titleTypographyProps={{ align: 'left', fontSize: '16px', fontWeight: 'bold', paddingBottom: '2px' }}
-                                    subheader={formatDate(lettercreatedAt)}
+                                    subheader={lettercreatedAt}
                                     subheaderTypographyProps={{ align: 'left', fontSize: '12px' }}
                                 >
                                 </CardHeader>
 
                                 <CardContent>
                                 <Typography sx={{ textAlign: 'left', fontSize: '24px', fontWeight:"bold" }}>
-                                        {post?.title ?? null}
+                                        {postStorage?.postId.title ?? null}
                                     </Typography>
                                     <Typography sx={{ textAlign: 'left', fontSize: '14px' }}>
-                                        {post?.content ?? null}
+                                        {postStorage?.postId.content ?? null}
                                     </Typography>
                                 </CardContent >
                                 <CardMedia
                                     className={classes.myMedia}
                                     component="img"
-                                    image={PF + post?.image ?? null}
+                                    image={PF + postStorage?.postId.image ?? null}
                                     alt="Paella dish"
                                 >
                                 </CardMedia>
 
-                                <CardActions style={{marginTop:"10px"}} disableSpacing >
+                                <CardActions disableSpacing >
                                         <IconButton onClick={() => setClicked(!clicked)} sx={{ border: '0px solid black', backgroundColor: '#D9D9D9', borderRadius: '4px' }} >
-                                            {clicked  ? <FavoriteBorder onClick={(e) => dispatch(storagePost(post._id))}  sx={{ fontSize: '24px', color: 'red' }} /> : <Favorite onClick={(e) => dispatch(unstoragePost(post._id))} sx={{ fontSize: '24px', color: 'red' }} />}
+                                            {clicked  ? <FavoriteBorder onClick={(e) => dispatch(storagePost(postStorage?.postId._id))}  sx={{ fontSize: '24px', color: 'red' }} /> : <Favorite onClick={(e) => dispatch(unstoragePostInList(postStorage?.postId._id))} sx={{ fontSize: '24px', color: 'red' }} />}
                                             {/* <button onClick={(e) => dispatch(storagePost(post._id))}>Like</button>:<button>Unlike</button> */}
                                         </IconButton>
 

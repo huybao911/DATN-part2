@@ -4,6 +4,8 @@ const { sign } = require("jsonwebtoken");
 const User = require("../models/User");
 const Role = require("../models/Role");
 const Post = require("../models/Post");
+const ApplyJob = require("../models/ApplyJob");
+const Event = require("../models/Event");
 paginate = require("../util/paginate");
 
 exports.login = async (req, res, next) => {
@@ -57,11 +59,11 @@ exports.getAuthManager = async (req, res, next) => {
 };
 
 exports.createPost = async (req, res) => {
-  const { poster, approver, title, content, image } = req.body;
+  const { title, content, image, event } = req.body;
   const { id } = req.params;
   const userPost = await User.findById({_id:id});
   const imagePath = image.replace(/^.*\\/, "");
-  if ( !title || !content|| !image)
+  if ( !title || !content|| !image || !event)
     return res.status(400).send("Please fill in all the required fields!")
   try {
     const newPost = new Post({
@@ -69,8 +71,8 @@ exports.createPost = async (req, res) => {
       approver: null,
       title,
       content,
+      event,
       image:imagePath,
-      storages:false,
     });
     await newPost.save();
 
@@ -116,14 +118,27 @@ exports.getPosts = async (req, res) => {
 
 exports.updatePost = async (req, res) => {
   const { id } = req.params;
+  const { poster,approver,title, content, image } = req.body;
   try {
     if (!req.manager) return res.status(400).send("You dont have permission");
     const post = await Post.findById(id).lean();
+    const imagePath = image.replace(/^.*\\/, "");
     if (!post) return res.status(400).send("Post does not exist");
-    const postObj = { ...req.body };
+    const postObj = { 
+      poster: poster,
+      approver: approver,
+      title:title,
+      content:content,
+      image:imagePath, 
+    };
     const newPost = await Post.findByIdAndUpdate(
       { _id: id },
-      { ...postObj },
+      { poster: postObj.poster,
+        approver: postObj.approver,
+        title: postObj.title,
+        content: postObj.content,
+        image: postObj.image,
+       },
       { new: true }
     );
     return res.status(200).json(newPost);
@@ -132,12 +147,36 @@ exports.updatePost = async (req, res) => {
     return res.status(500).json(error);
   }
 };
+
 exports.deletePost = async (req, res) => {
   const { id } = req.params;
   try {
     if (!req.manager) return res.status(400).send("You dont have permission");
     await Post.deleteOne({ _id: id });
     return res.status(200).send("Post has been deleted");
+  } catch (error) {
+    return res.status(500).json(error);
+  }
+};
+
+exports.getEvents = async (req, res) => {
+  const managerUser = await User.findById(req?.manager?._id);
+  const managerEvent = await Event.find({ departmentEvent: managerUser.department}).populate("departmentEvent");
+  try {
+    if (!req.manager) return res.status(400).send("You dont have permission");
+    return res.status(200).json(managerEvent);
+  } catch (error) {
+    return res.status(500).json(error);
+  }
+};
+
+exports.getPostUserApply = async (req, res) => {
+  const managerUser = await User.findById(req?.manager?._id);
+  const managerPost = await Post.find({poster:managerUser._id}).populate("poster");
+  const findPostUserApply = await ApplyJob.find({postId:managerPost}).populate({ path: "postId", populate: [{ path: "event" }] }).populate("userId");
+  try {
+    if (!req.manager) return res.status(400).send("You dont have permission");
+    return res.status(200).json(findPostUserApply);
   } catch (error) {
     return res.status(500).json(error);
   }

@@ -10,6 +10,10 @@ const PostSchema = new mongoose.Schema(
       type: mongoose.Types.ObjectId,
       ref: "User",
     },
+    event: {
+      type: mongoose.Types.ObjectId,
+      ref: "Event",
+    },
     title: {
       type: String,
       required: true,
@@ -24,17 +28,8 @@ const PostSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    storages: {
-      type: Boolean,
-    },
   },
   { timestamps: true }
 );
-
-// PostSchema.pre("remove", async function (next) {
-//   console.log(this._id);
-//   await PostStorage.deleteMany({ postId: this._id });
-//   next();
-// });
 
 module.exports = mongoose.model("Post", PostSchema);

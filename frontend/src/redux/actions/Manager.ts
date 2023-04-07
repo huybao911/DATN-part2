@@ -233,6 +233,29 @@ export const getPosts =
     }
   };
 
+// GET POST USER APPLY
+export const getPostUserApply =
+  () => async (dispatch: Dispatch<ManagerActions | AlertActions>) => {
+    const config: any = {
+      header: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    try {
+      const { data } = await axios.get(`${URI}/postUserApply`, config);
+      dispatch({ type: types.GET_POST_USERAPPLY, payload: data });
+    } catch (error: any) {
+      dispatch<any>(
+        setAlert({
+          msg: "Xảy ra lỗi khi lấy dữ liệu post user apply!",
+          status: error.response.status,
+          alertType: "error",
+        })
+      );
+    }
+  };
+
 // CREATE POST
 export const createPost =
   (body: any, id: number, setSubmitting: any) =>
@@ -312,7 +335,7 @@ export const updatePost =
     };
 
 // DELETE USER
-export const deleteUser =
+export const deletePost =
   (id: number) => async (dispatch: Dispatch<ManagerActions | AlertActions>) => {
     const config: any = {
       header: {
@@ -335,6 +358,29 @@ export const deleteUser =
       dispatch<any>(
         setAlert({
           msg: "Xảy ra lỗi khi xóa post!",
+          status: error.response.status,
+          alertType: "error",
+        })
+      );
+    }
+  };
+
+// GET EVENTS
+export const getEvents =
+  () => async (dispatch: Dispatch<ManagerActions | AlertActions>) => {
+    const config: any = {
+      header: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    try {
+      const { data } = await axios.get(`${URI}/events`, config);
+      dispatch({ type: types.GET_EVENTS, payload: data });
+    } catch (error: any) {
+      dispatch<any>(
+        setAlert({
+          msg: "Xảy ra lỗi khi lấy dữ liệu events!",
           status: error.response.status,
           alertType: "error",
         })

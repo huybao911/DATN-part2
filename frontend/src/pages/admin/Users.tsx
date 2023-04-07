@@ -99,19 +99,19 @@ const headCells: HeadCell[] = [
   },
   {
     _id: 'email',
-    numeric: true,
+    numeric: false,
     disablePadding: false,
     label: 'Email',
   },
   {
     _id: 'role',
-    numeric: true,
+    numeric: false,
     disablePadding: false,
     label: 'Role',
   },
   {
     _id: 'department',
-    numeric: true,
+    numeric: false,
     disablePadding: false,
     label: 'Department',
   }
@@ -267,7 +267,7 @@ const Users: React.FC = (): JSX.Element => {
           </Typography>
           <Link to="/users/registerAdmin">
             <Button style={{ backgroundColor: "black", padding: "6px 16px", color: "white" }} variant="contained" >
-              New User
+              Thêm User
             </Button>
           </Link>
         </Stack>
@@ -302,23 +302,23 @@ const Users: React.FC = (): JSX.Element => {
                 <TableBody>
                   {sortUser.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((user: any, index) =>
                     <TableRow key={user._id}>
-                      <TableCell align="right">
+                      <TableCell align="left">
                         {user.username}
                       </TableCell>
 
-                      <TableCell align="right">
+                      <TableCell align="left">
                         {user.email}
                       </TableCell>
 
-                      <TableCell align="right">
+                      <TableCell align="left">
                         {user.role.keyRole}
                       </TableCell>
 
 
-                      <TableCell align="right">
+                      <TableCell align="left">
                         {user.department.nameDepartment}
                       </TableCell >
-                      <TableCell align="right">
+                      <TableCell align="left">
                         <Button size="large" color="inherit" onClick={(event) => handleOpenMenu(event, index)} >
                           <EditIcon/>
                         </Button>
@@ -345,7 +345,7 @@ const Users: React.FC = (): JSX.Element => {
                           </Box>
                         </Popover>
                       </TableCell>
-                      <TableCell >
+                      <TableCell align="left" >
                         <Button style={{color:"red"}} onClick={(e) => dispatch(deleteUser(user._id))} >
                           <DeleteForeverIcon/>
                         </Button>
@@ -356,6 +356,7 @@ const Users: React.FC = (): JSX.Element => {
                   <TableRow>
                     <TablePagination
                       rowsPerPageOptions={[5, 10, 25]}
+                      labelRowsPerPage={"Số lượng hàng:"}
                       count={users.length}
                       rowsPerPage={rowsPerPage}
                       page={page}

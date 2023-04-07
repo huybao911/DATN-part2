@@ -23,7 +23,7 @@ const AppHeader: React.FC = (): JSX.Element => {
   const admin = useSelector((state: RootState) => state.admin);
 
   const header = admin.isAuthenticated || smanager.isAuthenticated || manager.isAuthenticated ? (
-    <StyledRoot style={{boxShadow:"none"}} >
+    <StyledRoot style={{ boxShadow: "none" }} >
       <Stack
         direction="row"
         alignItems="center"
@@ -34,7 +34,7 @@ const AppHeader: React.FC = (): JSX.Element => {
         sx={{ margin: 3 }}
       >
         <Box sx={{ color: 'black' }}>
-         Dashboard
+          <img src="/hutech-logo.ico" style={{ height: "56px", width: "50px" }}></img>
         </Box>
       </Stack>
     </StyledRoot>

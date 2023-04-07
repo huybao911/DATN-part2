@@ -14,6 +14,8 @@ router.get("/roles", isAuth, adminController.getRoles);
 router.post("/addDepartment", isAuth, adminController.addDepartment);
 router.post("/addRole", isAuth, adminController.addRole);
 
+
+router.get("/posts", isAuth, adminController.getPosts);
 router
   .route("/users/:id")
   .patch(isAuth, adminController.updateUser)

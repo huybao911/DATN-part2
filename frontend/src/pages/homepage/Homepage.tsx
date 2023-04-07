@@ -6,18 +6,16 @@ import { RootState } from "redux/reducers";
 import { logOutUser } from "redux/actions/user";
 import Content from "pages/contents/Content";
 
-import { PersonAdd, Favorite, Logout, Person, Settings, Notifications } from '@mui/icons-material';
+import { PersonAdd, Favorite, Logout, Person, Approval, Notifications } from '@mui/icons-material';
 
 import { purple } from '@mui/material/colors';
 
 import { Stack, AppBar, Box, Toolbar, Typography, Popover, MenuItem, Avatar, ListItemIcon, Divider } from '@mui/material';
 import { Link } from "react-router-dom";
-import { IconButton } from "material-ui";
-
 const StyledRoot = styled(AppBar)(() => ({
   boxShadow: 'none',
   width: '100%',
-  backgroundColor: '#eeeeee',
+  backgroundColor: 'black',
   fontWeight: 'bold',
 }));
 
@@ -25,6 +23,14 @@ const StyledRoot = styled(AppBar)(() => ({
 const Homepage: React.FC = (): JSX.Element => {
 
   const dispatch = useDispatch();
+  const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const openUser = Boolean(anchorElUser);
+  const handleClickUser = (event: any) => {
+    setAnchorElUser(event.currentTarget);
+  };
+  const handleCloseUser = () => {
+    setAnchorElUser(null);
+  };
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: any) => {
@@ -45,7 +51,7 @@ const Homepage: React.FC = (): JSX.Element => {
         <div className="verticalLine">
         </div>
         <Box>
-          <Button type='submit' href='' style={{ color: "black" }}>
+          <Button type='submit' href='' style={{ color: "white" }}>
             <Notifications />
           </Button>
         </Box>
@@ -59,19 +65,19 @@ const Homepage: React.FC = (): JSX.Element => {
           sx={{ margin: 3 }}
         >
           <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
-            <Button size="large" style={{ color: "black" }} onClick={(event) => handleClick(event)} >
+            <Button size="large" style={{ color: "white" }} onClick={(event) => handleClickUser(event)} >
               <Person />
             </Button>
             <Popover
-              open={open}
-              anchorEl={anchorEl}
-              onClose={handleClose}
+              open={openUser}
+              anchorEl={anchorElUser}
+              onClose={handleCloseUser}
               anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
               transformOrigin={{ vertical: 'top', horizontal: 'right' }}
               PaperProps={{
                 sx: {
                   p: 1,
-                  width: 180,
+                  width: 220,
                   '& .MuiMenuItem-root': {
                     px: 1,
                     py: 1,
@@ -91,7 +97,7 @@ const Homepage: React.FC = (): JSX.Element => {
                 },
               }}
             >
-              <Link style={{ textDecoration: 'none' }} to={'/loginuser'}>
+              <Link style={{ textDecoration: 'none' }} to={'/profile'}>
                 <MenuItem >
                   <Avatar sx={{ bgcolor: purple[500] }}>{user.user.username.charAt(0).toUpperCase()}</Avatar>
                   <Typography style={{ color: "black" }}>{user.user.username}</Typography>
@@ -104,6 +110,14 @@ const Homepage: React.FC = (): JSX.Element => {
                     <Favorite style={{ color: "red" }} fontSize="small" />
                   </ListItemIcon>
                   <Typography>Bài Viết Đã Lưu</Typography>
+                </MenuItem>
+              </Link>
+              <Link style={{ textDecoration: 'none' }} to={'/applyPost'}>
+                <MenuItem>
+                  <ListItemIcon>
+                    <Approval style={{ color: "black" }} fontSize="small" />
+                  </ListItemIcon>
+                  <Typography>Bài Viết Đã Ứng Tuyển</Typography>
                 </MenuItem>
               </Link>
               <MenuItem className="navbar-logout" onClick={(e) => dispatch(logOutUser())}>
@@ -131,7 +145,7 @@ const Homepage: React.FC = (): JSX.Element => {
         sx={{ margin: 3 }}
       >
         <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
-          <Button size="large" style={{ color: "black" }} onClick={(event) => handleClick(event)} >
+          <Button size="large" style={{ color: "white" }} onClick={(event) => handleClick(event)} >
             <Person />
           </Button>
           <Popover

@@ -4,8 +4,10 @@ import { Link } from 'react-router-dom';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LeaderboardIcon from '@mui/icons-material/Leaderboard'
 import EventIcon from '@mui/icons-material/Event';
-import PostAddIcon from '@mui/icons-material/PostAdd';
 import SchoolIcon from '@mui/icons-material/School';
+import WorkOutlineIcon from '@mui/icons-material/WorkOutline';
+import ListAltIcon from '@mui/icons-material/ListAlt';
+import WebIcon from '@mui/icons-material/Web';
 import { useSelector } from "react-redux";
 import { RootState } from "redux/reducers";
 
@@ -34,14 +36,14 @@ export default function NavSection() {
             path: '/*'
         },
         {
-            icon: <PostAddIcon />,
+            icon: <WebIcon />,
             name: 'Bài Viết',
-            path: '/*'
+            path: '/postAdmin'
         },
         {
             icon: <SchoolIcon />,
             name: 'Khoa',
-            path: '/*'
+            path: '/department'
         },
     ];
 
@@ -60,17 +62,17 @@ export default function NavSection() {
         {
             icon: <EventIcon />,
             name: 'Sự Kiện',
-            path: '/*'
+            path: '/event'
         },
         {
-            icon: <PostAddIcon />,
+            icon: <WorkOutlineIcon />,
+            name: 'Công Việc Sự Kiện',
+            path: '/jobEvent'
+        },
+        {
+            icon: <WebIcon />,
             name: 'Bài Viết',
             path: '/postsSManager'
-        },
-        {
-            icon: <SchoolIcon />,
-            name: 'Khoa',
-            path: '/*'
         },
     ];
 
@@ -92,14 +94,14 @@ export default function NavSection() {
             path: '/*'
         },
         {
-            icon: <PostAddIcon />,
+            icon: <WebIcon />,
             name: 'Bài Viết',
             path: '/postsManager'
         },
         {
-            icon: <SchoolIcon />,
-            name: 'Khoa',
-            path: '/*'
+            icon: <ListAltIcon />,
+            name: 'Danh Sách Ứng Tuyển',
+            path: '/listUserApply'
         },
     ];
     const topAM = admin.isAuthenticated && admin.getRole.keyRole === "admin" ? (

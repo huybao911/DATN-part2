@@ -2,8 +2,9 @@ import types from "redux/actions/types";
 import { IUser } from "./user";
 import { ISManager } from "./sManager";
 import { IManager } from "./Manager";
-import { IDepartment } from "./department"
-import { IRole } from "./role"
+import { IDepartment } from "./department";
+import { IRole } from "./role";
+import { IPost } from "./post";
 
 export interface IAdmin {
   _id: any;
@@ -55,6 +56,11 @@ interface IGetRoles {
   payload: IRole[];
 }
 
+interface IGetPosts {
+  type: typeof types.GET_POSTS;
+  payload: IPost[];
+}
+
 interface IUpdateUser {
   type: typeof types.UPDATE_USER;
   payload: {
@@ -65,42 +71,6 @@ interface IUpdateUser {
 
 interface IDeleteUser {
   type: typeof types.DELETE_USER;
-  payload: number;
-}
-
-interface IGetManager {
-  type: typeof types.GET_MANAGER;
-  payload: IManager[];
-}
-
-interface IUpdateManager {
-  type: typeof types.UPDATE_MANAGER;
-  payload: {
-    user: IManager;
-    id: number;
-  };
-}
-
-interface IDeleteManager {
-  type: typeof types.DELETE_MANAGER;
-  payload: number;
-}
-
-interface IGetSManager {
-  type: typeof types.GET_SMANAGER;
-  payload: ISManager[];
-}
-
-interface IUpdateSManager {
-  type: typeof types.UPDATE_SMANAGER;
-  payload: {
-    user: ISManager;
-    id: number;
-  };
-}
-
-interface IDeleteSManager {
-  type: typeof types.DELETE_SMANAGER;
   payload: number;
 }
 
@@ -138,14 +108,9 @@ export type AdminActions =
   | IGetUser
   | IGetDepartments
   | IGetRoles
+  | IGetPosts
   | IUpdateUser
-  | IDeleteUser
-  | IGetManager
-  | IUpdateManager
-  | IDeleteManager
-  | IGetSManager
-  | IUpdateSManager
-  | IDeleteSManager;
+  | IDeleteUser;
 
 export interface IAdminState {
   token: string | null;
@@ -157,5 +122,6 @@ export interface IAdminState {
   manager: IManager[];
   users: IUser[];
   roles: IRole[];
+  posts: IPost[];
   departments: IDepartment[];
 }

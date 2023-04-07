@@ -62,8 +62,8 @@ const UserForm: React.FC<Props> = ({ user }): JSX.Element => {
     username: Yup.string().required("required!"),
     email: Yup.string().email("Invalid email!").required("required!"),
     password: Yup.string().required("required!"),
-    role: Yup.string().required("required!"),
-    department: Yup.string().required("required!")
+    // role: Yup.string().required("required!"),
+    // department: Yup.string().required("required!")
 
   });
 

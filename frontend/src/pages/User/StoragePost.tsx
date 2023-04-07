@@ -4,9 +4,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { getPostStorage, logOutUser } from "redux/actions/user";
 import { RootState } from "redux/reducers";
 import { IPost } from "redux/types/post";
+import { IPostStorage } from "redux/types/postStorage";
 import FeedStoragePost from "pages/User/FeedStoragePost";
 import { Button, Stack, AppBar, Box, Toolbar, Typography, Popover, MenuItem, Avatar, ListItemIcon, Divider } from '@mui/material';
-import { PersonAdd, Favorite, Logout, Person, Settings, Notifications } from '@mui/icons-material';
+import { Approval, Favorite, Logout, Person, Settings, Notifications } from '@mui/icons-material';
 import { Link } from "react-router-dom";
 import { purple } from '@mui/material/colors';
 
@@ -20,7 +21,7 @@ const StoragePost: React.FC = (): JSX.Element => {
 
     const dispatch = useDispatch();
 
-    const [posts, setPosts] = React.useState<IPost[]>([]);
+    const [posts, setPosts] = React.useState<IPostStorage[]>([]);
     const user = useSelector((state: RootState) => state.user);
 
     React.useEffect(() => {
@@ -29,8 +30,8 @@ const StoragePost: React.FC = (): JSX.Element => {
 
     React.useEffect(() => {
         setPosts(() =>
-            user?.posts?.filter((post: any) =>
-                post.title || post.content || post.image
+            user?.postStorages?.filter((post: any) =>
+                post.postId
             ));
     }, [user]);
 
@@ -85,7 +86,7 @@ const StoragePost: React.FC = (): JSX.Element => {
                                 PaperProps={{
                                     sx: {
                                         p: 1,
-                                        width: 180,
+                                        width: 220,
                                         '& .MuiMenuItem-root': {
                                             px: 1,
                                             py: 1,
@@ -120,6 +121,14 @@ const StoragePost: React.FC = (): JSX.Element => {
                                         <Typography>Bài Viết Đã Lưu</Typography>
                                     </MenuItem>
                                 </Link>
+                                <Link style={{ textDecoration: 'none' }} to={'/applyPost'}>
+                                    <MenuItem>
+                                        <ListItemIcon>
+                                            <Approval style={{ color: "black" }} fontSize="small" />
+                                        </ListItemIcon>
+                                        <Typography>Bài Viết Đã Ứng Tuyển</Typography>
+                                    </MenuItem>
+                                </Link>
                                 <MenuItem className="navbar-logout" onClick={(e) => dispatch(logOutUser())}>
                                     <ListItemIcon>
                                         <Logout style={{ color: "red" }} fontSize="small" />
@@ -131,10 +140,10 @@ const StoragePost: React.FC = (): JSX.Element => {
                     </Stack>
                 </Toolbar>
             </StyledRoot>
-            <Typography style={{fontSize:"30px", fontWeight:"bold"}}>Bài Viết Đã Lưu</Typography>
-            {posts.map((post: any) =>
-                <FeedStoragePost post={post} key={post._id} />) ?? (
-                    <p>No FeedContent Found.</p>
+            <Typography style={{ fontSize: "30px", fontWeight: "bold" }}>Bài Viết Đã Lưu</Typography>
+            {posts.map((postStorage: any) =>
+                <FeedStoragePost postStorage={postStorage} key={postStorage._id} />) ?? (
+                    <p>No FeedStoragePost Found.</p>
                 )}
         </>
     );

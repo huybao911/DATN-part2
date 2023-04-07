@@ -2,6 +2,8 @@ import types from "redux/actions/types";
 import { IDepartment } from "./department";
 import { IRole } from "./role";
 import { IPost } from "./post";
+import { IPostStorage } from "./postStorage";
+import { IApplyJob } from "./applyJob";
 
 export interface IUser {
   _id: any;
@@ -11,6 +13,12 @@ export interface IUser {
   department: any;
   role: any;
   date: string;
+  fullName: string;
+  birthday: string;
+  mssv: string;
+  classUser: string;
+  phone: string;
+  address: string;
 }
 
 interface IUserLoaded {
@@ -39,7 +47,7 @@ interface IGetPosts {
 
 interface IGetPostStorage {
   type: typeof types.GET_POSTSTORAGE;
-  payload: IPost[];
+  payload: IPostStorage[];
 }
 
 interface storagePost {
@@ -53,6 +61,52 @@ interface unstoragePost {
   type: typeof types.UNSTORAGE_POST;
   payload: {
     post: IPost;
+    id: number;
+  };
+}
+
+interface storagePost {
+  type: typeof types.STORAGE_POST;
+  payload: {
+    post: IPost;
+    id: number;
+  };
+}
+interface unstoragePost {
+  type: typeof types.UNSTORAGE_POST;
+  payload: {
+    post: IPost;
+    id: number;
+  };
+}
+
+interface IGetPostApplyJob {
+  type: typeof types.GET_POST_APPLY_JOB;
+  payload: IPostStorage[];
+}
+interface applyJob {
+  type: typeof types.APPLY_JOB;
+  payload: {
+    post: IPost;
+    id: number;
+  };
+}
+interface unapplyJob {
+  type: typeof types.UNAPPLY_JOB;
+  payload: {
+    post: IPost;
+    id: number;
+  };
+}
+
+interface IGetProfile {
+  type: typeof types.GET_PROFILE;
+  payload: IUser[];
+}
+interface IUpdateProfile {
+  type: typeof types.UPDATE_PROFILE;
+  payload: {
+    user: IUser;
     id: number;
   };
 }
@@ -85,6 +139,11 @@ export type UserActions =
   | IGetPostStorage
   | storagePost
   | unstoragePost
+  | IGetPostApplyJob
+  | applyJob
+  | unapplyJob
+  | IGetProfile
+  | IUpdateProfile
   | IUserLogout;
 
 export interface IUserState {
@@ -93,6 +152,10 @@ export interface IUserState {
   isAuthenticated: boolean | null;
   user: IUser;
   getRole: IRole;
+  getDepartment: IDepartment;
   departments: IDepartment[];
   posts: IPost[];
+  postStorages: IPostStorage[];
+  applyJobs: IApplyJob[];
+  users: IUser[];
 }
