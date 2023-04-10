@@ -59,7 +59,7 @@ exports.getDepartments = async (req, res, next) => {
 exports.getPostApprove = async (req, res) => {
   const smanagerUser = await User.findById(req?.smanager?._id);
   const smanagerDepartment = await User.find({ department: smanagerUser.department });
-  const smanagerPost = await Post.find({ poster: smanagerDepartment, approver: null }).populate("poster");
+  const smanagerPost = await Post.find({ poster: smanagerDepartment, approver: null }).populate("poster").populate({ path: "comments", populate: [{ path: "commenter" }] });
   try {
     if (!req.smanager) return res.status(400).send("You dont have permission");
     return res.status(200).json(smanagerPost);
@@ -95,6 +95,55 @@ exports.approvePost = async (req, res) => {
       { new: true }
     );
     return res.status(200).json(newPost);
+  } catch (error) {
+    console.log(error.message);
+    return res.status(500).json(error);
+  }
+};
+
+exports.commentPost = async (req, res) => {
+  const { id } = req.params;
+  const userComment = await User.findById(req?.smanager?._id);
+  const { contentComment } = req.body;
+  try {
+    if (!req.smanager) return res.status(400).send("You dont have permission");
+    const post = await Post.findById(id).lean();
+    if (!post) return res.status(400).send("Post does not exist");
+    const postObj = {
+      commenter: userComment,
+      contentComment: contentComment,
+    };
+    const newComment = await Post.findByIdAndUpdate(
+      { _id: id },
+      {
+        $push:{comments: [{
+          commenter: postObj.commenter,
+          contentComment: postObj.contentComment,
+      }]}
+      },
+      { new: true }
+    );
+    return res.status(200).json(newComment);
+  } catch (error) {
+    console.log(error.message);
+    return res.status(500).json(error);
+  }
+};
+
+exports.deleteCommentPost = async (req, res) => {
+  const { id, postId } = req.params;
+  try {
+    if (!req.smanager) return res.status(400).send("You dont have permission");
+    const newComment = await Post.updateOne(
+      { _id: postId },
+      {
+        $pull:{comments: {
+          _id:id,
+      }}
+      },
+      { new: true }
+    );
+    return res.status(200).json(newComment);
   } catch (error) {
     console.log(error.message);
     return res.status(500).json(error);

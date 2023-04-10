@@ -20,9 +20,9 @@ const routesProps: ROUTES[] = [
     auth: false,
   },
   {
-    name: "homepageUser",
+    name: "homepage",
     path: "/",
-    component: React.lazy(() => import("pages/homepage/Homepage")),
+    component: React.lazy(() => import("pages/contents/Content")),
     exact: true,
     // keyRole: "guest",
     auth: false,
@@ -106,7 +106,7 @@ const routesProps: ROUTES[] = [
   {
     name: "postsSManager",
     path: "/postsSManager",
-    component: React.lazy(() => import("pages/SManager/Posts")),
+    component: React.lazy(() => import("pages/SManager/ApprovePosts")),
     exact: true,
     keyRole: "smanager",
     auth: true,

@@ -1,24 +1,32 @@
 // @mui
 import { styled } from '@mui/material/styles';
-import { ListItemIcon, ListItemButton } from '@mui/material';
+import { ListItemIcon, ListItemButton, MenuItem } from '@mui/material';
+import { LinkProps } from 'react-router-dom';
 
 // ----------------------------------------------------------------------
 
-export const StyledNavItem = styled((props) => <ListItemButton disableGutters {...props} />)(({ theme }) => ({
-  ...theme.typography.body2,
-  height: 48,
-  position: 'relative',
-  textTransform: 'capitalize',
-  color: theme.palette.text.secondary,
-  borderRadius: theme.shape.borderRadius,
-  display:"flex",
+export const StyledListItemButton = styled(ListItemButton)<LinkProps>(() => ({
+  
+  textTransform: "capitalize",
+  '&:hover': {
+    backgroundColor: 'transparent'
+  },
+  '&.active': {
+    backgroundColor: 'transparent',
+    color: '#6ECCAF'
+  },
 }));
 
 export const StyledNavItemIcon = styled(ListItemIcon)({
   width: 22,
   height: 22,
-  color: 'inherit',
+  color: '#4D455D',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
 });
+
+export const StyledMenuItem = styled(MenuItem)<LinkProps>(() => ({
+  
+}));
+

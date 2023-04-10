@@ -10,6 +10,28 @@ const PostSchema = new mongoose.Schema(
       type: mongoose.Types.ObjectId,
       ref: "User",
     },
+    comments: [
+      {
+        commenter: {
+          type: mongoose.Types.ObjectId,
+          ref: "User",
+        },
+        contentComment: {
+          type: String,
+          trim: true,
+        },
+      }
+    ],
+    // commenter: {
+    //   type: mongoose.Types.ObjectId,
+    //   ref: "User",
+    //   default:0,
+    // },
+    // contentComment: {
+    //   type: String,
+    //   trim: true,
+    //   default:"",
+    // },
     event: {
       type: mongoose.Types.ObjectId,
       ref: "Event",

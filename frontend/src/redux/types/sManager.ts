@@ -57,6 +57,22 @@ interface IApprovePost {
   };
 }
 
+interface ICommentPost {
+  type: typeof types.COMMENT_POST;
+  payload: {
+    post: IPost;
+    id: number;
+  };
+}
+
+interface IDeleteComment {
+  type: typeof types.DELETE_COMMENT;
+   payload: {
+    post: IPost;
+    id: number;
+  };
+}
+
 interface IGetEvents {
   type: typeof types.GET_EVENTS;
   payload: IEvent[];
@@ -140,6 +156,8 @@ export type SManagerActions =
   | IGetDepartments
   | IGetPostApprove
   | IApprovePost
+  | ICommentPost
+  | IDeleteComment
   | IGetEvents
   | ICreateEventSuccess
   | ICreateEventFail

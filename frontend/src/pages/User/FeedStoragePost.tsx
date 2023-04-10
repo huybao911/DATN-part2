@@ -104,7 +104,15 @@ const FeedStoragePost: React.FC<Props> = ({ postStorage }): JSX.Element => {
     const dispatch = useDispatch();
     const [value, setValue] = React.useState('1');
 
-    const [clicked, setClicked] = React.useState(false);
+    const [clicked, setClicked] = React.useState(true);
+
+    function handleClickStorage () {
+        dispatch(storagePost(postStorage?.postId._id));
+    }
+
+    function handleClickUnStorage () {
+        dispatch(unstoragePostInList(postStorage?.postId._id));
+    }
 
     const PF = process.env.REACT_APP_PUBLIC_FOLDER;
 
@@ -159,7 +167,7 @@ const FeedStoragePost: React.FC<Props> = ({ postStorage }): JSX.Element => {
 
                                 <CardActions disableSpacing >
                                         <IconButton onClick={() => setClicked(!clicked)} sx={{ border: '0px solid black', backgroundColor: '#D9D9D9', borderRadius: '4px' }} >
-                                            {clicked  ? <FavoriteBorder onClick={(e) => dispatch(storagePost(postStorage?.postId._id))}  sx={{ fontSize: '24px', color: 'red' }} /> : <Favorite onClick={(e) => dispatch(unstoragePostInList(postStorage?.postId._id))} sx={{ fontSize: '24px', color: 'red' }} />}
+                                            {clicked  ? <Favorite onClick={handleClickUnStorage}  sx={{ fontSize: '24px', color: 'red' }} /> : <FavoriteBorder onClick={handleClickStorage} sx={{ fontSize: '24px', color: 'red' }} />}
                                             {/* <button onClick={(e) => dispatch(storagePost(post._id))}>Like</button>:<button>Unlike</button> */}
                                         </IconButton>
 

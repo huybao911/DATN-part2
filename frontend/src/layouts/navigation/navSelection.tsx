@@ -1,16 +1,10 @@
 import { Box, List, ListItemText } from '@mui/material';
-import { StyledNavItem, StyledNavItemIcon } from './style';
+import { StyledListItemButton, StyledNavItemIcon } from './style';
 import { Link } from 'react-router-dom';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import LeaderboardIcon from '@mui/icons-material/Leaderboard'
-import EventIcon from '@mui/icons-material/Event';
-import SchoolIcon from '@mui/icons-material/School';
-import WorkOutlineIcon from '@mui/icons-material/WorkOutline';
-import ListAltIcon from '@mui/icons-material/ListAlt';
-import WebIcon from '@mui/icons-material/Web';
+import { dataAdmin, dataSManager, dataManager } from './dataConfig'
 import { useSelector } from "react-redux";
 import { RootState } from "redux/reducers";
-
+import { Stack } from '@mui/system';
 
 export default function NavSection() {
 
@@ -18,201 +12,45 @@ export default function NavSection() {
     const manager = useSelector((state: RootState) => state.manager);
     const admin = useSelector((state: RootState) => state.admin);
 
-    const dataAdmin = [
-        {
-            icon: <LeaderboardIcon />,
-            name: 'Bảng Điều Khiển',
-            path: '/*'
-        },
-
-        {
-            icon: <AccountCircleIcon />,
-            name: 'User',
-            path: '/users'
-        },
-        {
-            icon: <EventIcon />,
-            name: 'Sự Kiện',
-            path: '/*'
-        },
-        {
-            icon: <WebIcon />,
-            name: 'Bài Viết',
-            path: '/postAdmin'
-        },
-        {
-            icon: <SchoolIcon />,
-            name: 'Khoa',
-            path: '/department'
-        },
-    ];
-
-    const dataSManager = [
-        {
-            icon: <LeaderboardIcon />,
-            name: 'Bảng Điều Khiển',
-            path: '/*'
-        },
-
-        {
-            icon: <AccountCircleIcon />,
-            name: 'User',
-            path: '/smanager'
-        },
-        {
-            icon: <EventIcon />,
-            name: 'Sự Kiện',
-            path: '/event'
-        },
-        {
-            icon: <WorkOutlineIcon />,
-            name: 'Công Việc Sự Kiện',
-            path: '/jobEvent'
-        },
-        {
-            icon: <WebIcon />,
-            name: 'Bài Viết',
-            path: '/postsSManager'
-        },
-    ];
-
-    const dataManager = [
-        {
-            icon: <LeaderboardIcon />,
-            name: 'Bảng Điều Khiển',
-            path: '/*'
-        },
-
-        {
-            icon: <AccountCircleIcon />,
-            name: 'User',
-            path: '/manager'
-        },
-        {
-            icon: <EventIcon />,
-            name: 'Sự Kiện',
-            path: '/*'
-        },
-        {
-            icon: <WebIcon />,
-            name: 'Bài Viết',
-            path: '/postsManager'
-        },
-        {
-            icon: <ListAltIcon />,
-            name: 'Danh Sách Ứng Tuyển',
-            path: '/listUserApply'
-        },
-    ];
     const topAM = admin.isAuthenticated && admin.getRole.keyRole === "admin" ? (
-        <Box>
-            <List disablePadding sx={{ p: 1 }}>
+        <Stack spacing={3}>
                 {dataAdmin.map((item) => (
-                    <Link style={{ textDecoration: "none" }} key={item.name} to={item.path}>
-                        <StyledNavItem
-                            sx={{
-                                '&.active': {
-                                    color: 'text.primary',
-                                    bgcolor: 'action.selected',
-                                    fontWeight: 'fontWeightBold',
-                                },
-                                '&.MuiButtonBase-root': {
-                                    display: 'flex',
-                                    backgroundColor: 'rgba(0, 0, 0, 0.04)',
-                                    color: 'black'
-                                }
-                            }}>
-                            <StyledNavItemIcon >
-                                {item.icon}
-                            </StyledNavItemIcon>
-                            <ListItemText style={{ color: "black" }} disableTypography> {item.name} </ListItemText>
-                        </StyledNavItem>
-                    </Link>
+                    <StyledListItemButton  component={Link} to={item.path} key={item.name}>
+                        <StyledNavItemIcon>
+                            {item.icon}
+                        </StyledNavItemIcon>
+                        <ListItemText disableTypography primary={item.name} />
+                    </StyledListItemButton>
                 ))}
-            </List>
-        </Box>
+            </Stack>
     ) : smanager.isAuthenticated && smanager.getRole.keyRole === "smanager" ? (
-        <Box>
-            <List disablePadding sx={{ p: 1 }}>
+            <Stack spacing={2}>
                 {dataSManager.map((item) => (
-                    <Link style={{ textDecoration: "none" }} key={item.name} to={item.path}>
-                        <StyledNavItem
-                            sx={{
-                                '&.active': {
-                                    color: 'text.primary',
-                                    bgcolor: 'action.selected',
-                                    fontWeight: 'fontWeightBold',
-                                },
-                                '&.MuiButtonBase-root': {
-                                    display: 'flex',
-                                    backgroundColor: 'rgba(0, 0, 0, 0.04)',
-                                    color: 'black'
-                                }
-                            }}>
-                            <StyledNavItemIcon >
-                                {item.icon}
-                            </StyledNavItemIcon>
-                            <ListItemText style={{ color: "black" }} disableTypography> {item.name} </ListItemText>
-                        </StyledNavItem>
-                    </Link>
+                    <StyledListItemButton  component={Link} to={item.path} key={item.name}>
+                        <StyledNavItemIcon>
+                            {item.icon}
+                        </StyledNavItemIcon>
+                        <ListItemText disableTypography primary={item.name} />
+                    </StyledListItemButton>
                 ))}
-            </List>
-        </Box>
+            </Stack>
+       
     ) : manager.isAuthenticated && manager.getRole.keyRole === "manager" ? (
-        <Box>
-            <List disablePadding sx={{ p: 1 }}>
+        <Stack spacing={1}>
                 {dataManager.map((item) => (
-                    <Link style={{ textDecoration: "none" }} key={item.name} to={item.path}>
-                        <StyledNavItem
-                            sx={{
-                                '&.active': {
-                                    color: 'text.primary',
-                                    bgcolor: 'action.selected',
-                                    fontWeight: 'fontWeightBold',
-                                },
-                                '&.MuiButtonBase-root': {
-                                    display: 'flex',
-                                    backgroundColor: 'rgba(0, 0, 0, 0.04)',
-                                    color: 'black'
-                                }
-                            }}>
-                            <StyledNavItemIcon >
-                                {item.icon}
-                            </StyledNavItemIcon>
-                            <ListItemText style={{ color: "black" }} disableTypography> {item.name} </ListItemText>
-                        </StyledNavItem>
-                    </Link>
+                    <StyledListItemButton  component={Link} to={item.path} key={item.name}>
+                        <StyledNavItemIcon>
+                            {item.icon}
+                        </StyledNavItemIcon>
+                        <ListItemText disableTypography primary={item.name} />
+                    </StyledListItemButton>
                 ))}
-            </List>
-        </Box>
+            </Stack>
     ) : null;
 
     return (
         <>
             {topAM}
-            {/* <Link style={{ textDecoration: "none" }} to='/users'>
-                <Box >
-                    <List disablePadding sx={{ p: 1 }}>
-                        <StyledNavItem
-                            sx={{
-                                '&.active': {
-                                    color: 'text.primary',
-                                    bgcolor: 'action.selected',
-                                    fontWeight: 'fontWeightBold',
-                                },
-                            }}
-                        >
-                            <StyledNavItemIcon>
-                                <IconUser />
-                            </StyledNavItemIcon>
-
-                            <ListItemText disableTypography> User </ListItemText>
-
-                        </StyledNavItem>
-                    </List>
-                </Box>
-            </Link> */}
-
         </>
 
     )

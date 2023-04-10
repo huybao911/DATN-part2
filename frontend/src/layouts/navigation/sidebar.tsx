@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
+import { dataAdmin, dataSManager, dataManager } from './dataConfig'
 
 import { logOutUser } from "redux/actions/user";
 import { logOutSManager } from "redux/actions/sManager";
@@ -98,7 +99,7 @@ const SideBar: React.FC = (): JSX.Element => {
             {topLinks}
           </Box>
 
-          <NavSection />
+          <NavSection/>
 
           <Box sx={{ px: 2.5, pb: 3, mt: 10 }}>
             <Stack alignItems="center" spacing={3} sx={{ pt: 5, borderRadius: 2, position: 'relative' }}>
