@@ -82,6 +82,21 @@ const sManagerReducer = (
           post._id === action.payload.id ? { ...action.payload.post } : post
         ),
       };
+    case types.COMMENT_POST:
+      return {
+        ...state,
+        posts: state.posts.map((post) =>
+          post._id === action.payload.id ? { ...action.payload.post } : post
+        ),
+      };
+    case types.DELETE_COMMENT:
+      return {
+        ...state,
+        posts: state.posts.map((post) =>
+          post._id === action.payload.id ? { ...action.payload.post } : post
+        ),
+      };
+
     case types.GET_EVENTS:
       return {
         ...state,

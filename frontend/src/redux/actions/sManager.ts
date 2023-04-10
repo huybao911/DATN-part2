@@ -230,9 +230,10 @@ export const getPostApprove =
       );
     }
   };
+
 // APPROVE POST
 export const approvePost =
-  (body: any, id: number, setSubmitting: any) =>
+  (id: number) =>
     async (dispatch: Dispatch<SManagerActions | AlertActions>) => {
       const config: any = {
         header: {
@@ -241,7 +242,7 @@ export const approvePost =
       };
 
       try {
-        const { data } = await axios.patch(`${URI}/post/${id}`, body, config);
+        const { data } = await axios.put(`${URI}/post/${id}`, config);
         dispatch({
           type: types.APPROVE_POSTER,
           payload: data,
@@ -262,8 +263,64 @@ export const approvePost =
             alertType: "error",
           })
         );
+      }
+    };
+
+// COMMENT POST
+export const commentPost =
+  (body: any, id: number, setSubmitting: any) =>
+    async (dispatch: Dispatch<SManagerActions | AlertActions>) => {
+      const config: any = {
+        header: {
+          "Content-Type": "application/json",
+        },
+      };
+
+      try {
+        const { data } = await axios.put(`${URI}/comment/${id}`, body, config);
+        dispatch({
+          type: types.COMMENT_POST,
+          payload: data,
+        });
+        dispatch<any>(getPostApprove());
+      } catch (error: any) {
+        dispatch<any>(
+          setAlert({
+            msg: "Xảy ra lỗi khi comment!",
+            status: error.response.status,
+            alertType: "error",
+          })
+        );
       } finally {
         setSubmitting(false);
+      }
+    };
+
+// DELETE COMMENT POST
+export const deleteComment=
+  (postId: number, id: number) =>
+    async (dispatch: Dispatch<SManagerActions | AlertActions>) => {
+      const config: any = {
+        header: {
+          "Content-Type": "application/json",
+        },
+      };
+
+      try {
+        const { data } = await axios.put(`${URI}/comment/${postId}/${id}`, config);
+        dispatch({
+          type: types.DELETE_COMMENT,
+          payload: data,
+        });
+        dispatch<any>(getPostApprove());
+      } catch (error: any) {
+        dispatch<any>(
+          setAlert({
+            msg: "Xảy ra lỗi khi xóa comment!",
+            status: error.response.status,
+            alertType: "error",
+          })
+        );
       }
     };
 

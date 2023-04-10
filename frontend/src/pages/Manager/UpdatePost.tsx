@@ -58,7 +58,7 @@ const CreatePost: React.FC<Props> = ({ post }): JSX.Element => {
         title: Yup.string().required("required!"),
         content: Yup.string().required("required!"),
         event: Yup.string().required("required!"),
-        image: Yup.string().required("required!"),
+        // image: Yup.string().required("required!"),
     });
 
     return (

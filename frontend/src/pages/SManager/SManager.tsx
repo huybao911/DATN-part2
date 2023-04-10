@@ -6,7 +6,7 @@ import { RootState } from "redux/reducers";
 import { ISManager } from "redux/types/sManager";
 import { IManager } from "redux/types/Manager";
 import { IUser } from "redux/types/user";
-import { TableSortLabel, Toolbar, OutlinedInput, InputAdornment,Card, Container, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography } from "@mui/material";
+import { TableSortLabel, Toolbar, OutlinedInput, InputAdornment, Card, Container, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography } from "@mui/material";
 // @mui
 import SearchIcon from '@mui/icons-material/Search';
 import { Box } from "@mui/system";
@@ -16,7 +16,7 @@ const StyledRoot = styled(Toolbar)(({ theme }) => ({
   height: 96,
   display: 'flex',
   justifyContent: 'space-between',
-  padding: theme.spacing(0, 1, 0, 3),
+  padding: theme.spacing(0, 3, 0, 3),
 }));
 
 const StyledSearch = styled(OutlinedInput)(({ theme }) => ({
@@ -79,7 +79,7 @@ interface DataUser {
 }
 
 interface HeadCell {
-  disablePadding: boolean;
+  paddingLeft: boolean;
   _id: keyof DataUser;
   label: string;
   numeric: boolean;
@@ -89,26 +89,26 @@ const headCells: HeadCell[] = [
   {
     _id: 'username',
     numeric: false,
-    disablePadding: true,
-    label: 'Username',
+    paddingLeft: true,
+    label: 'Tên Tài Khoản',
   },
   {
     _id: 'email',
-    numeric: true,
-    disablePadding: false,
+    numeric: false,
+    paddingLeft: false,
     label: 'Email',
   },
   {
     _id: 'role',
-    numeric: true,
-    disablePadding: false,
-    label: 'Role',
+    numeric: false,
+    paddingLeft: false,
+    label: 'Vai Trò',
   },
   {
     _id: 'department',
-    numeric: true,
-    disablePadding: false,
-    label: 'Department',
+    numeric: false,
+    paddingLeft: false,
+    label: 'Khoa',
   }
 ];
 
@@ -127,13 +127,21 @@ function EnhancedTableHead(props: EnhancedTableProps) {
       onRequestSort(event, property);
     };
   return (
-    <TableHead>
-      <TableRow>
+    <TableHead style={{ backgroundColor: "#f4f5f5" }}
+      sx={{
+        '& th:first-child': {
+          borderRadius: '1em 0 0 0'
+        },
+        '& th:last-child': {
+          borderRadius: '0 1em 0 0'
+        }
+      }}>
+      <TableRow >
         {headCells.map((headCell) => (
           <TableCell
             key={headCell._id}
             align={headCell.numeric ? 'right' : 'left'}
-            padding={headCell.disablePadding ? 'none' : 'normal'}
+            style={{ paddingLeft: headCell.paddingLeft ? "112px" : "17px" }}
             sortDirection={orderBy === headCell._id ? order : false}
           >
             <TableSortLabel
@@ -198,7 +206,7 @@ const Users: React.FC = (): JSX.Element => {
 
     if (keyword !== '') {
       const results = smanager?.users?.filter((user: any) => {
-        if (user.role.keyRole !== "smanager")
+        if (user.role.keyRole !== "admin")
           return user.username.toLowerCase().startsWith(keyword.toLowerCase());
         // Use the toLowerCase() method to make it case-insensitive
       });
@@ -233,19 +241,16 @@ const Users: React.FC = (): JSX.Element => {
 
     <>
       <Container>
-        <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-          <Typography variant="h4" gutterBottom>
-            User
-          </Typography>
-        </Stack>
-
-        <Card>
+        <Card style={{ padding: "20px", marginTop: "50px", paddingBottom: "40px", borderRadius: "22px" }}>
           <StyledRoot
             sx={{
               color: 'primary.main',
               bgcolor: 'primary.lighter',
             }}
           >
+            <Typography gutterBottom style={{color:"black", fontSize:"26px"}}>
+              User
+            </Typography>
             <StyledSearch
               value={filterName}
               onChange={handleFilterByName}
@@ -259,46 +264,32 @@ const Users: React.FC = (): JSX.Element => {
           </StyledRoot>
           <TableContainer>
             {/* Table user */}
-            <Table >
+            <Table>
               <EnhancedTableHead
                 order={order}
                 orderBy={orderBy}
                 onRequestSort={handleRequestSort}
               />
               {users && users.length > 0 ? (
-                <TableBody>
+                <TableBody >
                   {sortUser.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((user: any) =>
                     <TableRow key={user.username}>
-                      <TableCell align="right">
+                      <TableCell align="left" sx={{ width: "150px", paddingLeft: "110px" }}>
                         {user.username}
                       </TableCell>
 
-                      <TableCell align="right">
+                      <TableCell align="left" sx={{ width: "150px" }}>
                         {user.email}
                       </TableCell>
 
-                      <TableCell align="right">
+                      <TableCell align="left" sx={{ width: "150px" }}>
                         {user.role.keyRole}
                       </TableCell>
 
 
-                      <TableCell align="right">
+                      <TableCell align="left" sx={{ width: "150px" }}>
                         {user.department.nameDepartment}
                       </TableCell >
-                      {/* Button delete */}
-                      {/* <TableCell align="center">
-                      {
-                        <Button style={{ backgroundColor: "black", color: "white", padding: "4px 10px" }}
-                          type='button'
-                          variant='contained'
-                          color='secondary'
-                          size='small'
-                          onClick={(e) => dispatch(deleteUser(user._id))}
-                        >
-                          Xóa
-                        </Button>
-                      }
-                    </TableCell> */}
                     </TableRow>
                   )}
 
@@ -330,21 +321,6 @@ const Users: React.FC = (): JSX.Element => {
                 </TableBody>
               )}
             </Table>
-
-            {/* <div style={{ textAlign: "center", marginTop: "30px" }}>
-          <Link to="registerAdmin">
-            <button style={{ fontSize: "20px", backgroundColor: "#000", color: "#fff", border: "10px solid black" }}>TẠO TÀI KHOẢN</button>
-          </Link>
-        </div>
-
-       
-        <div style={{ textAlign: "center", marginTop: "20px" }}>
-          <Link to="adddepartment">
-            <button style={{ fontSize: "20px", backgroundColor: "#000", color: "#fff", border: "10px solid black" }}>Thêm tòa nhà</button>
-          </Link>
-        </div> */}
-
-
           </TableContainer>
         </Card>
       </Container>

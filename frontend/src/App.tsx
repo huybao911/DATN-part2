@@ -5,6 +5,8 @@ import { styled } from '@mui/material/styles';
 
 import AppHeader from "layouts/navigation/AppHeader";
 import SideBar from "layouts/navigation/sidebar";
+import HeaderHome from "pages/homepage/HeaderHome";
+
 
 import Alert from "layouts/alert/Alert";
 import Routes from "components/routing/Routes";
@@ -57,6 +59,7 @@ const App: React.FC = (): JSX.Element => {
         <StyledRoot>
           <AppHeader/>
           <SideBar />
+          <HeaderHome/>
          
         <Main>
           

@@ -3,6 +3,7 @@ export interface IPost {
     poster: any;
     approver: any;
     event: any;
+    comments: any;
     title: string;
     content: string;
     image:string;

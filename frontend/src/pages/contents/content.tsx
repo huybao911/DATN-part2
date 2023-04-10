@@ -27,7 +27,6 @@ const Content: React.FC = (): JSX.Element => {
     }, []);
 
     return (
-
         <>
             {posts.map((post: any) =>
                 <FeedContent post={post} key={post._id} />) ?? (

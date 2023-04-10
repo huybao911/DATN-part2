@@ -59,7 +59,7 @@ exports.getAuthManager = async (req, res, next) => {
 };
 
 exports.createPost = async (req, res) => {
-  const { title, content, image, event } = req.body;
+  const { title, content, image, event, comments} = req.body;
   const { id } = req.params;
   const userPost = await User.findById({_id:id});
   const imagePath = image.replace(/^.*\\/, "");
@@ -69,6 +69,7 @@ exports.createPost = async (req, res) => {
     const newPost = new Post({
       poster: userPost,
       approver: null,
+      comments,
       title,
       content,
       event,
@@ -97,7 +98,7 @@ exports.createPost = async (req, res) => {
 
 exports.getPost = async (req, res) => {
   const managerUser = await User.findById(req?.manager?._id);
-  const managerPost = await Post.find({poster:managerUser._id}).populate("poster")
+  const managerPost = await Post.find({poster:managerUser._id}).populate("poster").populate({ path: "comments", populate: [{ path: "commenter" }] });
   try {
     if (!req.manager) return res.status(400).send("You dont have permission");
     return res.status(200).json(managerPost);

@@ -1,6 +1,6 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { FormControl, FormLabel, TextField, Container, Card, CardHeader, CardMedia, CardContent, Avatar, IconButton, Typography } from "@material-ui/core";
+import { Card, CardHeader, CardMedia, CardContent, Avatar, IconButton, Typography } from "@material-ui/core";
 import { useFormikContext } from "formik";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 
@@ -40,19 +40,19 @@ const FormPost: React.FC = (): JSX.Element => {
 
   return (
     <>
-      <Card style={{ maxWidth: 345 }}>
+      <Card style={{ maxWidth: 500, height: 493, boxShadow:"none" }}>
         <CardHeader
-          // avatar={
-          //   <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-
-          //   </Avatar>
-          // }
+          avatar={
+            <Avatar style={{backgroundColor:"green"}} aria-label="recipe">
+                {values.poster.username.charAt(0).toUpperCase()}
+            </Avatar>
+          }
           action={
             <IconButton aria-label="settings">
               <MoreVertIcon />
             </IconButton>
           }
-          // title={values.poster.username}
+          title={values.poster.username}
           subheader={formatDate(values.createdAt)}
         />
         <CardContent>
@@ -65,7 +65,7 @@ const FormPost: React.FC = (): JSX.Element => {
         </CardContent>
         <CardMedia
           component="img"
-          height="194"
+          height="350"
           image={PF + values.image}
           alt="Paella dish"
         />

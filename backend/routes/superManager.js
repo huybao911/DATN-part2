@@ -13,7 +13,10 @@ router.get("/users", isAuth, sManagerController.getUsers);
 router.get("/departments", isAuth, sManagerController.getDepartments);
 
 router.get("/postApprove", isAuth, sManagerController.getPostApprove);
-router.patch("/post/:id", isAuth, sManagerController.approvePost);
+router.put("/post/:id", isAuth, sManagerController.approvePost);
+
+router.put("/comment/:id", isAuth, sManagerController.commentPost);
+router.put("/comment/:postId/:id", isAuth, sManagerController.deleteCommentPost);
 
 router.get("/events", isAuth, sManagerController.getEvents);
 router.post("/createEvent", isAuth, sManagerController.createEvent);
