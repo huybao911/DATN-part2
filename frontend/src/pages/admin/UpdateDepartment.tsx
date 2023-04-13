@@ -3,33 +3,34 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Button, CircularProgress, Box } from "@material-ui/core";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import SendIcon from '@mui/icons-material/Send';
 import { useDispatch } from "react-redux";
-import { commentPost } from "redux/actions/sManager";
-import FormComment from "pages/SManager/FormComment";
+import { updateDepartment } from "redux/actions/admin";
+import FormDepartment from "pages/admin/FormFieldDepartment";
 
 const useStyles = makeStyles((theme) => ({
     btnLogin: {
         '&.MuiButton-root:hover': {
-            backgroundColor:"transparent",
+            backgroundColor: "transparent",
         }
     },
-  }));
+}));
 
 type Props = {
-    post: any;
+    department: any;
 };
 
 interface IInitialValues {
-    contentComment: string;
+    nameDepartment: string;
+    keyDepartment: string;
 }
 
-const CommentPost: React.FC<Props> = ({ post }): JSX.Element => {
+const CommentPost: React.FC<Props> = ({ department }): JSX.Element => {
     const dispatch = useDispatch();
     const classes = useStyles();
 
     const initialValues: IInitialValues = {
-        contentComment: post?.contentComment ?? "",
+        nameDepartment: department?.nameDepartment ?? "",
+        keyDepartment: department?.keyDepartment ?? "",
     };
 
 
@@ -37,10 +38,11 @@ const CommentPost: React.FC<Props> = ({ post }): JSX.Element => {
         values: IInitialValues,
         { setSubmitting }: any
     ): Promise<void> =>
-        dispatch<any>(commentPost(values, post._id, setSubmitting));
+        dispatch<any>(updateDepartment(values, department._id, setSubmitting));
 
     const validationSchema = Yup.object({
-        contentComment: Yup.string().required("required!"),
+        nameDepartment: Yup.string().required("required!"),
+        keyDepartment: Yup.string().required("required!"),
     });
 
     return (
@@ -52,15 +54,19 @@ const CommentPost: React.FC<Props> = ({ post }): JSX.Element => {
         >
             {({ isSubmitting, handleSubmit }) => (
                 <form noValidate onSubmit={handleSubmit}>
-                    <Box style={{ display: "flex", flexDirection: "row", marginTop:"30px" }}>
-                        <FormComment />
+                    <Box>
+                        <FormDepartment />
                         <Button
-                            disableRipple
-                            type='submit'
-                            className={classes.btnLogin}
-                            disabled={isSubmitting}
+                             disableRipple
+                             style={{ backgroundColor: "black", color: "white" }}
+                             type='submit'
+                             variant='contained'
+                             color='primary'
+                             size='small'
+                             className={classes.btnLogin}
+                             disabled={isSubmitting}
                         >
-                            {isSubmitting ? <CircularProgress size='1rem' /> : <SendIcon style={{width: '16px'}} />}
+                            {isSubmitting ? <CircularProgress size='1rem' /> : "Cập nhật khoa"}
                         </Button>
                     </Box>
                 </form>

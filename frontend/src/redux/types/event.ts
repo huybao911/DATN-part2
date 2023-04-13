@@ -7,4 +7,6 @@ export interface IEvent {
     costs: string;
     dayStart:string;
     dayEnd:string;
+    update: string;
+    delete: string;
   }

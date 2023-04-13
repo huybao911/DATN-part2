@@ -28,7 +28,6 @@ const NewEvent: React.FC = (): JSX.Element => {
     }, []);
 
     return (
-
         <>
             {SManagers.map((event: any) =>
                 <Box key={event._id} >

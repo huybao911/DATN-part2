@@ -20,21 +20,16 @@ const PostSchema = new mongoose.Schema(
           type: String,
           trim: true,
         },
-      }
+        created: { type: Date, default: Date.now }
+      },
     ],
-    // commenter: {
-    //   type: mongoose.Types.ObjectId,
-    //   ref: "User",
-    //   default:0,
-    // },
-    // contentComment: {
-    //   type: String,
-    //   trim: true,
-    //   default:"",
-    // },
     event: {
       type: mongoose.Types.ObjectId,
       ref: "Event",
+    },
+    jobEvent: {
+      type: mongoose.Types.ObjectId,
+      ref: "JobEvent",
     },
     title: {
       type: String,

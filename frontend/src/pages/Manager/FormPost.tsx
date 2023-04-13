@@ -77,7 +77,7 @@ const FormPost: React.FC = (): JSX.Element => {
             hidden
           />
         </Button> */}
-        {/* <input
+        <input
           // fullWidth
           // variant="outlined"
           accept=".png,.jpg"
@@ -86,7 +86,7 @@ const FormPost: React.FC = (): JSX.Element => {
           value={values.image}
           onChange={handleChange}
           onBlur={handleBlur}
-        /> */}
+        />
       </FormControl>  
     </>
   );

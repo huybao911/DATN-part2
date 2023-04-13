@@ -180,6 +180,7 @@ export interface ISManagerState {
   smanager: ISManager;
   departments: IDepartment[];
   getRole: IRole;
+  getDepartment: IDepartment;
   manager: IManager[];
   users: IUser[];
   posts: IPost[];

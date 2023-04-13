@@ -2,7 +2,7 @@ import * as React from 'react';
 import { makeStyles, styled } from "@material-ui/core/styles";
 
 import { AppBar, Avatar, Card, CardActions, CardContent, CardHeader, CardMedia, Collapse, IconButton, Rating, Toolbar, Stack, Typography, Popover, ListItemIcon, Divider } from '@mui/material';
-import {  Favorite, FavoriteBorder, MoreVert, PersonAdd, Person } from '@mui/icons-material';
+import { Favorite, FavoriteBorder, MoreVert, PersonAdd, Person } from '@mui/icons-material';
 import { Button } from "@material-ui/core";
 import TabContext from '@mui/lab/TabContext';
 import TabPanel from '@mui/lab/TabPanel';

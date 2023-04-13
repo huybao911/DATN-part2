@@ -13,6 +13,7 @@ import UserForm from "./UserForm";
 // @mui
 import EditIcon from '@mui/icons-material/Edit';
 import SearchIcon from '@mui/icons-material/Search';
+import AddIcon from '@mui/icons-material/Add';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { Box } from "@mui/system";
 import { visuallyHidden } from '@mui/utils';
@@ -81,10 +82,11 @@ interface DataUser {
   email: keyof IUser;
   department: keyof IUser;
   role: keyof IUser;
+  update: keyof IUser;
+  delete: keyof IUser;
 }
 
 interface HeadCell {
-  disablePadding: boolean;
   _id: keyof DataUser;
   label: string;
   numeric: boolean;
@@ -94,27 +96,33 @@ const headCells: HeadCell[] = [
   {
     _id: 'username',
     numeric: false,
-    disablePadding: true,
     label: 'Username',
   },
   {
     _id: 'email',
     numeric: false,
-    disablePadding: false,
     label: 'Email',
   },
   {
     _id: 'role',
     numeric: false,
-    disablePadding: false,
     label: 'Role',
   },
   {
     _id: 'department',
     numeric: false,
-    disablePadding: false,
     label: 'Department',
-  }
+  },
+  {
+    _id: 'update',
+    numeric: false,
+    label: '',
+  },
+  {
+    _id: 'delete',
+    numeric: false,
+    label: '',
+  },
 ];
 
 
@@ -132,13 +140,21 @@ function EnhancedTableHead(props: EnhancedTableProps) {
       onRequestSort(event, property);
     };
   return (
-    <TableHead>
+    <TableHead style={{ backgroundColor: "#f4f5f5" }}
+      sx={{
+        '& th:first-child': {
+          borderRadius: '1em 0 0 0'
+        },
+        '& th:last-child': {
+          borderRadius: '0 1em 0 0'
+        }
+      }}>
       <TableRow>
         {headCells.map((headCell) => (
           <TableCell
             key={headCell._id}
             align={headCell.numeric ? 'right' : 'left'}
-            padding={headCell.disablePadding ? 'none' : 'normal'}
+            style={{ fontSize: '13px' }}
             sortDirection={orderBy === headCell._id ? order : false}
           >
             <TableSortLabel
@@ -207,12 +223,10 @@ const Users: React.FC = (): JSX.Element => {
       const results = admin?.users?.filter((user: any) => {
         if (user.role.keyRole !== "admin")
           return user.username.toLowerCase().startsWith(keyword.toLowerCase());
-        // Use the toLowerCase() method to make it case-insensitive
       });
       setUsers(results);
     } else {
       setUsers(() => admin?.users?.filter((user: any) => user.role.keyRole === "user" || user.role.keyRole === "manager" || user.role.keyRole === "smanager"));
-      // If the text field is empty, show all users
     }
 
     setFilterName(keyword);
@@ -261,34 +275,47 @@ const Users: React.FC = (): JSX.Element => {
 
     <>
       <Container>
-        <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-          <Typography variant="h4" gutterBottom>
-            User
-          </Typography>
-          <Link to="/users/registerAdmin">
-            <Button style={{ backgroundColor: "black", padding: "6px 16px", color: "white" }} variant="contained" >
-              Thêm User
-            </Button>
-          </Link>
-        </Stack>
-
-        <Card>
+        <Card style={{ padding: "20px", paddingBottom: "40px", borderRadius: "22px" }}>
           <StyledRoot
+            style={{ display: "flex", flexDirection: "row" }}
             sx={{
               color: 'primary.main',
               bgcolor: 'primary.lighter',
             }}
           >
-            <StyledSearch
-              value={filterName}
-              onChange={handleFilterByName}
-              placeholder="Tìm kiếm user..."
-              startAdornment={
-                <InputAdornment position="start">
-                  <SearchIcon sx={{ color: 'text.disabled', width: 20, height: 20 }} />
-                </InputAdornment>
-              }
-            />
+            <Box>
+              <Typography gutterBottom style={{ color: "black", fontSize: "22px" }}>
+                User
+              </Typography>
+            </Box>
+            <Box style={{ display: "flex", flexDirection: "row" }} >
+              <Box style={{ marginRight: "14px" }}>
+                <StyledSearch
+                  style={{ borderRadius: '30px', fontSize: '13px', height: "48px" }}
+                  value={filterName}
+                  onChange={handleFilterByName}
+                  placeholder="Tìm kiếm user..."
+                  startAdornment={
+                    <InputAdornment position="start" sx={{ paddingLeft: 1.3 }}>
+                      <SearchIcon style={{ width: '16px' }} sx={{ color: 'text.disabled' }} />
+                    </InputAdornment>
+                  }
+                />
+              </Box>
+              <Box component={Link} to="/users/registerAdmin" style={{ fontSize: '14px', textDecoration: "none", color: "black" }}>
+                <Box style={{
+                  border: '1px solid rgba(158, 158, 158, 0.32)',
+                  borderRadius: '30px', textAlign: 'center',
+                  marginTop: '0.5px', padding: '11px', backgroundColor: "#f5f5f5",
+                  width: 140, display: 'flex', flexDirection: 'row', justifyContent: 'center'
+                }}>
+                  <AddIcon style={{ width: '14px', color: '#ee6f81', marginRight: "6px" }} />
+                  <Typography style={{ fontSize: '12px', paddingTop: "2.5px" }} >
+                    Thêm User
+                  </Typography>
+                </Box>
+              </Box>
+            </Box>
           </StyledRoot>
           <TableContainer>
             {/* Table user */}
@@ -302,25 +329,25 @@ const Users: React.FC = (): JSX.Element => {
                 <TableBody>
                   {sortUser.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((user: any, index) =>
                     <TableRow key={user._id}>
-                      <TableCell align="left">
+                      <TableCell align="left" sx={{ width: "200px", paddingLeft: "26px", fontSize: '12px' }}>
                         {user.username}
                       </TableCell>
 
-                      <TableCell align="left">
+                      <TableCell align="left" sx={{ width: "300px", fontSize: '12px' }}>
                         {user.email}
                       </TableCell>
 
-                      <TableCell align="left">
+                      <TableCell align="left" sx={{ width: "200px", fontSize: '12px' }}>
                         {user.role.keyRole}
                       </TableCell>
 
 
-                      <TableCell align="left">
+                      <TableCell align="left" sx={{ width: "200px", fontSize: '12px' }}>
                         {user.department.nameDepartment}
                       </TableCell >
-                      <TableCell align="left">
+                      <TableCell align="left" sx={{ padding: "0px" }}>
                         <Button size="large" color="inherit" onClick={(event) => handleOpenMenu(event, index)} >
-                          <EditIcon/>
+                          <EditIcon style={{ width: "16px" }} />
                         </Button>
                         <Popover
                           open={!!anchorEl[index]}
@@ -345,9 +372,9 @@ const Users: React.FC = (): JSX.Element => {
                           </Box>
                         </Popover>
                       </TableCell>
-                      <TableCell align="left" >
-                        <Button style={{color:"red"}} onClick={(e) => dispatch(deleteUser(user._id))} >
-                          <DeleteForeverIcon/>
+                      <TableCell align="left" sx={{ padding: "0px" }} >
+                        <Button style={{ color: "red" }} onClick={(e) => dispatch(deleteUser(user._id))} >
+                          <DeleteForeverIcon style={{ width: "16px" }} />
                         </Button>
                       </TableCell>
                     </TableRow>
@@ -355,6 +382,24 @@ const Users: React.FC = (): JSX.Element => {
 
                   <TableRow>
                     <TablePagination
+                      style={{ fontSize: "12px" }}
+                      sx={{
+                        '& .MuiTablePagination-select': {
+                          width: "12px"
+                        },
+                        '& .MuiTablePagination-selectLabel': {
+                          fontSize: "12px"
+                        },
+                        '& .MuiTablePagination-selectIcon': {
+                          width: "16px"
+                        },
+                        '& .MuiTablePagination-displayedRows': {
+                          fontSize: "12px"
+                        },
+                        '& .MuiSvgIcon-root': {
+                          fontSize: "16px"
+                        },
+                      }}
                       rowsPerPageOptions={[5, 10, 25]}
                       labelRowsPerPage={"Số lượng hàng:"}
                       count={users.length}
@@ -362,6 +407,15 @@ const Users: React.FC = (): JSX.Element => {
                       page={page}
                       onPageChange={handleChangePage}
                       onRowsPerPageChange={handleChangeRowsPerPage}
+                      SelectProps={{
+                        MenuProps: {
+                          sx: {
+                            "&& .MuiTablePagination-menuItem": {
+                              fontSize: "12px"
+                            }
+                          }
+                        }
+                      }}
                     />
                   </TableRow>
                 </TableBody>

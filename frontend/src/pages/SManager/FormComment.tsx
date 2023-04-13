@@ -4,12 +4,12 @@ import { FormControl, FormLabel, TextField } from "@material-ui/core";
 import { useFormikContext } from "formik";
 
 const useStyles = makeStyles((theme) => ({
-    formLabel: {
-        fontWeight: 600,
-        marginBottom: theme.spacing(1.5),
-    },
-    formControl: {
-        margin: theme.spacing(2, 0),
+    formTextField: {
+        "& .MuiInputBase-root": {
+            "& fieldset": {
+              borderRadius: "22px",
+            },
+        }
     },
 }));
 
@@ -26,15 +26,22 @@ const FormComment: React.FC = (): JSX.Element => {
 
     return (
         <>
-            <FormControl fullWidth className={classes.formControl}>
+            <FormControl style={{paddingLeft: "38px" }}>
                 <TextField
-                    style={{width:"400px"}}
+                    style={{width:"320px", }}
+                    className={classes.formTextField}
                     variant="outlined"
+                    inputProps={{
+                        style: {
+                            fontSize: '12px',
+                            padding: '12px' 
+                        }
+                    }}
                     name='contentComment'
                     value={values.contentComment}
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    placeholder='Nhập bình luận'
+                    placeholder='Nhập bình luận...'
                     helperText={touched.contentComment ? errors.contentComment : ""}
                     error={touched.contentComment ? Boolean(errors.contentComment) : false}
                 />

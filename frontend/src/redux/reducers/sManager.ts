@@ -21,6 +21,7 @@ const initialState: ISManagerState = {
   events: [] as IEvent[],
   jobevents: [] as IJobEvent[],
   getRole: {} as IRole,
+  getDepartment: {} as IDepartment,
 };
 
 const sManagerReducer = (

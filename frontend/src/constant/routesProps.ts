@@ -86,6 +86,22 @@ const routesProps: ROUTES[] = [
     auth: true,
   },
   {
+    name: "eventAdmin",
+    path: "/eventAdmin",
+    component: React.lazy(() => import("pages/admin/Events")),
+    exact: true,
+    keyRole: "admin",
+    auth: true,
+  },
+  {
+    name: "jobEventAdmin",
+    path: "/jobEventAdmin",
+    component: React.lazy(() => import("pages/admin/JobEvents")),
+    exact: true,
+    keyRole: "admin",
+    auth: true,
+  },
+  {
     name: "postAdmin",
     path: "/postAdmin",
     component: React.lazy(() => import("pages/admin/Post")),
@@ -104,8 +120,8 @@ const routesProps: ROUTES[] = [
     auth: true,
   },
   {
-    name: "postsSManager",
-    path: "/postsSManager",
+    name: "approvePost",
+    path: "/approvePost",
     component: React.lazy(() => import("pages/SManager/ApprovePosts")),
     exact: true,
     keyRole: "smanager",
@@ -146,17 +162,17 @@ const routesProps: ROUTES[] = [
 
   //MANAGER
   {
-    name: "manager",
-    path: "/manager",
-    component: React.lazy(() => import("pages/Manager/Manager")),
+    name: "postsManager",
+    path: "/postsManager",
+    component: React.lazy(() => import("pages/Manager/Posts")),
     exact: true,
     keyRole: "manager",
     auth: true,
   },
   {
-    name: "postsManager",
-    path: "/postsManager",
-    component: React.lazy(() => import("pages/Manager/Posts")),
+    name: "eventManager",
+    path: "/eventManager",
+    component: React.lazy(() => import("pages/Manager/Events")),
     exact: true,
     keyRole: "manager",
     auth: true,

@@ -5,6 +5,8 @@ const User = require("../models/User");
 const Department = require("../models/Department");
 const Role = require("../models/Role");
 const Post = require("../models/Post");
+const Event = require("../models/Event");
+const JobEvent = require("../models/JobEvent");
 
 
 exports.login = async (req, res, next) => {
@@ -29,25 +31,6 @@ exports.login = async (req, res, next) => {
   }
 };
 
-exports.addDepartment = async (req, res) => {
-  const { nameDepartment, keyDepartment } = req.body;
-  try {
-    if (!nameDepartment || !keyDepartment) {
-      return res.status(400).send("Please fill in all the required fields!")
-    }
-    if (!req.admin) {
-      return res.status(400).send("You dont have permission");
-    }
-    const departmentObj = { nameDepartment, keyDepartment }
-    const department = await new Department(departmentObj).save();
-    return res
-      .status(201)
-      .json(department)
-  }
-  catch (error) {
-    return res.status(500).send(error.message);
-  }
-}
 
 exports.addRole = async (req, res) => {
   const { nameRole, keyRole } = req.body;
@@ -92,6 +75,56 @@ exports.getDepartments = async (req, res, next) => {
   try {
     if (!req.admin) return res.status(400).send("You dont have permission");
     return res.status(200).json(await Department.find().lean());
+  } catch (error) {
+    return res.status(500).json(error);
+  }
+};
+
+exports.addDepartment = async (req, res) => {
+  const { nameDepartment, keyDepartment } = req.body;
+  try {
+    if (!nameDepartment || !keyDepartment) {
+      return res.status(400).send("Please fill in all the required fields!")
+    }
+    if (!req.admin) {
+      return res.status(400).send("You dont have permission");
+    }
+    const departmentObj = { nameDepartment, keyDepartment }
+    const department = await new Department(departmentObj).save();
+    return res
+      .status(201)
+      .json(department)
+  }
+  catch (error) {
+    return res.status(500).send(error.message);
+  }
+}
+
+exports.updateDepartment = async (req, res, next) => {
+  const { id } = req.params;
+  try {
+    if (!req.admin) return res.status(400).send("You dont have permission");
+    const department = await Department.findById(id).lean();
+    if (!department) return res.status(400).send("Department does not exist");
+    const departmentObj = { ...req.body };
+    const newDepartment = await Department.findByIdAndUpdate(
+      { _id: id },
+      { ...departmentObj },
+      { new: true }
+    );
+    return res.status(200).json(newDepartment);
+  } catch (error) {
+    console.log(error.message);
+    return res.status(500).json(error);
+  }
+};
+
+exports.deleteDepartment = async (req, res, next) => {
+  const { id } = req.params;
+  try {
+    if (!req.admin) return res.status(400).send("You dont have permission");
+    await Department.deleteOne({ _id: id });
+    return res.status(200).send("Deparment has been deleted");
   } catch (error) {
     return res.status(500).json(error);
   }
@@ -144,6 +177,24 @@ exports.getPosts = async (req, res) => {
   try {
     if (!req.admin) return res.status(400).send("You dont have permission");
     return res.status(200).json(await Post.find().populate({ path: "poster", populate: [{ path: "department" }] }).populate("approver"));
+  } catch (error) {
+    return res.status(500).json(error);
+  }
+};
+
+exports.getEvents = async (req, res) => {
+  try {
+    if (!req.admin) return res.status(400).send("You dont have permission");
+    return res.status(200).json(await Event.find().populate("departmentEvent"));
+  } catch (error) {
+    return res.status(500).json(error);
+  }
+};
+
+exports.getJobEvents = async (req, res) => {
+  try {
+    if (!req.admin) return res.status(400).send("You dont have permission");
+    return res.status(200).json(await JobEvent.find().populate("eventId"));
   } catch (error) {
     return res.status(500).json(error);
   }

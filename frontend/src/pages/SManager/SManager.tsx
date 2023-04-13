@@ -6,7 +6,7 @@ import { RootState } from "redux/reducers";
 import { ISManager } from "redux/types/sManager";
 import { IManager } from "redux/types/Manager";
 import { IUser } from "redux/types/user";
-import { TableSortLabel, Toolbar, OutlinedInput, InputAdornment, Card, Container, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography } from "@mui/material";
+import { TableSortLabel, Toolbar, OutlinedInput, InputAdornment, Card, Container, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography } from "@mui/material";
 // @mui
 import SearchIcon from '@mui/icons-material/Search';
 import { Box } from "@mui/system";
@@ -141,7 +141,7 @@ function EnhancedTableHead(props: EnhancedTableProps) {
           <TableCell
             key={headCell._id}
             align={headCell.numeric ? 'right' : 'left'}
-            style={{ paddingLeft: headCell.paddingLeft ? "112px" : "17px" }}
+            style={{ paddingLeft: headCell.paddingLeft ? "112px" : "17px", fontSize: '13px' }}
             sortDirection={orderBy === headCell._id ? order : false}
           >
             <TableSortLabel
@@ -166,7 +166,6 @@ function EnhancedTableHead(props: EnhancedTableProps) {
 const Users: React.FC = (): JSX.Element => {
 
   const dispatch = useDispatch();
-
 
   const [users, setUsers] = React.useState<IUser[]>([]);
   const [SManagers, setSManagers] = React.useState<ISManager[]>([]);
@@ -248,16 +247,17 @@ const Users: React.FC = (): JSX.Element => {
               bgcolor: 'primary.lighter',
             }}
           >
-            <Typography gutterBottom style={{color:"black", fontSize:"26px"}}>
+            <Typography gutterBottom style={{ color: "black", fontSize: "22px" }}>
               User
             </Typography>
             <StyledSearch
+              style={{ borderRadius: '30px', fontSize: '13px' }}
               value={filterName}
               onChange={handleFilterByName}
               placeholder="Tìm kiếm user..."
               startAdornment={
-                <InputAdornment position="start">
-                  <SearchIcon sx={{ color: 'text.disabled', width: 20, height: 20 }} />
+                <InputAdornment position="start" sx={{ paddingLeft: 1.3 }}>
+                  <SearchIcon sx={{ color: 'text.disabled', width: 18 }} />
                 </InputAdornment>
               }
             />
@@ -271,23 +271,23 @@ const Users: React.FC = (): JSX.Element => {
                 onRequestSort={handleRequestSort}
               />
               {users && users.length > 0 ? (
-                <TableBody >
+                <TableBody style={{ fontSize: '12px' }} >
                   {sortUser.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((user: any) =>
-                    <TableRow key={user.username}>
-                      <TableCell align="left" sx={{ width: "150px", paddingLeft: "110px" }}>
+                    <TableRow key={user.username} >
+                      <TableCell align="left" sx={{ width: "150px", paddingLeft: "110px", fontSize: '12px' }}>
                         {user.username}
                       </TableCell>
 
-                      <TableCell align="left" sx={{ width: "150px" }}>
+                      <TableCell align="left" sx={{ width: "150px", fontSize: '12px' }}>
                         {user.email}
                       </TableCell>
 
-                      <TableCell align="left" sx={{ width: "150px" }}>
+                      <TableCell align="left" sx={{ width: "150px", fontSize: '12px' }}>
                         {user.role.keyRole}
                       </TableCell>
 
 
-                      <TableCell align="left" sx={{ width: "150px" }}>
+                      <TableCell align="left" sx={{ width: "150px", fontSize: '12px' }}>
                         {user.department.nameDepartment}
                       </TableCell >
                     </TableRow>
@@ -295,12 +295,40 @@ const Users: React.FC = (): JSX.Element => {
 
                   <TableRow>
                     <TablePagination
+                      style={{ fontSize: "12px" }}
+                      sx={{
+                        '& .MuiTablePagination-selectLabel': {
+                          fontSize: "12px"
+                        },
+                        '& .MuiTablePagination-selectIcon': {
+                          width: "16px"
+                        },
+                        '& .MuiTablePagination-displayedRows': {
+                          fontSize: "12px"
+                        },
+                        '& .MuiSvgIcon-root': {
+                          fontSize: "16px"
+                        },
+                      }}
                       rowsPerPageOptions={[5, 10, 25]}
+                      labelRowsPerPage={"Số lượng hàng:"}
                       count={users.length}
                       rowsPerPage={rowsPerPage}
                       page={page}
                       onPageChange={handleChangePage}
                       onRowsPerPageChange={handleChangeRowsPerPage}
+                      SelectProps={{
+                        MenuProps:{
+                          sx: {
+                            "&& .MuiTablePagination-menuItem": {
+                              fontSize: "12px"
+                            }
+                          }
+                        }
+                      }}
+
+                    // labelDisplayedRows={({ from, to, count }) => `${from} - ${to} / ${count}`}
+
                     />
                   </TableRow>
                 </TableBody>

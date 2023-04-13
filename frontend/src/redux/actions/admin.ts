@@ -105,7 +105,6 @@ export const registerAdmin =
     };
 
 // ADD DEPARTMENT
-
 export const addDepartment =
   (body: any, setSubmitting: any) =>
     async (dispatch: Dispatch<AdminActions | AlertActions>) => {
@@ -144,6 +143,74 @@ export const addDepartment =
         setSubmitting(false);
       }
     };
+
+// UPDATE DEPARTMENT
+export const updateDepartment =
+  (body: any, id: number, setSubmitting: any) =>
+    async (dispatch: Dispatch<AdminActions | AlertActions>) => {
+      const config: any = {
+        header: {
+          "Content-Type": "application/json",
+        },
+      };
+
+      try {
+        const { data } = await axios.patch(`${URI}/department/${id}`, body, config);
+        dispatch({
+          type: types.UPDATE_DEPARTMENT,
+          payload: data,
+        });
+        dispatch<any>(getDepartments());
+        dispatch<any>(
+          setAlert({
+            msg: "Cập nhật khoa thành công!",
+            status: 200,
+            alertType: "success",
+          })
+        );
+      } catch (error: any) {
+        dispatch<any>(
+          setAlert({
+            msg: "Xảy ra lỗi khi cập nhật khoa!",
+            status: error.response.status,
+            alertType: "error",
+          })
+        );
+      } finally {
+        setSubmitting(false);
+      }
+    };
+
+// DELETE USER
+export const deleteDepartment =
+  (id: number) => async (dispatch: Dispatch<AdminActions | AlertActions>) => {
+    const config: any = {
+      header: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    try {
+      await axios.delete(`${URI}/department/${id}`, config);
+      dispatch({ type: types.DELETE_DEPARTMENT, payload: id });
+      dispatch<any>(loadAdmin());
+      dispatch<any>(
+        setAlert({
+          msg: "Xóa khoa thành công!",
+          status: 200,
+          alertType: "success",
+        })
+      );
+    } catch (error: any) {
+      dispatch<any>(
+        setAlert({
+          msg: "Xảy ra lỗi khi xóa khoa!",
+          status: error.response.status,
+          alertType: "error",
+        })
+      );
+    }
+  };
 
 // GET USERS
 export const getUsers =
@@ -214,6 +281,50 @@ export const getDepartments =
     }
   };
 
+// GET EVENTS
+export const getEvents =
+  () => async (dispatch: Dispatch<AdminActions | AlertActions>) => {
+    const config: any = {
+      header: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    try {
+      const { data } = await axios.get(`${URI}/events`, config);
+      dispatch({ type: types.GET_EVENTS, payload: data });
+    } catch (error: any) {
+      dispatch<any>(
+        setAlert({
+          msg: "Xảy ra lỗi khi lấy dữ liệu events!",
+          status: error.response.status,
+          alertType: "error",
+        })
+      );
+    }
+  };
+// GET JOBEVENTS
+export const getJobEvents =
+  () => async (dispatch: Dispatch<AdminActions | AlertActions>) => {
+    const config: any = {
+      header: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    try {
+      const { data } = await axios.get(`${URI}/jobEvents`, config);
+      dispatch({ type: types.GET_JOBEVENTS, payload: data });
+    } catch (error: any) {
+      dispatch<any>(
+        setAlert({
+          msg: "Xảy ra lỗi khi lấy dữ liệu jobevents!",
+          status: error.response.status,
+          alertType: "error",
+        })
+      );
+    }
+  };
 // GET ROLES
 export const getRoles =
   () => async (dispatch: Dispatch<AdminActions | AlertActions>) => {

@@ -19,6 +19,8 @@ export interface IUser {
   classUser: string;
   phone: string;
   address: string;
+  update: string;
+  delete: string;
 }
 
 interface IUserLoaded {

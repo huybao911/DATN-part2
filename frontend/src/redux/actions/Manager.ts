@@ -388,6 +388,29 @@ export const getEvents =
     }
   };
 
+// GET JOBEVENTS
+export const getJobEvents =
+  () => async (dispatch: Dispatch<ManagerActions | AlertActions>) => {
+    const config: any = {
+      header: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    try {
+      const { data } = await axios.get(`${URI}/jobEvents`, config);
+      dispatch({ type: types.GET_JOBEVENTS, payload: data });
+    } catch (error: any) {
+      dispatch<any>(
+        setAlert({
+          msg: "Xảy ra lỗi khi lấy dữ liệu jobevents!",
+          status: error.response.status,
+          alertType: "error",
+        })
+      );
+    }
+  };
+
 // LOGOUT MANAGER
 export const logOutManager =
   () => (dispatch: Dispatch<ManagerActions | AlertActions>) => {

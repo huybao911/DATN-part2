@@ -12,6 +12,10 @@ const JobEvent = new mongoose.Schema(
       ref: "Event",
       required: true,
     },
+    quantity: {
+      type: Number,
+      required: [true, "Quantity is required"],
+  },
   },
   { timestamps: true }
 );

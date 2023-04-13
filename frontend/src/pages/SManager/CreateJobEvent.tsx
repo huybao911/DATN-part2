@@ -31,6 +31,7 @@ type Props = {
 
 interface IInitialValues {
     nameJob: string;
+    quantity: number;
     eventId: any;
 }
 
@@ -40,6 +41,7 @@ const CreateJobEvent: React.FC<Props> = ({ jobEvent }): JSX.Element => {
 
     const initialValues: IInitialValues = {
         nameJob: jobEvent?.nameJob ?? "",
+        quantity: jobEvent?.quantity ?? "",
         eventId: jobEvent?.eventId ?? "",
     };
 
@@ -52,6 +54,7 @@ const CreateJobEvent: React.FC<Props> = ({ jobEvent }): JSX.Element => {
 
     const validationSchema = Yup.object({
         nameJob: Yup.string().required("required!"),
+        quantity: Yup.string().required("required!"),
         eventId: Yup.string().required("required!"),
     });
 

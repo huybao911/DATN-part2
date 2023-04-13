@@ -39,9 +39,11 @@ exports.getUser = async (req, res) => {
 };
 
 exports.getUsers = async (req, res, next) => {
+  const smanagerUser = await User.findById(req?.smanager?._id);
+  const smanagerDepartment = await User.find({ department: smanagerUser.department }).populate("role").populate("department");
   try {
     if (!req.smanager) return res.status(400).send("You dont have permission");
-    return res.status(200).json(await User.find().populate("role").populate("department"));
+    return res.status(200).json(smanagerDepartment);
   } catch (error) {
     return res.status(500).json(error);
   }
@@ -104,7 +106,7 @@ exports.approvePost = async (req, res) => {
 exports.commentPost = async (req, res) => {
   const { id } = req.params;
   const userComment = await User.findById(req?.smanager?._id);
-  const { contentComment } = req.body;
+  const { contentComment, created } = req.body;
   try {
     if (!req.smanager) return res.status(400).send("You dont have permission");
     const post = await Post.findById(id).lean();
@@ -112,6 +114,7 @@ exports.commentPost = async (req, res) => {
     const postObj = {
       commenter: userComment,
       contentComment: contentComment,
+      created: created,
     };
     const newComment = await Post.findByIdAndUpdate(
       { _id: id },
@@ -119,6 +122,7 @@ exports.commentPost = async (req, res) => {
         $push:{comments: [{
           commenter: postObj.commenter,
           contentComment: postObj.contentComment,
+          created: postObj.created,
       }]}
       },
       { new: true }
@@ -162,25 +166,28 @@ exports.getEvents = async (req, res) => {
 };
 
 exports.createEvent = async (req, res) => {
-  const { nameEvent, quantityUser, location, departmentEvent, costs, dayStart, dayEnd } = req.body;
-  if (!nameEvent || !quantityUser || !location || !departmentEvent || !costs || !dayStart || !dayEnd)
-    return res.status(400).send("Please fill in all the required fields!")
+  const { nameEvent, quantityUser, job, location, costs, dayStart, dayEnd } = req.body;
+  const smanagerUser = await User.findById(req?.smanager?._id);
+  const smanagerDepartment = await Department.findOne({ _id: smanagerUser.department });
   try {
+    if (!req.smanager) return res.status(400).send("You dont have permission");
+    if (!nameEvent || !quantityUser || !location || !costs || !dayStart || !dayEnd)
+    return res.status(400).send("Please fill in all the required fields!")
     const newEvent = new Event({
       nameEvent,
       quantityUser,
+      job,
       location,
-      departmentEvent,
+      departmentEvent:smanagerDepartment,
       costs,
       dayStart,
       dayEnd,
     });
     await newEvent.save();
 
-    if (!req.smanager) return res.status(400).send("You dont have permission");
     return res
-      .status(201)
-      .json({ smanager: { newEvent } })
+      .status(200)
+      .json(newEvent)
   } catch (error) {
     return res.status(400).send(error.message);
   }
@@ -189,7 +196,7 @@ exports.createEvent = async (req, res) => {
 exports.updateEvent = async (req, res) => {
   const { id } = req.params;
   const getJobEvent = await JobEvent.find({eventId:id});
-  const { nameEvent, quantityUser, job, location, departmentEvent, costs, dayStart, dayEnd } = req.body;
+  const { nameEvent, quantityUser, location, costs, dayStart, dayEnd } = req.body;
   try {
     if (!req.smanager) return res.status(400).send("You dont have permission");
     const event = await Event.findById(id).lean();
@@ -199,7 +206,6 @@ exports.updateEvent = async (req, res) => {
       quantityUser: quantityUser,
       job: getJobEvent,
       location: location,
-      departmentEvent: departmentEvent,
       costs: costs,
       dayStart: dayStart,
       dayEnd: dayEnd,
@@ -211,7 +217,6 @@ exports.updateEvent = async (req, res) => {
         quantityUser: eventObj.quantityUser,
         job: eventObj.job,
         location: eventObj.location,
-        departmentEvent: eventObj.departmentEvent,
         costs: eventObj.costs,
         dayStart: eventObj.dayStart,
         dayEnd: eventObj.dayEnd,
@@ -249,15 +254,16 @@ exports.getJobEvents = async (req, res) => {
 };
 
 exports.createNewJobEvent = async (req, res) => {
-  const { nameJob,eventId} = req.body;
+  const { nameJob,eventId, quantity} = req.body;
   try {
     if (!req.smanager) return res.status(400).send("You dont have permission");
-    if (!nameJob || !eventId) {
+    if (!nameJob || !eventId || !quantity) {
       return res.status(400).send("Please fill in all the required fields!")
     }
     const NewJobEvent = new JobEvent({
       nameJob: nameJob,
       eventId: eventId,
+      quantity: quantity,
     });
     await NewJobEvent.save();
 
@@ -269,7 +275,7 @@ exports.createNewJobEvent = async (req, res) => {
 
 exports.updateJobEvent = async (req, res, next) => {
   const { id } = req.params;
-  const { nameJob, eventId} = req.body;
+  const { nameJob, eventId, quantity} = req.body;
   try {
     if (!req.smanager) return res.status(400).send("You dont have permission");
     const jobEvent = await JobEvent.findById(id).lean();
@@ -277,12 +283,14 @@ exports.updateJobEvent = async (req, res, next) => {
     const jobEventObj = { 
       nameJob: nameJob,
       eventId: eventId,
+      quantity:quantity,
      };
     const newJobEvent = await JobEvent.findByIdAndUpdate(
       { _id: id },
       { 
         nameJob: jobEventObj.nameJob,
         eventId: jobEventObj.eventId,
+        quantity: jobEventObj.quantity,
        },
       { new: true }
     );
@@ -310,9 +318,10 @@ exports.getAuthsuperManager = async (req, res, next) => {
   try {
     const smanager = await User.findById(req?.smanager?._id).select("-password").lean();
     let getRole = await Role.findById(smanager.role);
+    let getDepartment = await Department.findById(smanager.department);
     if (!smanager)
       return res.status(400).send("Supermanager not found, Authorization denied..");
-    return res.status(200).json({ smanager: { ...smanager }, getRole });
+    return res.status(200).json({ smanager: { ...smanager }, getRole, getDepartment });
   } catch (error) {
     return res.status(500).send(error.message);
   }

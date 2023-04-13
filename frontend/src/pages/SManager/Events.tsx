@@ -1,15 +1,16 @@
 import * as React from "react";
-import { styled, alpha } from "@material-ui/core/styles";
+import { styled, alpha, makeStyles } from "@material-ui/core/styles";
 import { useDispatch, useSelector } from "react-redux";
 import { getEvents, deleteEvent } from "redux/actions/sManager";
 import { RootState } from "redux/reducers";
 import { IEvent } from "redux/types/event";
-import { TableSortLabel, Toolbar, OutlinedInput, InputAdornment, Button, Card, Container, Popover, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography } from "@mui/material";
+import { TableSortLabel, Toolbar, OutlinedInput, InputAdornment, Button, Card, Container, Popover, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography } from "@mui/material";
 import { Link } from 'react-router-dom';
 import UpdateEvent from "pages/SManager/UpdateEvent";
 // @mui
 import EditIcon from '@mui/icons-material/Edit';
 import SearchIcon from '@mui/icons-material/Search';
+import AddIcon from '@mui/icons-material/Add';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { Box } from "@mui/system";
 import { visuallyHidden } from '@mui/utils';
@@ -33,6 +34,14 @@ const StyledSearch = styled(OutlinedInput)(({ theme }) => ({
   '& fieldset': {
     borderWidth: `1px !important`,
     borderColor: `${alpha(theme.palette.grey[500], 0.32)} !important`,
+  },
+}));
+
+const useStyles = makeStyles((theme) => ({
+  btn: {
+    '&.MuiButton-root:hover': {
+      backgroundColor: "transparent",
+    }
   },
 }));
 
@@ -81,10 +90,11 @@ interface DataUser {
   costs: keyof IEvent;
   dayStart: keyof IEvent;
   dayEnd: keyof IEvent;
+  update: keyof IEvent;
+  delete: keyof IEvent;
 }
 
 interface HeadCell {
-  disablePadding: boolean;
   _id: keyof DataUser;
   label: string;
   numeric: boolean;
@@ -94,44 +104,47 @@ const headCells: HeadCell[] = [
   {
     _id: 'nameEvent',
     numeric: false,
-    disablePadding: true,
     label: 'Tên sự kiện',
   },
   {
     _id: 'quantityUser',
     numeric: false,
-    disablePadding: false,
     label: 'Số lượng người',
   },
   {
     _id: 'job',
     numeric: false,
-    disablePadding: false,
     label: 'Công việc',
   },
   {
     _id: 'departmentEvent',
     numeric: false,
-    disablePadding: false,
     label: 'Khoa',
   },
   {
     _id: 'costs',
     numeric: false,
-    disablePadding: false,
     label: 'Chi phí',
   },
   {
     _id: 'dayStart',
     numeric: false,
-    disablePadding: false,
     label: 'Ngày bắt đầu',
   },
   {
     _id: 'dayEnd',
     numeric: false,
-    disablePadding: false,
     label: 'Ngày kết thúc',
+  },
+  {
+    _id: 'update',
+    numeric: false,
+    label: '',
+  },
+  {
+    _id: 'delete',
+    numeric: false,
+    label: '',
   },
 ];
 
@@ -150,13 +163,21 @@ function EnhancedTableHead(props: EnhancedTableProps) {
       onRequestSort(event, property);
     };
   return (
-    <TableHead>
+    <TableHead style={{ backgroundColor: "#f4f5f5" }}
+      sx={{
+        '& th:first-child': {
+          borderRadius: '1em 0 0 0'
+        },
+        '& th:last-child': {
+          borderRadius: '0 1em 0 0'
+        }
+      }}>
       <TableRow>
         {headCells.map((headCell) => (
           <TableCell
             key={headCell._id}
             align={headCell.numeric ? 'right' : 'left'}
-            padding={headCell.disablePadding ? 'none' : 'normal'}
+            style={{ fontSize: '13px' }}
             sortDirection={orderBy === headCell._id ? order : false}
           >
             <TableSortLabel
@@ -181,7 +202,7 @@ function EnhancedTableHead(props: EnhancedTableProps) {
 const Users: React.FC = (): JSX.Element => {
 
   const dispatch = useDispatch();
-
+  const classes = useStyles();
 
   const [events, setEvents] = React.useState<IEvent[]>([]);
   const smanager = useSelector((state: RootState) => state.smanager);
@@ -270,34 +291,47 @@ const Users: React.FC = (): JSX.Element => {
 
     <>
       <Container>
-        <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-          <Typography variant="h4" gutterBottom>
-            Sự Kiện
-          </Typography>
-          <Link to="/event/newevent">
-            <Button style={{ backgroundColor: "black", padding: "6px 16px", color: "white" }} variant="contained" >
-              Thêm Sự Kiện
-            </Button>
-          </Link>
-        </Stack>
-
-        <Card>
+        <Card style={{ padding: "20px", marginTop: "80px", paddingBottom: "40px", borderRadius: "22px" }}>
           <StyledRoot
+            style={{ display: "flex", flexDirection: "row" }}
             sx={{
               color: 'primary.main',
               bgcolor: 'primary.lighter',
             }}
           >
-            <StyledSearch
-              value={filterName}
-              onChange={handleFilterByName}
-              placeholder="Tìm kiếm sự kiện..."
-              startAdornment={
-                <InputAdornment position="start">
-                  <SearchIcon sx={{ color: 'text.disabled', width: 20, height: 20 }} />
-                </InputAdornment>
-              }
-            />
+            <Box>
+              <Typography gutterBottom style={{ color: "black", fontSize: "22px" }}>
+                Sự Kiện
+              </Typography>
+            </Box>
+            <Box style={{ display: "flex", flexDirection: "row" }} >
+              <Box style={{ marginRight: "14px" }}>
+                <StyledSearch
+                  style={{ borderRadius: '30px', fontSize: '13px', height: "48px" }}
+                  value={filterName}
+                  onChange={handleFilterByName}
+                  placeholder="Tìm kiếm sự kiện..."
+                  startAdornment={
+                    <InputAdornment position="start" sx={{ paddingLeft: 1.3 }}>
+                      <SearchIcon style={{ width: '16px' }} sx={{ color: 'text.disabled' }} />
+                    </InputAdornment>
+                  }
+                />
+              </Box>
+              <Box component={Link} to="/event/newevent" style={{ fontSize: '14px', textDecoration: "none", color: "black" }}>
+                <Box style={{
+                  border: '1px solid rgba(158, 158, 158, 0.32)',
+                  borderRadius: '30px', textAlign: 'center',
+                  marginTop: '0.5px', padding: '11px', backgroundColor: "#f5f5f5",
+                  width: 140, display: 'flex', flexDirection: 'row', justifyContent: 'center'
+                }}>
+                  <AddIcon style={{ width: '14px', color: '#ee6f81', marginRight: "6px" }} />
+                  <Typography style={{ fontSize: '12px', paddingTop: "2.5px" }} >
+                    Thêm sự kiện
+                  </Typography>
+                </Box>
+              </Box>
+            </Box>
           </StyledRoot>
           <TableContainer>
             {/* Table user */}
@@ -311,41 +345,44 @@ const Users: React.FC = (): JSX.Element => {
                 <TableBody>
                   {sortEvent.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((event: any, index) =>
                     <TableRow key={event._id}>
-                      <TableCell align="left">
+                      <TableCell align="left" sx={{ width: "300px", paddingLeft: "26px", fontSize: '12px' }}>
                         {event.nameEvent}
                       </TableCell>
 
-                      <TableCell align="left">
+                      <TableCell align="left" sx={{ width: "400px", fontSize: '12px' }}>
                         {event.quantityUser}
                       </TableCell>
 
                       <TableCell align="left">
-                      {event.job.map((job: any) =>
-                        <Typography align="left">
-                          - {job.nameJob}
-                        </Typography>
-                      )}
+                        {event.job.map((job: any) =>
+                          <Typography key={job._id} sx={{ width: "100px", fontSize: '12px' }}>
+                            - {job.nameJob}
+                          </Typography>
+                        )}
                       </TableCell>
 
-                      <TableCell align="left">
+                      <TableCell align="left" sx={{ width: "300px", fontSize: '12px' }}>
                         {event.departmentEvent.nameDepartment}
                       </TableCell>
 
-                      <TableCell align="left">
+                      <TableCell align="left" sx={{ width: "200px", fontSize: '12px' }}>
                         {event.costs}
                       </TableCell >
 
-                      <TableCell align="left">
+                      <TableCell align="left" sx={{ width: "300px", fontSize: '12px' }}>
                         {event.dayStart}
                       </TableCell >
 
-                      <TableCell align="left">
+                      <TableCell align="left" sx={{ width: "300px", fontSize: '12px' }}>
                         {event.dayEnd}
                       </TableCell >
 
-                      <TableCell align="left">
-                        <Button size="large" color="inherit" onClick={(event) => handleOpenMenu(event, index)} >
-                          <EditIcon />
+                      <TableCell align="left" sx={{ padding: "0px" }}>
+                        <Button
+                          disableRipple
+                          className={classes.btn} size="medium" color="inherit"
+                          onClick={(event) => handleOpenMenu(event, index)} >
+                          <EditIcon style={{ width: "16px" }} />
                         </Button>
                         <Popover
                           open={!!anchorEl[index]}
@@ -370,9 +407,12 @@ const Users: React.FC = (): JSX.Element => {
                           </Box>
                         </Popover>
                       </TableCell>
-                      <TableCell >
-                        <Button style={{ color: "red" }} onClick={(e) => dispatch(deleteEvent(event._id))} >
-                          <DeleteForeverIcon />
+                      <TableCell align="left" sx={{ padding: "0px" }} >
+                        <Button
+                          className={classes.btn}
+                          disableRipple
+                          style={{ color: "red" }} onClick={(e) => dispatch(deleteEvent(event._id))} >
+                          <DeleteForeverIcon style={{ width: "16px" }} />
                         </Button>
                       </TableCell>
                     </TableRow>
@@ -380,6 +420,24 @@ const Users: React.FC = (): JSX.Element => {
 
                   <TableRow>
                     <TablePagination
+                      style={{ fontSize: "12px" }}
+                      sx={{
+                        '& .MuiTablePagination-select': {
+                          width: "12px"
+                        },
+                        '& .MuiTablePagination-selectLabel': {
+                          fontSize: "12px"
+                        },
+                        '& .MuiTablePagination-selectIcon': {
+                          width: "16px"
+                        },
+                        '& .MuiTablePagination-displayedRows': {
+                          fontSize: "12px"
+                        },
+                        '& .MuiSvgIcon-root': {
+                          fontSize: "16px"
+                        },
+                      }}
                       rowsPerPageOptions={[5, 10, 25]}
                       labelRowsPerPage={"Số lượng hàng:"}
                       count={events.length}
@@ -387,6 +445,15 @@ const Users: React.FC = (): JSX.Element => {
                       page={page}
                       onPageChange={handleChangePage}
                       onRowsPerPageChange={handleChangeRowsPerPage}
+                      SelectProps={{
+                        MenuProps:{
+                          sx: {
+                            "&& .MuiTablePagination-menuItem": {
+                              fontSize: "12px"
+                            }
+                          }
+                        }
+                      }}
                     />
                   </TableRow>
                 </TableBody>

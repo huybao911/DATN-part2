@@ -8,19 +8,17 @@ import { LinkProps } from 'react-router-dom';
 export const StyledListItemButton = styled(ListItemButton)<LinkProps>(() => ({
   
   textTransform: "capitalize",
-  '&:hover': {
-    backgroundColor: 'transparent'
-  },
-  '&.active': {
-    backgroundColor: 'transparent',
-    color: '#6ECCAF'
-  },
+  // '&:hover': {
+  //   backgroundColor: 'transparent'
+  // },
+  // '&:focus': {
+  //   backgroundColor: 'green',
+  //   color: '#6ECCAF'
+  // },
 }));
 
 export const StyledNavItemIcon = styled(ListItemIcon)({
-  width: 22,
-  height: 22,
-  color: '#4D455D',
+  color: '#979797',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
