@@ -9,11 +9,17 @@ router.post("/login", adminController.login);
 router.get("/auth-admin", isAuth, adminController.getAuthAdmin);
 router.get("/users", isAuth, adminController.getUsers);
 router.get("/user", isAuth, adminController.getUser);
-router.get("/departments", isAuth, adminController.getDepartments);
+
 router.get("/roles", isAuth, adminController.getRoles);
-router.post("/addDepartment", isAuth, adminController.addDepartment);
 router.post("/addRole", isAuth, adminController.addRole);
 
+router.get("/departments", isAuth, adminController.getDepartments);
+router.post("/addDepartment", isAuth, adminController.addDepartment);
+router.patch("/department/:id", isAuth, adminController.updateDepartment);
+router.delete("/department/:id", isAuth, adminController.deleteDepartment);
+
+router.get("/events", isAuth, adminController.getEvents);
+router.get("/jobEvents", isAuth, adminController.getJobEvents);
 
 router.get("/posts", isAuth, adminController.getPosts);
 router

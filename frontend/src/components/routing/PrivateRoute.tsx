@@ -33,7 +33,7 @@ const PrivateRoute: React.FC<Props> = ({
           return <Redirect to='/smanager' />;
         }
         if (Manager.isAuthenticated && Manager.getRole.keyRole === "manager") {
-          return <Redirect to='/manager' />;
+          return <Redirect to='/postsManager' />;
         }
         if (user.isAuthenticated && user.getRole.keyRole === "user") {
           return <Component {...props} />;

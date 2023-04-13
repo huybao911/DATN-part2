@@ -8,7 +8,6 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import { useDispatch } from "react-redux";
 import { createEvent } from "redux/actions/sManager";
 import FormEvent from "pages/SManager/FormEvent";
-import FormDepartment from "pages/auth/FormDepartment_SManager";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -67,7 +66,6 @@ const CreateEvent: React.FC<Props> = ({ event }): JSX.Element => {
         costs: Yup.string().required("required!"),
         dayStart: Yup.string().required("required!"),
         dayEnd: Yup.string().required("required!"),
-        departmentEvent: Yup.string().required("required!"),
     });
 
     return (
@@ -88,8 +86,7 @@ const CreateEvent: React.FC<Props> = ({ event }): JSX.Element => {
                 >
                     {({ isSubmitting, handleSubmit }) => (
                         <form noValidate onSubmit={handleSubmit}>
-                            <FormEvent />   
-                            <FormDepartment isDepartmentCbb={true}/>       
+                            <FormEvent />        
                             <Button
                                 type='submit'
                                 variant='contained'

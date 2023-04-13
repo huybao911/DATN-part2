@@ -6,6 +6,8 @@ import { IManager } from "redux/types/Manager";
 import { IDepartment } from "redux/types/department";
 import { IRole } from "redux/types/role";
 import { IPost } from "redux/types/post";
+import { IEvent } from "redux/types/event";
+import { IJobEvent } from "redux/types/jobEvent";
 import { IAdminState, AdminActions } from "../types/admin";
 
 const initialState: IAdminState = {
@@ -19,6 +21,8 @@ const initialState: IAdminState = {
   departments: [] as IDepartment[],
   roles: [] as IRole[],
   posts: [] as IPost[],
+  events: [] as IEvent[],
+  jobevents: [] as IJobEvent[],
   users: [] as IUser[],
 };
 
@@ -41,6 +45,27 @@ const adminReducer = (
         ...action.payload,
         isAuthenticated: true,
         loading: false,
+      };
+    case types.UPDATE_DEPARTMENT:
+      return {
+        ...state,
+        departments: state.departments.map((department) =>
+          department._id === action.payload.id ? { ...action.payload.department } : department
+        ),
+      };
+
+    case types.DELETE_DEPARTMENT:
+      return {
+        ...state,
+        departments: state.departments.filter((department) => department._id !== action.payload),
+      };
+
+    case types.UPDATE_USER:
+      return {
+        ...state,
+        users: state.users.map((user) =>
+          user._id === action.payload.id ? { ...action.payload.user } : user
+        ),
       };
     case types.ADMIN_LOGIN_SUCCESS:
       localStorage.setItem("admin__token", action.payload.token);
@@ -66,12 +91,25 @@ const adminReducer = (
         ...state,
         departments: action.payload,
       };
+
+    case types.GET_EVENTS:
+      return {
+        ...state,
+        events: action.payload,
+      };
+
+    case types.GET_JOBEVENTS:
+      return {
+        ...state,
+        jobevents: action.payload,
+      };
+      
     case types.GET_ROLES:
       return {
         ...state,
         roles: action.payload,
       };
-      
+
     case types.GET_POSTS:
       return {
         ...state,

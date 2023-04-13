@@ -3,9 +3,11 @@ import { IUser } from "redux/types/user";
 import { IManager } from "redux/types/Manager";
 import { IManagerState, ManagerActions } from "../types/Manager";
 import { IRole } from "redux/types/role";
+import { IDepartment } from "redux/types/department";
 import { IPost } from "redux/types/post";
 import { IApplyJob } from "redux/types/applyJob";
 import { IEvent } from "redux/types/event";
+import { IJobEvent } from "redux/types/jobEvent";
 
 const initialState: IManagerState = {
   token: localStorage.getItem("Manager__token"),
@@ -16,7 +18,9 @@ const initialState: IManagerState = {
   posts: [] as IPost[],
   appyjobs: [] as IApplyJob[],
   events: [] as IEvent[],
+  jobevents: [] as IJobEvent[],
   getRole: {} as IRole,
+  getDepartment: {} as IDepartment,
 };
 
 const ManagerReducer = (
@@ -101,6 +105,13 @@ const ManagerReducer = (
         ...state,
         events: action.payload,
       };
+
+    case types.GET_JOBEVENTS:
+      return {
+        ...state,
+        jobevents: action.payload,
+      };
+
 
     case types.CREATE_POSTER_FAIL:
     case types.MANAGER_LOGIN_FAIL:

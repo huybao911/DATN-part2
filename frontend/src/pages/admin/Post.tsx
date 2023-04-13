@@ -78,7 +78,6 @@ interface DataUser {
 }
 
 interface HeadCell {
-  disablePadding: boolean;
   _id: keyof DataUser;
   label: string;
   numeric: boolean;
@@ -88,37 +87,31 @@ const headCells: HeadCell[] = [
   {
     _id: 'poster',
     numeric: false,
-    disablePadding: false,
     label: 'Người đăng',
   },
   {
     _id: 'poster',
     numeric: false,
-    disablePadding: false,
     label: 'Khoa',
   },
   {
     _id: 'title',
     numeric: false,
-    disablePadding: false,
     label: 'Tiêu đề',
   },
   {
     _id: 'content',
     numeric: false,
-    disablePadding: false,
     label: 'Nội dung',
   },
   {
     _id: 'image',
     numeric: false,
-    disablePadding: true,
     label: 'Hình ảnh',
   },
   {
     _id: 'createdAt',
     numeric: false,
-    disablePadding: true,
     label: 'Ngày đăng',
   },
 ];
@@ -138,13 +131,21 @@ function EnhancedTableHead(props: EnhancedTableProps) {
       onRequestSort(event, property);
     };
   return (
-    <TableHead>
+    <TableHead style={{ backgroundColor: "#f4f5f5" }}
+      sx={{
+        '& th:first-child': {
+          borderRadius: '1em 0 0 0'
+        },
+        '& th:last-child': {
+          borderRadius: '0 1em 0 0'
+        }
+      }}>
       <TableRow>
         {headCells.map((headCell) => (
           <TableCell
             key={headCell._id}
             align={headCell.numeric ? 'right' : 'left'}
-            padding={headCell.disablePadding ? 'none' : 'normal'}
+            style={{ fontSize: '13px' }}
             sortDirection={orderBy === headCell._id ? order : false}
           >
             <TableSortLabel
@@ -248,34 +249,34 @@ const Department: React.FC = (): JSX.Element => {
 
     <>
       <Container>
-        <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-          <Typography variant="h4" gutterBottom>
-            Bài Viết
-          </Typography>
-          {/* <Link to="/adddepartment">
-            <Button style={{ backgroundColor: "black", padding: "6px 16px", color: "white" }} variant="contained" >
-              Thêm Bài Viết
-            </Button>
-          </Link> */}
-        </Stack>
-
-        <Card>
+        <Card style={{ padding: "20px", paddingBottom: "40px", borderRadius: "22px" }}>
           <StyledRoot
+            style={{ display: "flex", flexDirection: "row" }}
             sx={{
               color: 'primary.main',
               bgcolor: 'primary.lighter',
             }}
           >
-            <StyledSearch
-              value={filterName}
-              onChange={handleFilterByName}
-              placeholder="Tìm kiếm bài viết..."
-              startAdornment={
-                <InputAdornment position="start">
-                  <SearchIcon sx={{ color: 'text.disabled', width: 20, height: 20 }} />
-                </InputAdornment>
-              }
-            />
+            <Box>
+              <Typography gutterBottom style={{ color: "black", fontSize: "22px" }}>
+              Bài Viết
+              </Typography>
+            </Box>
+            <Box style={{ display: "flex", flexDirection: "row" }} >
+              <Box style={{ marginRight: "14px" }}>
+                <StyledSearch
+                  style={{ borderRadius: '30px', fontSize: '13px', height: "48px" }}
+                  value={filterName}
+                  onChange={handleFilterByName}
+                  placeholder="Tìm kiếm bài viết..."
+                  startAdornment={
+                    <InputAdornment position="start" sx={{ paddingLeft: 1.3 }}>
+                      <SearchIcon style={{ width: '16px' }} sx={{ color: 'text.disabled' }} />
+                    </InputAdornment>
+                  }
+                />
+              </Box>
+            </Box>
           </StyledRoot>
           <TableContainer>
             {/* Table department */}
@@ -289,7 +290,7 @@ const Department: React.FC = (): JSX.Element => {
                 <TableBody>
                   {sortPost.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((post: any, index) =>
                     <TableRow key={post._id}>
-                       <TableCell >
+                      <TableCell >
                         {post.poster.username}
                       </TableCell>
                       <TableCell >
@@ -298,16 +299,16 @@ const Department: React.FC = (): JSX.Element => {
                       {/* <TableCell align="right">
                         {post.approver._id} 
                       </TableCell> */}
-                      <TableCell align="left">
+                      <TableCell align="left" sx={{ width: "200px", paddingLeft: "26px", fontSize: '12px' }}>
                         {post.title}
                       </TableCell>
-                      <TableCell align="left">
+                      <TableCell align="left" sx={{ width: "200px", paddingLeft: "26px", fontSize: '12px' }}> 
                         {post.content}
                       </TableCell>
-                      <TableCell align="left">
-                          <img style={{ height: "100px", width: "150px", scale: isActive ? "4" : "" }} src={PF + post.image} onClick={handleClickImage} />
+                      <TableCell align="left" sx={{ width: "200px", paddingLeft: "26px", fontSize: '12px' }}>
+                        <img style={{ height: "100px", width: "150px", scale: isActive ? "4" : "" }} src={PF + post.image} onClick={handleClickImage} />
                       </TableCell>
-                      <TableCell align="left">
+                      <TableCell align="left" sx={{ width: "200px", paddingLeft: "26px", fontSize: '12px' }}>
                         {formatDate(post.createdAt).slice(0, 10)}
                       </TableCell>
                     </TableRow>
@@ -315,6 +316,24 @@ const Department: React.FC = (): JSX.Element => {
 
                   <TableRow>
                     <TablePagination
+                    style={{ fontSize: "12px" }}
+                    sx={{
+                      '& .MuiTablePagination-select': {
+                        width: "12px"
+                      },
+                      '& .MuiTablePagination-selectLabel': {
+                        fontSize: "12px"
+                      },
+                      '& .MuiTablePagination-selectIcon': {
+                        width: "16px"
+                      },
+                      '& .MuiTablePagination-displayedRows': {
+                        fontSize: "12px"
+                      },
+                      '& .MuiSvgIcon-root': {
+                        fontSize: "16px"
+                      },
+                    }}
                       rowsPerPageOptions={[5, 10, 25]}
                       labelRowsPerPage={"Số lượng hàng:"}
                       count={posts.length}
@@ -322,6 +341,15 @@ const Department: React.FC = (): JSX.Element => {
                       page={page}
                       onPageChange={handleChangePage}
                       onRowsPerPageChange={handleChangeRowsPerPage}
+                      SelectProps={{
+                        MenuProps: {
+                          sx: {
+                            "&& .MuiTablePagination-menuItem": {
+                              fontSize: "12px"
+                            }
+                          }
+                        }
+                      }}
                     />
                   </TableRow>
                 </TableBody>

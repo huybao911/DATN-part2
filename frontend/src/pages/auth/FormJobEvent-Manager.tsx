@@ -6,10 +6,10 @@ import { useFormikContext } from "formik";
 import { MenuItem } from "@mui/material";
 import Select from '@mui/material/Select';
 
-import { getDepartments } from "redux/actions/sManager";
+import { getJobEvents } from "redux/actions/Manager";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "redux/reducers";
-import { IDepartment } from "redux/types/department";
+import { IJobEvent } from "redux/types/jobEvent";
 
 const useStyles = makeStyles((theme) => ({
     formLabel: {
@@ -25,11 +25,11 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 type Props = {
-    isDepartmentCbb?: boolean;
+    isJobEvent?: boolean;
 };
 
 interface IInitialValues {
-    departmentEvent: any;
+    jobEvent: any;
 }
 
 // const Placeholder = ({ children }: { children: any }) => {
@@ -37,47 +37,47 @@ interface IInitialValues {
 //     return <div className={classes.placeholder}>{children}</div>;
 // };
 
-const FormField: React.FC<Props> = ({ isDepartmentCbb = false }): JSX.Element => {
+const FormField: React.FC<Props> = ({ isJobEvent = false }): JSX.Element => {
     const classes = useStyles();
     const dispatch = useDispatch();
 
     const { values, handleChange, handleBlur, touched, errors } =
         useFormikContext<IInitialValues>();
 
-    const [departments, setDepartments] = React.useState<IDepartment[]>([]);
-    const Department = useSelector((state: RootState) => state.smanager);
+    const [jobevents, setJobEvents] = React.useState<IJobEvent[]>([]);
+    const JobEvent = useSelector((state: RootState) => state.manager);
 
 
     React.useEffect(() => {
-        dispatch(getDepartments());
+        dispatch(getJobEvents());
     }, [dispatch]);
 
     React.useEffect(() => {
-        setDepartments(() => Department?.departments?.filter((departmentEvent: any) => departmentEvent.nameDepartment));
-    }, [Department]);
+        setJobEvents(() => JobEvent?.jobevents?.filter((jobEvent: any) => jobEvent.nameJob));
+    }, [Event]);
 
     return (
         <>
 
-            {isDepartmentCbb ? (
+            {isJobEvent ? (
                 <FormControl fullWidth className={classes.formControl}>
-                    <FormLabel classes={{ root: classes.formLabel }}>Khoa tổ chức</FormLabel>
+                    <FormLabel classes={{ root: classes.formLabel }}>Công việc</FormLabel>
                     <Select
-                        name="departmentEvent"
+                        name="jobEvent"
                         labelId="demo-simple-select-label"
-                        id="handle-department"
-                        value={values.departmentEvent._id}
+                        id="handle-event"
+                        value={values.jobEvent._id}
                         onChange={handleChange}
                         onBlur={handleBlur}
-                        error={touched.departmentEvent ? Boolean(errors.departmentEvent) : false}
+                        error={touched.jobEvent ? Boolean(errors.jobEvent) : false}
 
                     // renderValue={
                     //     role !== "" ? undefined : () => <Placeholder>Role</Placeholder>
                     // }
                     >
-                        {departments?.map((departmentEvent: any) => (
-                            <MenuItem value={departmentEvent._id} key={departmentEvent._id}>
-                                {departmentEvent.nameDepartment}
+                        {jobevents?.map((jobEvent: any) => (
+                            <MenuItem value={jobEvent._id} key={jobEvent._id}>
+                                {jobEvent.nameJob}
                             </MenuItem>
                         ))}
                     </Select>

@@ -3,16 +3,17 @@ import { NavLink } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
 import { makeStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
-import { dataAdmin, dataSManager, dataManager } from './dataConfig'
 
 import { logOutUser } from "redux/actions/user";
 import { logOutSManager } from "redux/actions/sManager";
 import { logOutManager } from "redux/actions/Manager";
 import { logOutAdmin } from "redux/actions/admin";
 import { RootState } from "redux/reducers";
-import { Box, Drawer, Stack } from "@mui/material";
+import { Box, Drawer, Avatar, Typography, Divider } from "@mui/material";
+import LogoutIcon from '@mui/icons-material/Logout';
+
 import NavSection from "./navSelection";
+import { width } from "@mui/system";
 
 const useStyles = makeStyles((theme) => ({
   toolbar: {
@@ -44,37 +45,140 @@ const SideBar: React.FC = (): JSX.Element => {
 
   const topLinks =
     manager.isAuthenticated && manager.getRole.keyRole === "manager" ? (
-      <NavLink exact to='/manager' className={`${classes.navLink} nav-link`}>
-        QUẢN LÝ
-      </NavLink>
+      <Box>
+        <Box style={{ textAlign: "center", fontSize: '14px' }}>
+          {manager.getDepartment.nameDepartment}
+        </Box>
+        <Box
+          style={{
+            display: "flex", flexDirection: "row",
+            borderRadius: "16px", padding: "20px 10px",
+            backgroundColor: '#f5f5f5', marginTop: '40px'
+          }}>
+          <Box>
+            <Avatar style={{ backgroundColor: "green", margin: "5px 10px", width: "32px", height: "32px" }}>
+              {manager.manager.username.charAt(0).toUpperCase()}
+            </Avatar>
+          </Box>
+          <Box style={{ display: "flex", flexDirection: "column", textAlign: "left" }}>
+            <Box style={{ fontSize: "14px", marginBottom: "5px" }}>
+              {manager.manager.username}
+            </Box>
+            <Typography style={{ fontSize: "13px" }}>
+              {manager.getRole.nameRole}
+            </Typography>
+          </Box>
+        </Box>
+      </Box>
     ) : smanager.isAuthenticated && smanager.getRole.keyRole === "smanager" ? (
-      <NavLink exact to='/smanager' className={`${classes.navLink} nav-link`}>
-        QUẢN LÝ CẤP CAO
-      </NavLink>
+      <Box>
+        <Box style={{ textAlign: "center", fontSize: '14px' }}>
+          {smanager.getDepartment.nameDepartment}
+        </Box>
+        <Box
+          style={{
+            display: "flex", flexDirection: "row",
+            borderRadius: "16px", padding: "20px 10px",
+            backgroundColor: '#f5f5f5', marginTop: '40px'
+          }}>
+          <Box>
+            <Avatar style={{ backgroundColor: "green", margin: "5px 10px", width: "32px", height: "32px" }}>
+              {smanager.smanager.username.charAt(0).toUpperCase()}
+            </Avatar>
+          </Box>
+          <Box style={{ display: "flex", flexDirection: "column", textAlign: "left" }}>
+            <Box style={{ fontSize: "14px", marginBottom: "5px" }}>
+              {smanager.smanager.username}
+            </Box>
+            <Typography style={{ fontSize: "13px" }}>
+              {smanager.getRole.nameRole}
+            </Typography>
+          </Box>
+        </Box>
+      </Box>
     ) : admin.isAuthenticated && admin.getRole.keyRole === "admin" ? (
-      <NavLink exact to='/users' className={`${classes.navLink} nav-link`}>
-        ADMIN
-      </NavLink>
+      <Box>
+        <Box
+          style={{
+            display: "flex", flexDirection: "row",
+            borderRadius: "16px", padding: "20px 10px",
+            backgroundColor: '#f5f5f5', marginTop: '40px'
+          }}>
+          <Box>
+            <Avatar style={{ backgroundColor: "green", margin: "0 10px" }}>
+              {admin.admin.username.charAt(0).toUpperCase()}
+            </Avatar>
+          </Box>
+          <Box style={{ display: "flex", flexDirection: "column", textAlign: "left" }}>
+            <Box style={{ fontSize: "14px", marginBottom: "5px" }}>
+              {admin.admin.username}
+            </Box>
+            <Typography style={{ fontSize: "13px" }}>
+              {admin.getRole.nameRole}
+            </Typography>
+          </Box>
+        </Box>
+      </Box>
     ) : null;
 
 
 
   const bottomLinks = user.isAuthenticated ? (
-    <NavLink exact to='#' className={`${classes.navLink} nav-link`} onClick={(e) => dispatch(logOutUser())}>
-      Đăng xuất
-    </NavLink>
+    <Box onClick={(e) => dispatch(logOutUser())} style={{ display: 'flex', marginBottom: "20px", justifyContent: 'center', cursor: 'pointer' }}>
+      <Box style={{
+        border: '1px solid #b5b5b5',
+        borderRadius: '12px', textAlign: 'center',
+        marginTop: '20px', padding: '6px', paddingTop: '8px',
+        width: 140, display: 'flex', flexDirection: 'row', justifyContent: 'center'
+      }}>
+        <Typography style={{ fontSize: '14px', paddingRight: '10px' }} >
+          Đăng xuất
+        </Typography>
+        <LogoutIcon style={{ width: '14px', color: '#ee6f81', paddingBottom: '2px' }} />
+      </Box>
+    </Box>
   ) : admin.isAuthenticated ? (
-    <NavLink exact to='#' className={`${classes.navLink} nav-link`} onClick={(e) => dispatch(logOutAdmin())}>
-      Đăng xuất
-    </NavLink>
+    <Box onClick={(e) => dispatch(logOutAdmin())} style={{ display: 'flex', marginBottom: "20px", justifyContent: 'center', cursor: 'pointer' }}>
+      <Box style={{
+        border: '1px solid #b5b5b5',
+        borderRadius: '12px', textAlign: 'center',
+        marginTop: '20px', padding: '6px', paddingTop: '8px',
+        width: 140, display: 'flex', flexDirection: 'row', justifyContent: 'center'
+      }}>
+        <Typography style={{ fontSize: '14px', paddingRight: '10px' }} >
+          Đăng xuất
+        </Typography>
+        <LogoutIcon style={{ width: '14px', color: '#ee6f81', paddingBottom: '2px' }} />
+      </Box>
+    </Box>
   ) : smanager.isAuthenticated ? (
-    <NavLink exact to='#' className={`${classes.navLink} nav-link`} onClick={(e) => dispatch(logOutSManager())}>
-      Đăng xuất
-    </NavLink>
+    <Box onClick={(e) => dispatch(logOutSManager())} style={{ display: 'flex', marginBottom: "20px", justifyContent: 'center', cursor: 'pointer' }}>
+      <Box style={{
+        border: '1px solid #b5b5b5',
+        borderRadius: '12px', textAlign: 'center',
+        marginTop: '20px', padding: '6px', paddingTop: '8px',
+        width: 140, display: 'flex', flexDirection: 'row', justifyContent: 'center'
+      }}>
+        <Typography style={{ fontSize: '14px', paddingRight: '10px' }} >
+          Đăng xuất
+        </Typography>
+        <LogoutIcon style={{ width: '14px', color: '#ee6f81', paddingBottom: '2px' }} />
+      </Box>
+    </Box>
   ) : manager.isAuthenticated ? (
-    <NavLink exact to='#' className={`${classes.navLink} nav-link`} onClick={(e) => dispatch(logOutManager())}>
-      Đăng xuất
-    </NavLink>
+    <Box onClick={(e) => dispatch(logOutManager())} style={{ display: 'flex', marginBottom: "20px", justifyContent: 'center', cursor: 'pointer' }}>
+      <Box style={{
+        border: '1px solid #b5b5b5',
+        borderRadius: '12px', textAlign: 'center',
+        marginTop: '20px', padding: '6px', paddingTop: '8px',
+        width: 140, display: 'flex', flexDirection: 'row', justifyContent: 'center'
+      }}>
+        <Typography style={{ fontSize: '14px', paddingRight: '10px' }} >
+          Đăng xuất
+        </Typography>
+        <LogoutIcon style={{ width: '14px', color: '#ee6f81', paddingBottom: '2px' }} />
+      </Box>
+    </Box>
   ) : null
 
   const sideBar = admin.isAuthenticated || smanager.isAuthenticated || manager.isAuthenticated ? (
@@ -95,25 +199,16 @@ const SideBar: React.FC = (): JSX.Element => {
             }
           }}>
 
-          <Box sx={{ px: 2.5, py: 6, display: 'inline-block', textAlign: 'center', fontWeight:"bold" }}>
+          <Box sx={{ px: 2, py: 3, display: 'inline-block', fontWeight: "bold" }}>
             {topLinks}
           </Box>
+          <Divider />
 
-          <NavSection/>
+          <NavSection />
+          <Box flexGrow={1} />
 
-          <Box sx={{ px: 2.5, pb: 3, mt: 10 }}>
-            <Stack alignItems="center" spacing={3} sx={{ pt: 5, borderRadius: 2, position: 'relative' }}>
-              <Box
-                sx={{ width: 100, position: 'absolute', }}
-              />
-              <Box sx={{ textAlign: 'center' }}>
-                <Typography style={{ marginTop: "55px" }} gutterBottom variant="h6">
-                  {bottomLinks}
-                </Typography>
-              </Box>
-            </Stack>
-          </Box>
-
+          <Divider />
+          {bottomLinks}
 
         </Drawer>
       </Box>

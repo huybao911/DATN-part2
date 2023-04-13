@@ -8,17 +8,15 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import { useDispatch } from "react-redux";
 import { updateEvent } from "redux/actions/sManager";
 import FormEvent from "pages/SManager/FormEvent";
-import FormDepartment from "pages/auth/FormDepartment_SManager";
-
 
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
     },
-    btnLogin: {
-        marginTop: theme.spacing(1.5),
-        marginRight: theme.spacing(1),
-        padding: theme.spacing(1, 2),
+    btn: {
+        '&.MuiButton-root:hover': {
+            backgroundColor: "transparent",
+        }
     },
     accordion: {
         marginBottom: theme.spacing(3),
@@ -90,14 +88,14 @@ const CreatePost: React.FC<Props> = ({ event }): JSX.Element => {
                     {({ isSubmitting, handleSubmit }) => (
                         <form noValidate onSubmit={handleSubmit}>
                             <FormEvent/>
-                            <FormDepartment isDepartmentCbb={true}/>
                             <Button
+                                disableRipple
                                 style={{ backgroundColor: "black", color: "white" }}
                                 type='submit'
                                 variant='contained'
                                 color='primary'
                                 size='small'
-                                className={classes.btnLogin}
+                                className={classes.btn}
                                 disabled={isSubmitting}
                             >
                                 {isSubmitting ? <CircularProgress size='1rem' /> : "Cập Nhật Sự Kiện"}

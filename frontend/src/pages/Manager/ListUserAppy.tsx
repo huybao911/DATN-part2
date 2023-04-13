@@ -79,7 +79,6 @@ interface DataUser {
 }
 
 interface HeadCell {
-  disablePadding: boolean;
   _id: keyof DataUser;
   label: string;
   numeric: boolean;
@@ -89,13 +88,11 @@ const headCells: HeadCell[] = [
   {
     _id: 'postId',
     numeric: false,
-    disablePadding: true,
     label: 'Tên sự kiện',
   },
   {
     _id: 'userId',
-    numeric: false,
-    disablePadding: false,
+    numeric: true,
     label: 'Người ứng tuyển',
   },
 ];
@@ -115,13 +112,21 @@ function EnhancedTableHead(props: EnhancedTableProps) {
       onRequestSort(event, property);
     };
   return (
-    <TableHead>
+    <TableHead style={{ backgroundColor: "#f4f5f5" }}
+      sx={{
+        '& th:first-child': {
+          borderRadius: '1em 0 0 0'
+        },
+        '& th:last-child': {
+          borderRadius: '0 1em 0 0'
+        }
+      }}>
       <TableRow>
         {headCells.map((headCell) => (
           <TableCell
             key={headCell._id}
             align={headCell.numeric ? 'right' : 'left'}
-            padding={headCell.disablePadding ? 'none' : 'normal'}
+            style={{ fontSize: '13px' }}
             sortDirection={orderBy === headCell._id ? order : false}
           >
             <TableSortLabel
@@ -151,7 +156,6 @@ const Users: React.FC = (): JSX.Element => {
   const [applyJobs, setApplyJobs] = React.useState<IApplyJob[]>([]);
   const manager = useSelector((state: RootState) => state.manager);
 
-  const [anchorEl, setAnchorEl] = React.useState([null]);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [filterName, setFilterName] = React.useState('');
@@ -185,36 +189,17 @@ const Users: React.FC = (): JSX.Element => {
 
     if (keyword !== '') {
       const results = manager?.appyjobs?.filter((applyJob: any) => {
-          return applyJob.postId.event.nameEvent.toLowerCase().startsWith(keyword.toLowerCase());
+        return applyJob.postId.event.nameEvent.toLowerCase().startsWith(keyword.toLowerCase());
         // Use the toLowerCase() method to make it case-insensitive
       });
       setApplyJobs(results);
     } else {
-        setApplyJobs(() => manager?.appyjobs?.filter((applyJob: any) => applyJob.postId || applyJob.userId));
+      setApplyJobs(() => manager?.appyjobs?.filter((applyJob: any) => applyJob.postId || applyJob.userId));
       // If the text field is empty, show all users
     }
 
     setFilterName(keyword);
   };
-
-  const handleOpenMenu = (event: any, index: any) => {
-    const newAnchorEls = [
-      ...anchorEl.slice(0, index),
-      event.currentTarget,
-      ...anchorEl.slice(index + 1)
-    ];
-    setAnchorEl(newAnchorEls);
-  };
-
-  const handleCloseMenu = (index: any) => {
-    const newAnchorEls = [
-      ...anchorEl.slice(0, index),
-      null,
-      ...anchorEl.slice(index + 1)
-    ];
-    setAnchorEl(newAnchorEls);
-  };
-
 
   const sortApplyJob = stableSort(applyJobs, getComparator(order, orderBy));
 
@@ -235,34 +220,34 @@ const Users: React.FC = (): JSX.Element => {
 
     <>
       <Container>
-        <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-          <Typography variant="h4" gutterBottom>
-            Danh Sách Ứng Tuyển
-          </Typography>
-          {/* <Link to="/event/newevent">
-            <Button style={{ backgroundColor: "black", padding: "6px 16px", color: "white" }} variant="contained" >
-              Thêm Sự Kiện
-            </Button>
-          </Link> */}
-        </Stack>
-
-        <Card>
+        <Card style={{ padding: "20px", marginTop: "40px", paddingBottom: "40px", borderRadius: "22px" }}>
           <StyledRoot
+            style={{ display: "flex", flexDirection: "row" }}
             sx={{
               color: 'primary.main',
               bgcolor: 'primary.lighter',
             }}
           >
-            <StyledSearch
-              value={filterName}
-              onChange={handleFilterByName}
-              placeholder="Tìm kiếm..."
-              startAdornment={
-                <InputAdornment position="start">
-                  <SearchIcon sx={{ color: 'text.disabled', width: 20, height: 20 }} />
-                </InputAdornment>
-              }
-            />
+            <Box>
+              <Typography gutterBottom style={{ color: "black", fontSize: "22px" }}>
+                Danh Sách Ứng Tuyển
+              </Typography>
+            </Box>
+            <Box style={{ display: "flex", flexDirection: "row" }} >
+              <Box style={{ marginRight: "14px" }}>
+                <StyledSearch
+                  style={{ borderRadius: '30px', fontSize: '13px', height: "48px" }}
+                  value={filterName}
+                  onChange={handleFilterByName}
+                  placeholder="Tìm kiếm..."
+                  startAdornment={
+                    <InputAdornment position="start" sx={{ paddingLeft: 1.3 }}>
+                      <SearchIcon style={{ width: '16px' }} sx={{ color: 'text.disabled' }} />
+                    </InputAdornment>
+                  }
+                />
+              </Box>
+            </Box>
           </StyledRoot>
           <TableContainer>
             {/* Table user */}
@@ -276,51 +261,33 @@ const Users: React.FC = (): JSX.Element => {
                 <TableBody>
                   {sortApplyJob.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((applyJob: any, index) =>
                     <TableRow key={applyJob._id}>
-                      <TableCell align="left">
+                      <TableCell align="left" sx={{ fontSize: '12px' }}>
                         {applyJob.postId.event.nameEvent}
                       </TableCell>
 
-                      <TableCell align="left">
+                      <TableCell align="right" sx={{ fontSize: '12px' }}>
                         {applyJob.userId.username}
-                      </TableCell>            
-
-                      {/* <TableCell align="right">
-                        <Button size="large" color="inherit" onClick={(event) => handleOpenMenu(event, index)} >
-                          <EditIcon/>
-                        </Button>
-                        <Popover
-                          open={!!anchorEl[index]}
-                          anchorEl={anchorEl[index]}
-                          onClose={() => handleCloseMenu(index)}
-                          anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
-                          transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-                          PaperProps={{
-                            sx: {
-                              p: 1,
-                              width: 340,
-                              '& .MuiMenuItem-root': {
-                                px: 1,
-                                typography: 'body2',
-                                borderRadius: 0.75,
-                              },
-                            },
-                          }}
-                        >
-                          <Box>
-                            <UpdateEvent applyJob={applyJob} key={applyJob._id} />
-                          </Box>
-                        </Popover>
                       </TableCell>
-                      <TableCell >
-                        <Button style={{color:"red"}} onClick={(e) => dispatch(deleteEvent(event._id))} >
-                          <DeleteForeverIcon/>
-                        </Button>
-                      </TableCell> */}
                     </TableRow>
                   )}
 
                   <TableRow>
                     <TablePagination
+                      style={{ fontSize: "12px" }}
+                      sx={{
+                        '& .MuiTablePagination-selectLabel': {
+                          fontSize: "12px"
+                        },
+                        '& .MuiTablePagination-selectIcon': {
+                          width: "16px"
+                        },
+                        '& .MuiTablePagination-displayedRows': {
+                          fontSize: "12px"
+                        },
+                        '& .MuiSvgIcon-root': {
+                          fontSize: "16px"
+                        },
+                      }}
                       rowsPerPageOptions={[5, 10, 25]}
                       labelRowsPerPage={"Số lượng hàng:"}
                       count={applyJobs.length}
@@ -328,6 +295,15 @@ const Users: React.FC = (): JSX.Element => {
                       page={page}
                       onPageChange={handleChangePage}
                       onRowsPerPageChange={handleChangeRowsPerPage}
+                      SelectProps={{
+                        MenuProps: {
+                          sx: {
+                            "&& .MuiTablePagination-menuItem": {
+                              fontSize: "12px"
+                            }
+                          }
+                        }
+                      }}
                     />
                   </TableRow>
                 </TableBody>

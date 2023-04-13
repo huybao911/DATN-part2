@@ -8,28 +8,33 @@ import WebIcon from '@mui/icons-material/Web';
 
 export const dataAdmin = [
     {
-        icon: <LeaderboardIcon />,
+        icon: <LeaderboardIcon style={{width: '18px'}} />,
         name: 'Bảng Điều Khiển',
         path: '/*'
     },
 
     {
-        icon: <AccountCircleIcon />,
+        icon: <AccountCircleIcon style={{width: '18px'}} />,
         name: 'User',
         path: '/users'
     },
     {
-        icon: <EventIcon />,
+        icon: <EventIcon style={{width: '18px'}} />,
         name: 'Sự Kiện',
-        path: '/*'
+        path: '/eventAdmin'
     },
     {
-        icon: <WebIcon />,
+        icon: <WorkOutlineIcon style={{width: '18px'}}/>,
+        name: 'Công Việc Sự Kiện',
+        path: '/jobEventAdmin'
+    },
+    {
+        icon: <WebIcon style={{width: '18px'}} />,
         name: 'Bài Viết',
         path: '/postAdmin'
     },
     {
-        icon: <SchoolIcon />,
+        icon: <SchoolIcon style={{width: '18px'}}/>,
         name: 'Khoa',
         path: '/department'
     },
@@ -37,57 +42,51 @@ export const dataAdmin = [
 
 export const dataSManager = [
     {
-        icon: <LeaderboardIcon />,
+        icon: <LeaderboardIcon style={{width: '18px'}} />,
         name: 'Bảng Điều Khiển',
         path: '/*'
     },
 
     {
-        icon: <AccountCircleIcon />,
+        icon: <AccountCircleIcon style={{width: '18px'}}/>,
         name: 'User',
         path: '/smanager'
     },
     {
-        icon: <EventIcon />,
+        icon: <EventIcon style={{width: '18px'}}/>,
         name: 'Sự Kiện',
         path: '/event'
     },
     {
-        icon: <WorkOutlineIcon />,
+        icon: <WorkOutlineIcon style={{width: '18px'}}/>,
         name: 'Công Việc Sự Kiện',
         path: '/jobEvent'
     },
     {
-        icon: <WebIcon />,
+        icon: <WebIcon style={{width: '18px'}}/>,
         name: 'Bài Viết',
-        path: '/postsSManager'
+        path: '/approvePost'
     },
 ];
 
 export const dataManager = [
     {
-        icon: <LeaderboardIcon />,
+        icon: <LeaderboardIcon style={{width: '18px'}}/>,
         name: 'Bảng Điều Khiển',
         path: '/*'
     },
-
     {
-        icon: <AccountCircleIcon />,
-        name: 'User',
-        path: '/manager'
-    },
-    {
-        icon: <EventIcon />,
+        icon: <EventIcon style={{width: '18px'}}/>,
         name: 'Sự Kiện',
-        path: '/*'
+        path: '/eventManager'
     },
     {
-        icon: <WebIcon />,
+        icon: <WebIcon style={{width: '18px'}}/>,
         name: 'Bài Viết',
         path: '/postsManager'
     },
     {
-        icon: <ListAltIcon />,
+        icon: <ListAltIcon style={{width: '18px'}}/>,
         name: 'Danh Sách Ứng Tuyển',
         path: '/listUserApply'
     },

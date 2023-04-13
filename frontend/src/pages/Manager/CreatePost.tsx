@@ -9,6 +9,7 @@ import { useDispatch } from "react-redux";
 import { createPost } from "redux/actions/Manager";
 import FormPost from "pages/Manager/FormPost";
 import FormEvent from "pages/auth/FormEvent-Manager";
+import FormJobEvent from "pages/auth/FormJobEvent-Manager";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -33,6 +34,7 @@ interface IInitialValues {
     title: string;
     content: string;
     event: any;
+    jobEvent: any;
     image:string;
 }
 
@@ -44,6 +46,7 @@ const CreatePost: React.FC<Props> = ({ post }): JSX.Element => {
         title: post?.title ?? "",
         content: post?.content ?? "",
         event: post?.event ?? "",
+        jobEvent: post?.jobEvent ?? "",
         image: post?.image ?? "",
     };
 
@@ -58,6 +61,7 @@ const CreatePost: React.FC<Props> = ({ post }): JSX.Element => {
         title: Yup.string().required("required!"),
         content: Yup.string().required("required!"),
         event: Yup.string().required("required!"),
+        jobEvent: Yup.string().required("required!"),
         image: Yup.string().required("required!"),
     });
 
@@ -80,7 +84,8 @@ const CreatePost: React.FC<Props> = ({ post }): JSX.Element => {
                     {({ isSubmitting, handleSubmit }) => (
                         <form noValidate onSubmit={handleSubmit}>
                             <FormPost />  
-                            <FormEvent isEvent={true}/>        
+                            <FormEvent isEvent={true}/>  
+                            <FormJobEvent isJobEvent={true}/>        
                             <Button
                                 type='submit'
                                 variant='contained'

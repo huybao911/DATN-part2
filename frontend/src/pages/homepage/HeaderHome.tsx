@@ -139,8 +139,8 @@ const Homepage: React.FC = (): JSX.Element => {
         </Stack>
       </Toolbar>
     </StyledRoot>
-  )  : null
-  
+  ) : null
+
   React.useEffect(() => {
     document.title = "TRANG CHỦ ";
   }, []);

@@ -1,17 +1,13 @@
 import * as React from "react";
 import { styled, alpha } from "@material-ui/core/styles";
 import { useDispatch, useSelector } from "react-redux";
-import { getDepartments, deleteDepartment } from "redux/actions/admin";
+import { getJobEvents } from "redux/actions/admin";
 import { RootState } from "redux/reducers";
-import { IDepartment } from "redux/types/department";
+import { IJobEvent } from "redux/types/jobEvent";
 import { TableSortLabel, Toolbar, OutlinedInput, InputAdornment, Button, Card, Container, Popover, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography } from "@mui/material";
 import { Link } from 'react-router-dom';
-import UpdateDepartment from "pages/admin/UpdateDepartment";
 // @mui
-import EditIcon from '@mui/icons-material/Edit';
 import SearchIcon from '@mui/icons-material/Search';
-import AddIcon from '@mui/icons-material/Add';
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { Box } from "@mui/system";
 import { visuallyHidden } from '@mui/utils';
 
@@ -74,11 +70,9 @@ function stableSort<T>(array: T[], comparator: (a: T, b: T) => number) {
 }
 
 interface DataUser {
-  _id: keyof IDepartment;
-  keyDepartment: keyof IDepartment;
-  nameDepartment: keyof IDepartment;
-  update: keyof IDepartment;
-  delete: keyof IDepartment;
+  _id: keyof IJobEvent;
+  nameJob: keyof IJobEvent;
+  eventId: keyof IJobEvent;
 }
 
 interface HeadCell {
@@ -89,24 +83,14 @@ interface HeadCell {
 
 const headCells: HeadCell[] = [
   {
-    _id: 'keyDepartment',
+    _id: 'nameJob',
     numeric: false,
-    label: 'Ký Tự Viết Tắt Khoa',
+    label: 'Tên công việc',
   },
   {
-    _id: 'nameDepartment',
+    _id: 'eventId',
     numeric: true,
-    label: 'Tên Khoa',
-  },
-  {
-    _id: 'update',
-    numeric: false,
-    label: '',
-  },
-  {
-    _id: 'delete',
-    numeric: false,
-    label: '',
+    label: 'Tên sự kiện',
   },
 ];
 
@@ -125,7 +109,8 @@ function EnhancedTableHead(props: EnhancedTableProps) {
       onRequestSort(event, property);
     };
   return (
-    <TableHead style={{ backgroundColor: "#f4f5f5" }}
+    <TableHead
+      style={{ backgroundColor: "#f4f5f5" }}
       sx={{
         '& th:first-child': {
           borderRadius: '1em 0 0 0'
@@ -161,21 +146,20 @@ function EnhancedTableHead(props: EnhancedTableProps) {
   );
 }
 
-const Department: React.FC = (): JSX.Element => {
+const Users: React.FC = (): JSX.Element => {
 
   const dispatch = useDispatch();
 
 
-  const [departments, setDepartments] = React.useState<IDepartment[]>([]);
+  const [jobEvents, setJobEvents] = React.useState<IJobEvent[]>([]);
   const admin = useSelector((state: RootState) => state.admin);
-
-  const [anchorEl, setAnchorEl] = React.useState([null]);
+  
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [filterName, setFilterName] = React.useState('');
 
   const [order, setOrder] = React.useState<Order>('asc');
-  const [orderBy, setOrderBy] = React.useState<keyof DataUser>('nameDepartment');
+  const [orderBy, setOrderBy] = React.useState<keyof DataUser>('nameJob');
 
 
 
@@ -202,47 +186,32 @@ const Department: React.FC = (): JSX.Element => {
     const keyword = event.target.value;
 
     if (keyword !== '') {
-      const results = admin?.departments?.filter((department: any) => {
-        return department.nameDepartment.toLowerCase().startsWith(keyword.toLowerCase());
+      const results = admin?.jobevents?.filter((jobEvent: any) => {
+        return jobEvent.nameJob.toLowerCase().startsWith(keyword.toLowerCase());
+        // Use the toLowerCase() method to make it case-insensitive
       });
-      setDepartments(results);
+      setJobEvents(results);
     } else {
-      setDepartments(() => admin?.departments?.filter((department: any) => department.nameDepartment || department.keyDepartment));
+      setJobEvents(() => admin?.jobevents?.filter((jobEvent: any) => jobEvent.nameJob || jobEvent.eventId));
+      // If the text field is empty, show all users
     }
 
     setFilterName(keyword);
   };
 
-  const handleOpenMenu = (jobEvent: any, index: any) => {
-    const newAnchorEls = [
-      ...anchorEl.slice(0, index),
-      jobEvent.currentTarget,
-      ...anchorEl.slice(index + 1)
-    ];
-    setAnchorEl(newAnchorEls);
-  };
-
-  const handleCloseMenu = (index: any) => {
-    const newAnchorEls = [
-      ...anchorEl.slice(0, index),
-      null,
-      ...anchorEl.slice(index + 1)
-    ];
-    setAnchorEl(newAnchorEls);
-  };
-
-  const sortDepartment = stableSort(departments, getComparator(order, orderBy));
+  const sortJobEvent = stableSort(jobEvents, getComparator(order, orderBy));
 
   React.useEffect(() => {
-    dispatch(getDepartments());
+    dispatch(getJobEvents());
   }, [dispatch]);
 
   React.useEffect(() => {
-    setDepartments(() => admin?.departments?.filter((department: any) => department.nameDepartment || department.keyDepartment));
+
+    setJobEvents(() => admin?.jobevents?.filter((jobEvent: any) => jobEvent.nameJob || jobEvent.eventId));
   }, [admin]);
 
   React.useEffect(() => {
-    document.title = "KHOA";
+    document.title = "JOB EVENT";
   }, []);
 
   return (
@@ -259,7 +228,7 @@ const Department: React.FC = (): JSX.Element => {
           >
             <Box>
               <Typography gutterBottom style={{ color: "black", fontSize: "22px" }}>
-                Khoa
+                Công Việc Sự Kiện
               </Typography>
             </Box>
             <Box style={{ display: "flex", flexDirection: "row" }} >
@@ -268,79 +237,35 @@ const Department: React.FC = (): JSX.Element => {
                   style={{ borderRadius: '30px', fontSize: '13px', height: "48px" }}
                   value={filterName}
                   onChange={handleFilterByName}
-                  placeholder="Tìm kiếm khoa..."
+                  placeholder="Tìm kiếm công việc..."
                   startAdornment={
                     <InputAdornment position="start" sx={{ paddingLeft: 1.3 }}>
                       <SearchIcon style={{ width: '16px' }} sx={{ color: 'text.disabled' }} />
                     </InputAdornment>
                   }
                 />
-              </Box>
-              <Box component={Link} to="/adddepartment" style={{ fontSize: '14px', textDecoration: "none", color: "black" }}>
-                <Box style={{
-                  border: '1px solid rgba(158, 158, 158, 0.32)',
-                  borderRadius: '30px', textAlign: 'center',
-                  marginTop: '0.5px', padding: '11px', backgroundColor: "#f5f5f5",
-                  width: 140, display: 'flex', flexDirection: 'row', justifyContent: 'center'
-                }}>
-                  <AddIcon style={{ width: '14px', color: '#ee6f81', marginRight: "6px" }} />
-                  <Typography style={{ fontSize: '12px', paddingTop: "2.5px" }} >
-                    Thêm Khoa
-                  </Typography>
-                </Box>
-              </Box>
+              </Box>            
             </Box>
           </StyledRoot>
           <TableContainer>
-            {/* Table department */}
+            {/* Table user */}
             <Table >
               <EnhancedTableHead
                 order={order}
                 orderBy={orderBy}
                 onRequestSort={handleRequestSort}
               />
-              {departments && departments.length > 0 ? (
+              {jobEvents && jobEvents.length > 0 ? (
                 <TableBody>
-                  {sortDepartment.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((department: any, index) =>
-                    <TableRow key={department._id}>
+                  {sortJobEvent.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((jobEvent: any, index) =>
+                    <TableRow key={jobEvent._id}>
                       <TableCell align="left" sx={{ fontSize: '12px' }}>
-                        {department.keyDepartment}
+                        {jobEvent.nameJob}
                       </TableCell>
+
                       <TableCell align="right" sx={{ fontSize: '12px' }}>
-                        {department.nameDepartment}
-                      </TableCell>
-                      <TableCell align="right">
-                        <Button size="large" color="inherit" onClick={(jobEvent) => handleOpenMenu(jobEvent, index)} >
-                          <EditIcon style={{ width: "16px" }} />
-                        </Button>
-                        <Popover
-                          open={!!anchorEl[index]}
-                          anchorEl={anchorEl[index]}
-                          onClose={() => handleCloseMenu(index)}
-                          anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
-                          transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-                          PaperProps={{
-                            sx: {
-                              p: 1,
-                              width: 340,
-                              '& .MuiMenuItem-root': {
-                                px: 1,
-                                typography: 'body2',
-                                borderRadius: 0.75,
-                              },
-                            },
-                          }}
-                        >
-                          <Box>
-                            <UpdateDepartment department={department} key={department._id} />
-                          </Box>
-                        </Popover>
-                      </TableCell>
-                      <TableCell >
-                        <Button style={{ color: "red" }} onClick={(e) => dispatch(deleteDepartment(department._id))} >
-                          <DeleteForeverIcon style={{ width: "16px" }} />
-                        </Button>
-                      </TableCell>
+                        {jobEvent.eventId.nameEvent}
+                      </TableCell>                     
                     </TableRow>
                   )}
 
@@ -363,7 +288,7 @@ const Department: React.FC = (): JSX.Element => {
                       }}
                       rowsPerPageOptions={[5, 10, 25]}
                       labelRowsPerPage={"Số lượng hàng:"}
-                      count={departments.length}
+                      count={jobEvents.length}
                       rowsPerPage={rowsPerPage}
                       page={page}
                       onPageChange={handleChangePage}
@@ -385,7 +310,7 @@ const Department: React.FC = (): JSX.Element => {
                   <TableRow>
                     <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
                       <Typography variant="h6" paragraph>
-                        Không tồn tại department
+                        Không tồn tại công việc
                       </Typography>
 
                       <Typography variant="body2">
@@ -404,4 +329,4 @@ const Department: React.FC = (): JSX.Element => {
   );
 };
 
-export default Department;
+export default Users;

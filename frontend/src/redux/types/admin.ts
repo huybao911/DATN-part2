@@ -5,6 +5,8 @@ import { IManager } from "./Manager";
 import { IDepartment } from "./department";
 import { IRole } from "./role";
 import { IPost } from "./post";
+import { IEvent } from "./event";
+import { IJobEvent } from "./jobEvent";
 
 export interface IAdmin {
   _id: any;
@@ -36,6 +38,19 @@ interface IAdminAddDepartmentSuccess {
   };
 }
 
+interface IUpdateDepartment {
+  type: typeof types.UPDATE_DEPARTMENT;
+  payload: {
+    department: IDepartment;
+    id: number;
+  };
+}
+
+interface IDeleteDepartment {
+  type: typeof types.DELETE_DEPARTMENT;
+  payload: number;
+}
+
 interface IGetUsers {
   type: typeof types.GET_USERS;
   payload: IUser[];
@@ -49,6 +64,16 @@ interface IGetUser {
 interface IGetDepartments {
   type: typeof types.GET_DEPARTMENTS;
   payload: IDepartment[];
+}
+
+interface IGetEvents {
+  type: typeof types.GET_EVENTS;
+  payload: IEvent[];
+}
+
+interface IGetJobEvents {
+  type: typeof types.GET_JOBEVENTS;
+  payload: IJobEvent[];
 }
 
 interface IGetRoles {
@@ -107,8 +132,12 @@ export type AdminActions =
   | IGetUsers
   | IGetUser
   | IGetDepartments
+  | IUpdateDepartment
+  | IDeleteDepartment
   | IGetRoles
   | IGetPosts
+  | IGetEvents
+  | IGetJobEvents
   | IUpdateUser
   | IDeleteUser;
 
@@ -124,4 +153,6 @@ export interface IAdminState {
   roles: IRole[];
   posts: IPost[];
   departments: IDepartment[];
+  events: IEvent[];
+  jobevents: IJobEvent[];
 }

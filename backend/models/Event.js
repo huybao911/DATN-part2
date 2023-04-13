@@ -14,8 +14,8 @@ const eventSchema = new mongoose.Schema(
         },
         job: {
             type: Array,
-            trim: true,
             required: [true, "Job is required"],
+            default:[],
         },
         location: {
             type: String,
@@ -25,7 +25,6 @@ const eventSchema = new mongoose.Schema(
         departmentEvent:
         {
             type: mongoose.Schema.Types.ObjectId,
-            trim: true,
             ref: "Department",
         },
         costs: {

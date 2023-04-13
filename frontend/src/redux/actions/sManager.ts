@@ -347,7 +347,7 @@ export const getEvents =
     }
   };
 
-// CREATE EVENT
+// CREATE JOBEVENT
 export const createEvent =
   (body: any, setSubmitting: any) =>
     async (dispatch: Dispatch<SManagerActions | AlertActions>) => {
@@ -478,7 +478,6 @@ export const getJobEvents =
       );
     }
   };
-
 // CREATE JOBEVENT
 export const createJobEvent =
   (body: any, setSubmitting: any) =>

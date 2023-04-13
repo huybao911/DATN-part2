@@ -19,6 +19,7 @@ router.patch("/post/:id", isAuth, ManagerController.updatePost);
 router.delete("/post/:id", isAuth, ManagerController.deletePost);
 
 router.get("/events", isAuth, ManagerController.getEvents);
+router.get("/jobEvents", isAuth, ManagerController.getJobEvents);
 
 // router
 //   .route("/users/:id")
