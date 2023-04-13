@@ -1,18 +1,26 @@
 import * as React from "react";
 import clsx from "clsx";
+import { CircularProgress } from "@material-ui/core";
+
 import { makeStyles, styled, alpha } from "@material-ui/core/styles";
 import { useDispatch, useSelector } from "react-redux";
+import * as Yup from "yup";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { getUsers, deleteUser, updateUser } from "redux/actions/admin";
 import { RootState } from "redux/reducers";
 import { IAdmin } from "redux/types/admin";
 import { ISManager } from "redux/types/sManager";
+import FormField from "pages/auth/FormField";
+import FormFieldRole from "pages/auth/FormFieldRole";
+import FormFieldDepartment from "pages/auth/FormDepartment_Admin";
 import { IManager } from "redux/types/Manager";
 import { IUser } from "redux/types/user";
 import { IconButton, TableSortLabel, Toolbar, OutlinedInput, InputAdornment, Button, Card, Container, MenuItem, Popover, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography } from "@mui/material";
 import { Link } from 'react-router-dom';
 import UserForm from "./UserForm";
 import { forwardRef } from 'react';
+import { Formik, useFormik } from "formik";
+
 // icons
 import { Icon } from '@iconify/react';
 // @mui
@@ -48,29 +56,18 @@ const useStyles = makeStyles((theme) => ({
     animation: `$myEffectExit 3000ms ${theme.transitions.easing.easeInOut}`,
     opacity: 0,
     transform: "translateY(-200%)"
-    
-  },
-  "@keyframes myEffect": {
-    "0%": {
-      opacity: 0,
-      transform: "translateY(-200%)"
-    },
-    "100%": {
-      opacity: 1,
-      transform: "translateY(0)"
-    }
-  },
-  "@keyframes myEffectExit": {
-    "0%": {
-      opacity: 1,
-      transform: "translateY(0)"
-    },
-    "100%": {
-      opacity: 0,
-      transform: "translateY(-200%)"
-    }
+
   }
+
 }));
+
+interface IInitialValues {
+  username: string;
+  email?: string;
+  password: string;
+  role?: string;
+  department?: any;
+}
 
 const StyledRoot = styled(Toolbar)(({ theme }) => ({
   height: 96,
@@ -99,6 +96,23 @@ const Users: React.FC = (): JSX.Element => {
   const styles = useStyles();
   const dispatch = useDispatch();
 
+  const initialValues = {
+    username: "",
+    email: "",
+    password: "",
+    role: "",
+    department: ""
+  };
+
+
+  const validationSchema = Yup.object({
+    username: Yup.string().required("required!"),
+    email: Yup.string().email("Invalid email!").required("required!"),
+    password: Yup.string().required("required!"),
+    role: Yup.string().required("required!"),
+    department: Yup.string().required("required!")
+
+  });
 
   const [users, setUsers] = React.useState<IUser[]>([]);
   const [SManagers, setSManagers] = React.useState<ISManager[]>([]);
@@ -113,7 +127,7 @@ const Users: React.FC = (): JSX.Element => {
 
   const [nameDirection, setNameDirection] = React.useState("asc");
   const [toggle, setToggle] = React.useState(false)
-  
+
   const handleChangeRowsPerPage = (event: any) => {
     setPage(0);
     setRowsPerPage(parseInt(event.target.value, 10));
@@ -170,44 +184,7 @@ const Users: React.FC = (): JSX.Element => {
   }, []);
 
   return (
-    // <div className={styles.root}>
-    //   <div style={{ marginBottom: "5rem" }}>
-    //     <h4>Người Dùng</h4>
-    //     {users?.map((user: any) => <UserForm user={user} key={user._id} />) ?? (
-    //       <p>No Users Found.</p>
-    //     )}
-    //   </div>
-    //   <div>
-    //     <h4>Quản Lý</h4>
-    //     {Managers?.map((user: any) => (
-    //       <UserForm user={user} key={user._id} />
-    //     )) ?? <p>No Users Found.</p>}
-    //   </div>
-    //   <div>
-    //     <h4>Quản Lý Cấp Cao</h4>
-    //     {SManagers?.map((user: any) => (
-    //       <UserForm user={user} key={user._id} />
-    //     )) ?? <p>No Users Found.</p>}
-    //   </div>
-    //   <div>
-    //     <h4>Quản Trị Viên</h4>
-    //     {admins?.map((user: any) => (
-    //       <UserForm user={user} key={user._id} />
-    //     )) ?? <p>No Users Found.</p>}
-    //   </div>
-    //   <div style={{ textAlign: "center" }}>
-    //     <Link to="registerAdmin">
-    //       <button style={{fontSize:"20px", backgroundColor:"#000", color:"#fff",border:"10px solid black"}}>TẠO TÀI KHOẢN</button>
-    //     </Link>
-    //   </div>
 
-    //   <div style={{ textAlign: "center", marginTop: "20px" }}>
-    //     <Link to="adddepartment">
-    //       <button style={{fontSize:"20px", backgroundColor:"#000", color:"#fff",border:"10px solid black"}}>Thêm tòa nhà</button>
-    //     </Link>
-    //   </div>
-
-    // </div>
 
     <Container sx={{ position: 'relative' }}>
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
@@ -215,11 +192,11 @@ const Users: React.FC = (): JSX.Element => {
           User
         </Typography>
         <Link to={'/users/registerAdmin'}>
-        <Button style={{ backgroundColor: "black", padding: "6px 16px", color: "white" }} variant="contained" >
-          New User
-        </Button>
+          <Button style={{ backgroundColor: "black", padding: "6px 16px", color: "white" }} variant="contained" >
+            New User
+          </Button>
         </Link>
-       
+
       </Stack>
 
       <Card>
@@ -244,7 +221,7 @@ const Users: React.FC = (): JSX.Element => {
           {/* Table user */}
           <Table>
             <TableHead >
-              
+
             </TableHead>
             {users && users.length > 0 ? (
               <TableBody>
@@ -266,57 +243,16 @@ const Users: React.FC = (): JSX.Element => {
                       {user.department.nameDepartment}
                     </TableCell >
 
-                    <TableCell align="right" >
-                      <IconButton size="large" color="inherit" onClick={handleOpenMenu}>
-                        <MoreVertIcon />
-                      </IconButton>
-                      <Popover
-                        open={Boolean(open)}
-                        anchorEl={open}
-                        onClick={handleCloseMenu}
-                        anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
-                        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-                        PaperProps={{
-                          sx: {
-                            p: 1,
-                            width: 140,
-                            '& .MuiMenuItem-root': {
-                              px: 1,
-                              typography: 'body2',
-                              borderRadius: 0.75,
-                            },
-                          },
-                        }}
-                      >
-                        <MenuItem onClick={() => setToggle(!toggle)}>
-
-                          <Box>
-                            <EditIcon sx={{ mr: 2 }} />
-                          </Box>
-                          <Box>
-                            Sửa
-                          </Box>
-                        </MenuItem>
-
-                        <MenuItem onClick={(e) => dispatch(deleteUser(user._id))} sx={{ color: 'error.main' }}>
-                          <DeleteForeverIcon sx={{ mr: 2 }} />
-                          Xóa
-                        </MenuItem>
-                      </Popover>
+                    <TableCell >
+                      <Button onClick={(e) => dispatch(deleteUser(user._id))}>
+                        Xóa
+                      </Button>
                     </TableCell>
-                    {/* <Box className={clsx(styles.animatedItem, {
-                        [styles.animatedItemExiting]: !toggle
-                      })}> */}
-                    <TableCell sx={{ borderBottom: '0px' }} className={styles.tableCell} >
-                      {toggle && (
-                        <Box>
-                          <UserForm user={user} key={user._id} />
-                          <Button onClick={() => setToggle(false)}>Click to exit</Button>
-                        </Box>
-                      )}
+                     
+                        
+                    <TableCell>
+                          <UserForm user={user} key={user.id}/>
                     </TableCell>
-
-                    {/* </Box> */}
 
                   </TableRow>
 
