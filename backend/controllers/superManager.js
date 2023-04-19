@@ -4,7 +4,6 @@ const { sign } = require("jsonwebtoken");
 const User = require("../models/User");
 const Role = require("../models/Role");
 const Department = require("../models/Department");
-const Post = require("../models/Post");
 const Event = require("../models/Event");
 const JobEvent = require("../models/JobEvent");
 
@@ -58,10 +57,10 @@ exports.getDepartments = async (req, res, next) => {
   }
 };
 
-exports.getPostApprove = async (req, res) => {
+exports.getEventApprove = async (req, res) => {
   const smanagerUser = await User.findById(req?.smanager?._id);
   const smanagerDepartment = await User.find({ department: smanagerUser.department });
-  const smanagerPost = await Post.find({ poster: smanagerDepartment, approver: null }).populate("poster").populate({ path: "comments", populate: [{ path: "commenter" }] });
+  const smanagerPost = await Event.find({ poster: smanagerDepartment, approver: null }).populate("poster").populate({ path: "comments", populate: [{ path: "commenter" }] });
   try {
     if (!req.smanager) return res.status(400).send("You dont have permission");
     return res.status(200).json(smanagerPost);
@@ -70,59 +69,50 @@ exports.getPostApprove = async (req, res) => {
   }
 };
 
-exports.approvePost = async (req, res) => {
+exports.approveEvent = async (req, res) => {
   const { id } = req.params;
   const userApprove = await User.findById(req?.smanager?._id);
-  const { poster, title, content, image } = req.body;
   try {
     if (!req.smanager) return res.status(400).send("You dont have permission");
-    const post = await Post.findById(id).lean();
-    if (!post) return res.status(400).send("Post does not exist");
-    const postObj = {
-      poster: poster,
+    const event = await Event.findById(id).lean();
+    if (!event) return res.status(400).send("Event does not exist");
+    const eventObj = {
       approver: userApprove,
-      title: title,
-      content: content,
-      image: image,
     };
-    const newPost = await Post.findByIdAndUpdate(
+    const newEvent = await Event.findByIdAndUpdate(
       { _id: id },
       {
-        poster: postObj.poster,
-        approver: postObj.approver,
-        title: postObj.title,
-        content: postObj.content,
-        image: postObj.image,
+        approver: eventObj.approver,
       },
       { new: true }
     );
-    return res.status(200).json(newPost);
+    return res.status(200).json(newEvent);
   } catch (error) {
     console.log(error.message);
     return res.status(500).json(error);
   }
 };
 
-exports.commentPost = async (req, res) => {
+exports.commentEvent = async (req, res) => {
   const { id } = req.params;
   const userComment = await User.findById(req?.smanager?._id);
   const { contentComment, created } = req.body;
   try {
     if (!req.smanager) return res.status(400).send("You dont have permission");
-    const post = await Post.findById(id).lean();
-    if (!post) return res.status(400).send("Post does not exist");
-    const postObj = {
+    const event = await Event.findById(id).lean();
+    if (!event) return res.status(400).send("Event does not exist");
+    const eventObj = {
       commenter: userComment,
       contentComment: contentComment,
       created: created,
     };
-    const newComment = await Post.findByIdAndUpdate(
+    const newComment = await Event.findByIdAndUpdate(
       { _id: id },
       {
         $push:{comments: [{
-          commenter: postObj.commenter,
-          contentComment: postObj.contentComment,
-          created: postObj.created,
+          commenter: eventObj.commenter,
+          contentComment: eventObj.contentComment,
+          created: eventObj.created,
       }]}
       },
       { new: true }
@@ -134,12 +124,12 @@ exports.commentPost = async (req, res) => {
   }
 };
 
-exports.deleteCommentPost = async (req, res) => {
-  const { id, postId } = req.params;
+exports.deleteCommentEvent = async (req, res) => {
+  const { id, eventId } = req.params;
   try {
     if (!req.smanager) return res.status(400).send("You dont have permission");
-    const newComment = await Post.updateOne(
-      { _id: postId },
+    const newComment = await Event.updateOne(
+      { _id: eventId },
       {
         $pull:{comments: {
           _id:id,
@@ -244,7 +234,7 @@ exports.deleteEvent = async (req, res) => {
 exports.getJobEvents = async (req, res) => {
   const smanagerUser = await User.findById(req?.smanager?._id);
   const smanagerEvent = await Event.find({ departmentEvent: smanagerUser.department}).populate("departmentEvent");
-  const smanagerJobEvent = await JobEvent.find({ eventId: smanagerEvent}).populate("eventId");
+  const smanagerJobEvent = await JobEvent.find({ event: smanagerEvent}).populate("event");
   try {
     if (!req.smanager) return res.status(400).send("You dont have permission");
     return res.status(200).json(smanagerJobEvent);
@@ -254,15 +244,15 @@ exports.getJobEvents = async (req, res) => {
 };
 
 exports.createNewJobEvent = async (req, res) => {
-  const { nameJob,eventId, quantity} = req.body;
+  const { nameJob,event, quantity} = req.body;
   try {
     if (!req.smanager) return res.status(400).send("You dont have permission");
-    if (!nameJob || !eventId || !quantity) {
+    if (!nameJob || !event || !quantity) {
       return res.status(400).send("Please fill in all the required fields!")
     }
     const NewJobEvent = new JobEvent({
       nameJob: nameJob,
-      eventId: eventId,
+      event: event,
       quantity: quantity,
     });
     await NewJobEvent.save();
@@ -275,21 +265,21 @@ exports.createNewJobEvent = async (req, res) => {
 
 exports.updateJobEvent = async (req, res, next) => {
   const { id } = req.params;
-  const { nameJob, eventId, quantity} = req.body;
+  const { nameJob, event, quantity} = req.body;
   try {
     if (!req.smanager) return res.status(400).send("You dont have permission");
     const jobEvent = await JobEvent.findById(id).lean();
     if (!jobEvent) return res.status(400).send("JobEvent does not exist");
     const jobEventObj = { 
       nameJob: nameJob,
-      eventId: eventId,
+      event: event,
       quantity:quantity,
      };
     const newJobEvent = await JobEvent.findByIdAndUpdate(
       { _id: id },
       { 
         nameJob: jobEventObj.nameJob,
-        eventId: jobEventObj.eventId,
+        event: jobEventObj.event,
         quantity: jobEventObj.quantity,
        },
       { new: true }

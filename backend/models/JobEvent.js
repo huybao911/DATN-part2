@@ -3,11 +3,11 @@ const mongoose = require("mongoose");
 const JobEvent = new mongoose.Schema(
   {
     nameJob: {
-        type: String,
-        trim: true,
-        required: [true, "NameJob is required"],
+      type: String,
+      trim: true,
+      required: [true, "NameJob is required"],
     },
-    eventId: {
+    event: {
       type: mongoose.Types.ObjectId,
       ref: "Event",
       required: true,
@@ -15,7 +15,19 @@ const JobEvent = new mongoose.Schema(
     quantity: {
       type: Number,
       required: [true, "Quantity is required"],
-  },
+    },
+    unitPrice: {
+      type: Number,
+      required: [true, "UnitPrice is required"],
+    },
+    total: {
+      type: Number,
+    },
+    jobDescription: {
+      type: String,
+      required: true,
+      maxLength: [8000, "Must be no more than 8000 characters"],
+    },
   },
   { timestamps: true }
 );

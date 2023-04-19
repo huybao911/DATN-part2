@@ -1,13 +1,18 @@
 import * as React from "react";
 import { styled, alpha } from "@material-ui/core/styles";
 import { useDispatch, useSelector } from "react-redux";
-import { getPosts } from "redux/actions/admin";
+import { getJobEvents, deleteJobEvent } from "redux/actions/Manager";
 import { RootState } from "redux/reducers";
-import { IPost } from "redux/types/post";
+import { IJobEvent } from "redux/types/jobEvent";
 import { TableSortLabel, Toolbar, OutlinedInput, InputAdornment, Button, Card, Container, Popover, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography } from "@mui/material";
+import { Link } from 'react-router-dom';
+import UpdateJobEvent from "pages/Manager/UpdateJobEvent";
 // @mui
+import EditIcon from '@mui/icons-material/Edit';
 import SearchIcon from '@mui/icons-material/Search';
-import { Box, style } from "@mui/system";
+import AddIcon from '@mui/icons-material/Add';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import { Box } from "@mui/system";
 import { visuallyHidden } from '@mui/utils';
 
 const StyledRoot = styled(Toolbar)(({ theme }) => ({
@@ -69,12 +74,14 @@ function stableSort<T>(array: T[], comparator: (a: T, b: T) => number) {
 }
 
 interface DataUser {
-  _id: keyof IPost;
-  poster: keyof IPost;
-  title: keyof IPost;
-  content: keyof IPost;
-  image: keyof IPost;
-  createdAt: keyof IPost;
+  _id: keyof IJobEvent;
+  nameJob: keyof IJobEvent;
+  event: keyof IJobEvent;
+  quantity: keyof IJobEvent;
+  unitPrice: keyof IJobEvent;
+  jobDescription: keyof IJobEvent;
+  update: keyof IJobEvent;
+  delete: keyof IJobEvent;
 }
 
 interface HeadCell {
@@ -85,34 +92,39 @@ interface HeadCell {
 
 const headCells: HeadCell[] = [
   {
-    _id: 'poster',
+    _id: 'event',
     numeric: false,
-    label: 'Người đăng',
+    label: 'Tên sự kiện',
   },
   {
-    _id: 'poster',
+    _id: 'nameJob',
     numeric: false,
-    label: 'Khoa',
+    label: 'Tên công việc',
   },
   {
-    _id: 'title',
+    _id: 'quantity',
     numeric: false,
-    label: 'Tiêu đề',
+    label: 'Số lượng người',
   },
   {
-    _id: 'content',
+    _id: 'unitPrice',
     numeric: false,
-    label: 'Nội dung',
+    label: 'Đơn giá',
   },
   {
-    _id: 'image',
+    _id: 'jobDescription',
     numeric: false,
-    label: 'Hình ảnh',
+    label: 'Mô tả công việc',
   },
   {
-    _id: 'createdAt',
+    _id: 'update',
     numeric: false,
-    label: 'Ngày đăng',
+    label: '',
+  },
+  {
+    _id: 'delete',
+    numeric: false,
+    label: '',
   },
 ];
 
@@ -131,7 +143,8 @@ function EnhancedTableHead(props: EnhancedTableProps) {
       onRequestSort(event, property);
     };
   return (
-    <TableHead style={{ backgroundColor: "#f4f5f5" }}
+    <TableHead
+      style={{ backgroundColor: "#f4f5f5" }}
       sx={{
         '& th:first-child': {
           borderRadius: '1em 0 0 0'
@@ -167,35 +180,23 @@ function EnhancedTableHead(props: EnhancedTableProps) {
   );
 }
 
-const Department: React.FC = (): JSX.Element => {
+const Users: React.FC = (): JSX.Element => {
 
   const dispatch = useDispatch();
 
-  const PF = process.env.REACT_APP_PUBLIC_FOLDER;
-  const [posts, setPosts] = React.useState<IPost[]>([]);
-  const admin = useSelector((state: RootState) => state.admin);
 
+  const [jobEvents, setJobEvents] = React.useState<IJobEvent[]>([]);
+  const manager = useSelector((state: RootState) => state.manager);
+
+  const [anchorEl, setAnchorEl] = React.useState([null]);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [filterName, setFilterName] = React.useState('');
 
   const [order, setOrder] = React.useState<Order>('asc');
-  const [orderBy, setOrderBy] = React.useState<keyof DataUser>('createdAt');
-
-  const [isActive, setIsActive] = React.useState(false);
-
-  const handleClickImage = () => {
-    setIsActive(current => !current);
-  };
+  const [orderBy, setOrderBy] = React.useState<keyof DataUser>('nameJob');
 
 
-  function formatDate(input: any) {
-    var datePart = input.match(/\d+/g),
-      year = datePart[0].substring(0),
-      month = datePart[1], day = datePart[2];
-
-    return day + '/' + month + '/' + year;
-  }
 
   const handleRequestSort = (
     event: React.MouseEvent<unknown>,
@@ -220,36 +221,58 @@ const Department: React.FC = (): JSX.Element => {
     const keyword = event.target.value;
 
     if (keyword !== '') {
-      const results = admin?.posts?.filter((post: any) => {
-        return post.poster.department.nameDepartment.toLowerCase().startsWith(keyword.toLowerCase());
+      const results = manager?.jobevents?.filter((jobEvent: any) => {
+        return jobEvent.nameJob.toLowerCase().startsWith(keyword.toLowerCase());
+        // Use the toLowerCase() method to make it case-insensitive
       });
-      setPosts(results);
+      setJobEvents(results);
     } else {
-      setPosts(() => admin?.posts?.filter((post: any) => post.poster || post.approver || post.title || post.content || post.image || post.createdAt));
+      setJobEvents(() => manager?.jobevents?.filter((jobEvent: any) => jobEvent.nameJob || jobEvent.eventId));
+      // If the text field is empty, show all users
     }
 
     setFilterName(keyword);
   };
 
-  const sortPost = stableSort(posts, getComparator(order, orderBy));
+  const handleOpenMenu = (jobEvent: any, index: any) => {
+    const newAnchorEls = [
+      ...anchorEl.slice(0, index),
+      jobEvent.currentTarget,
+      ...anchorEl.slice(index + 1)
+    ];
+    setAnchorEl(newAnchorEls);
+  };
+
+  const handleCloseMenu = (index: any) => {
+    const newAnchorEls = [
+      ...anchorEl.slice(0, index),
+      null,
+      ...anchorEl.slice(index + 1)
+    ];
+    setAnchorEl(newAnchorEls);
+  };
+
+
+  const sortJobEvent = stableSort(jobEvents, getComparator(order, orderBy));
 
   React.useEffect(() => {
-    dispatch(getPosts());
+    dispatch(getJobEvents());
   }, [dispatch]);
 
   React.useEffect(() => {
-    setPosts(() => admin?.posts?.filter((post: any) => post.poster || post.approver || post.title || post.content || post.image || post.createdAt));
-  }, [admin]);
+
+    setJobEvents(() => manager?.jobevents?.filter((jobEvent: any) => jobEvent.nameJob || jobEvent.eventId));
+  }, [manager]);
 
   React.useEffect(() => {
-    document.title = "POST";
+    document.title = "JOB EVENT";
   }, []);
 
   return (
 
     <>
       <Container>
-        <Card style={{ padding: "20px", paddingBottom: "40px", borderRadius: "22px" }}>
+        <Card style={{ padding: "20px", marginTop: "20px", paddingBottom: "40px", borderRadius: "22px" }}>
           <StyledRoot
             style={{ display: "flex", flexDirection: "row" }}
             sx={{
@@ -259,7 +282,7 @@ const Department: React.FC = (): JSX.Element => {
           >
             <Box>
               <Typography gutterBottom style={{ color: "black", fontSize: "22px" }}>
-              Bài Viết
+                Công Việc Sự Kiện
               </Typography>
             </Box>
             <Box style={{ display: "flex", flexDirection: "row" }} >
@@ -268,7 +291,7 @@ const Department: React.FC = (): JSX.Element => {
                   style={{ borderRadius: '30px', fontSize: '13px', height: "48px" }}
                   value={filterName}
                   onChange={handleFilterByName}
-                  placeholder="Tìm kiếm bài viết..."
+                  placeholder="Tìm kiếm công việc..."
                   startAdornment={
                     <InputAdornment position="start" sx={{ paddingLeft: 1.3 }}>
                       <SearchIcon style={{ width: '16px' }} sx={{ color: 'text.disabled' }} />
@@ -276,67 +299,108 @@ const Department: React.FC = (): JSX.Element => {
                   }
                 />
               </Box>
+              <Box component={Link} to="/jobEvent/newJobEvent" style={{ fontSize: '14px', textDecoration: "none", color: "black" }}>
+                <Box style={{
+                  border: '1px solid rgba(158, 158, 158, 0.32)',
+                  borderRadius: '30px', textAlign: 'center',
+                  marginTop: '0.5px', padding: '11px', backgroundColor: "#f5f5f5",
+                  width: 140, display: 'flex', flexDirection: 'row', justifyContent: 'center'
+                }}>
+                  <AddIcon style={{ width: '14px', color: '#ee6f81', marginRight: "6px" }} />
+                  <Typography style={{ fontSize: '12px', paddingTop: "2.5px" }} >
+                    Thêm Công Việc
+                  </Typography>
+                </Box>
+              </Box>
             </Box>
           </StyledRoot>
           <TableContainer>
-            {/* Table department */}
+            {/* Table user */}
             <Table >
               <EnhancedTableHead
                 order={order}
                 orderBy={orderBy}
                 onRequestSort={handleRequestSort}
               />
-              {posts && posts.length > 0 ? (
+              {jobEvents && jobEvents.length > 0 ? (
                 <TableBody>
-                  {sortPost.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((post: any, index) =>
-                    <TableRow key={post._id}>
-                      <TableCell >
-                        {post.poster.username}
+                  {sortJobEvent.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((jobEvent: any, index) =>
+                    <TableRow key={jobEvent._id}>
+                      <TableCell align="left" sx={{ fontSize: '12px' }}>
+                        {jobEvent.event.nameEvent}
+                      </TableCell>
+
+                      <TableCell align="left" sx={{ fontSize: '12px' }}>
+                        {jobEvent.nameJob}
+                      </TableCell>
+
+                      <TableCell align="left" sx={{ fontSize: '12px' }}>
+                        {jobEvent.quantity}
+                      </TableCell>
+
+                      <TableCell align="left" sx={{ fontSize: '12px' }}>
+                        {jobEvent.unitPrice}
+
+                      </TableCell>
+
+                      <TableCell align="left" sx={{ fontSize: '12px' }}>
+                        {jobEvent.jobDescription}
+                      </TableCell>
+                      <TableCell align="right">
+                        <Button size="large" color="inherit" onClick={(jobEvent) => handleOpenMenu(jobEvent, index)} >
+                          <EditIcon style={{ width: "16px" }} />
+                        </Button>
+                        <Popover
+                          open={!!anchorEl[index]}
+                          anchorEl={anchorEl[index]}
+                          onClose={() => handleCloseMenu(index)}
+                          anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
+                          transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                          PaperProps={{
+                            sx: {
+                              p: 1,
+                              width: 340,
+                              '& .MuiMenuItem-root': {
+                                px: 1,
+                                typography: 'body2',
+                                borderRadius: 0.75,
+                              },
+                            },
+                          }}
+                        >
+                          <Box>
+                            <UpdateJobEvent jobEvent={jobEvent} key={jobEvent._id} />
+                          </Box>
+                        </Popover>
                       </TableCell>
                       <TableCell >
-                        {post.poster.department.nameDepartment}
-                      </TableCell>
-                      {/* <TableCell align="right">
-                        {post.approver._id} 
-                      </TableCell> */}
-                      <TableCell align="left" sx={{ width: "200px", paddingLeft: "26px", fontSize: '12px' }}>
-                        {post.title}
-                      </TableCell>
-                      <TableCell align="left" sx={{ width: "200px", paddingLeft: "26px", fontSize: '12px' }}> 
-                        {post.content}
-                      </TableCell>
-                      <TableCell align="left" sx={{ width: "200px", paddingLeft: "26px", fontSize: '12px' }}>
-                        <img style={{ height: "100px", width: "150px", scale: isActive ? "4" : "" }} src={PF + post.image} onClick={handleClickImage} />
-                      </TableCell>
-                      <TableCell align="left" sx={{ width: "200px", paddingLeft: "26px", fontSize: '12px' }}>
-                        {formatDate(post.createdAt).slice(0, 10)}
+                        <Button style={{ color: "red" }} onClick={(e) => dispatch(deleteJobEvent(jobEvent._id))} >
+                          <DeleteForeverIcon style={{ width: "16px" }} />
+                        </Button>
                       </TableCell>
                     </TableRow>
                   )}
 
                   <TableRow>
                     <TablePagination
-                    style={{ fontSize: "12px" }}
-                    sx={{
-                      '& .MuiTablePagination-select': {
-                        width: "12px"
-                      },
-                      '& .MuiTablePagination-selectLabel': {
-                        fontSize: "12px"
-                      },
-                      '& .MuiTablePagination-selectIcon': {
-                        width: "16px"
-                      },
-                      '& .MuiTablePagination-displayedRows': {
-                        fontSize: "12px"
-                      },
-                      '& .MuiSvgIcon-root': {
-                        fontSize: "16px"
-                      },
-                    }}
+                      style={{ fontSize: "12px" }}
+                      sx={{
+                        '& .MuiTablePagination-selectLabel': {
+                          fontSize: "12px"
+                        },
+                        '& .MuiTablePagination-selectIcon': {
+                          width: "16px"
+                        },
+                        '& .MuiTablePagination-displayedRows': {
+                          fontSize: "12px"
+                        },
+                        '& .MuiSvgIcon-root': {
+                          fontSize: "16px"
+                        },
+                      }}
                       rowsPerPageOptions={[5, 10, 25]}
                       labelRowsPerPage={"Số lượng hàng:"}
-                      count={posts.length}
+                      count={jobEvents.length}
                       rowsPerPage={rowsPerPage}
                       page={page}
                       onPageChange={handleChangePage}
@@ -358,7 +422,7 @@ const Department: React.FC = (): JSX.Element => {
                   <TableRow>
                     <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
                       <Typography variant="h6" paragraph>
-                        Không tồn tại post
+                        Không tồn tại công việc
                       </Typography>
 
                       <Typography variant="body2">
@@ -377,4 +441,4 @@ const Department: React.FC = (): JSX.Element => {
   );
 };
 
-export default Department;
+export default Users;

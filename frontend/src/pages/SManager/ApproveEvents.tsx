@@ -1,12 +1,12 @@
 import * as React from "react";
 import { makeStyles, styled } from "@material-ui/core/styles";
 import { useDispatch, useSelector } from "react-redux";
-import { getPostApprove, deleteComment } from "redux/actions/sManager";
+import { getEventApprove, deleteComment } from "redux/actions/sManager";
 import { RootState } from "redux/reducers";
-import { IPost } from "redux/types/post";
+import { IEvent } from "redux/types/event";
 import { Card, CardMedia, CardContent, Avatar, Toolbar, Typography, Button, Box, Container } from "@material-ui/core";
 
-import { approvePost } from "redux/actions/sManager";
+import { approveEvent } from "redux/actions/sManager";
 import UpdateComment from "pages/SManager/UpdateComment";
 
 import { formatDistance } from 'date-fns';
@@ -27,13 +27,13 @@ const StyledRoot = styled(Toolbar)(({ theme }) => ({
     padding: theme.spacing(0, 3, 0, 3),
 }));
 
-const ApprovePosts: React.FC = (): JSX.Element => {
+const ApproveEvents: React.FC = (): JSX.Element => {
 
     const dispatch = useDispatch();
     const classes = useStyles();
     const PF = process.env.REACT_APP_PUBLIC_FOLDER;
 
-    const [posts, setPosts] = React.useState<IPost[]>([]);
+    const [events, setEvents] = React.useState<IEvent[]>([]);
     const smanager = useSelector((state: RootState) => state.smanager);
 
     function formatDate(input: any) {
@@ -51,25 +51,25 @@ const ApprovePosts: React.FC = (): JSX.Element => {
 
 
     React.useEffect(() => {
-        dispatch(getPostApprove());
+        dispatch(getEventApprove());
     }, [dispatch]);
 
     React.useEffect(() => {
-        setPosts(() =>
-            smanager?.posts?.filter((post: any) =>
-                post.title || post.content || post.image || post.poster || post.comments
+        setEvents(() =>
+            smanager?.events?.filter((event: any) =>
+                event.poster || event.approver || event.comments || event.quantityUser || event.job || event.location || event.departmentEvent || event.costs || event.dayStart || event.dayEnd || event.image || event.created_at
             ));
     }, [smanager]);
 
     React.useEffect(() => {
-        document.title = "APPROVE POST";
+        document.title = "APPROVE EVENT";
     }, []);
 
     return (
         <Container >
             <StyledRoot style={{ display: "flex", flexDirection: "column" }}>
-                {posts.map((post: any) =>
-                    <Box key={post._id} >
+                {events.map((event: any) =>
+                    <Box key={event._id} >
                         <Box style={{ padding: "20px" }}>
                             <Card style={{ boxShadow: "none", padding: "30px", borderRadius: "24px" }}>
                                 <Box style={{ display: "flex", justifyContent: "center", alignItems: "center", marginBottom: "20px" }}>
@@ -79,9 +79,9 @@ const ApprovePosts: React.FC = (): JSX.Element => {
                                             padding: "6px 16px", borderRadius: "40px",
                                         }}>
                                         <Avatar style={{ backgroundColor: "green", marginRight: "15px", width: '28px', height: '28px', fontSize: '13px' }}>
-                                            {post.poster.username.charAt(0).toUpperCase()}
+                                            {event.poster.username.charAt(0).toUpperCase()}
                                         </Avatar>
-                                        <Typography style={{ fontWeight: "bold", fontSize: '13px' }}>{post.poster.username}</Typography>
+                                        <Typography style={{ fontWeight: "bold", fontSize: '13px' }}>{event.poster.username}</Typography>
                                     </Box>
                                     <Box flexGrow={1} />
                                     <Button
@@ -91,29 +91,43 @@ const ApprovePosts: React.FC = (): JSX.Element => {
                                         }}
                                         className={classes.btnLogin}
                                         size='medium'
-                                        onClick={(e) => dispatch(approvePost(post._id))}><CheckIcon style={{ width: '18px' }} />
+                                        onClick={(e) => dispatch(approveEvent(event._id))}><CheckIcon style={{ width: '18px' }} />
                                     </Button>
                                 </Box>
                                 <CardMedia
                                     component="img"
-                                    image={PF + post.image}
+                                    image={PF + event.image}
                                     alt="Không có ảnh"
                                     style={{ width: "440px" }}
                                 />
                                 <CardContent style={{ width: "400px" }} >
                                     <Typography style={{ fontWeight: "bold", fontSize: "13px", width: "470px" }}>
-                                        {post.title}
+                                        {event?.nameEvent}
                                     </Typography>
-                                    <Typography style={{ width: "470px", fontSize: "12px" }}>
-                                        {post.content}
+                                    <Typography style={{ width: "200px", fontSize: "12px" }}>
+                                        {event.quantityUser}
                                     </Typography>
-                                    <Typography style={{ fontSize: "12px", color: "#6a7b78", padding: "12px 0px" }}>{convertTZ((post.createdAt), "Asia/Bangkok")}</Typography>
+                                    <Typography style={{ width: "200px", fontSize: "12px" }}>
+                                        {event.location}
+                                    </Typography>
+                                    {event.job.map((job: any) =>
+                                        <Typography key={job._id} style={{ width: "100px", fontSize: '12px' }}>
+                                            - {job.nameJob}
+                                        </Typography>
+                                    )}
+                                    <Typography style={{ width: "200px", fontSize: "12px" }}>
+                                        {event.dayStart}
+                                    </Typography>
+                                    <Typography style={{ width: "200px", fontSize: "12px" }}>
+                                        {event.dayEnd}
+                                    </Typography>
+                                    <Typography style={{ fontSize: "12px", color: "#6a7b78", padding: "12px 0px" }}>{convertTZ((event.created_at), "Asia/Bangkok")}</Typography>
                                 </CardContent>
-                                {post.comments.map((comment: any) =>
+                                {event.comments.map((comment: any) =>
                                     <Box style={{ marginTop: "6px" }}>
-                                        <Card style={{ boxShadow: "none",   }}>
-                                            <Box style={{ display: "flex", flexDirection: "row", paddingLeft: '20px'}}>
-                                                <Avatar style={{ backgroundColor: "green", marginRight: "10px",marginTop: "10px", width: '28px', height: '28px', fontSize: '13px' }} aria-label="recipe">
+                                        <Card style={{ boxShadow: "none", }}>
+                                            <Box style={{ display: "flex", flexDirection: "row", paddingLeft: '20px' }}>
+                                                <Avatar style={{ backgroundColor: "green", marginRight: "10px", marginTop: "10px", width: '28px', height: '28px', fontSize: '13px' }} aria-label="recipe">
                                                     {comment.commenter.username.charAt(0).toUpperCase()}
                                                 </Avatar>
                                                 <CardContent style={{ backgroundColor: "#f4f5f5", padding: "10px 10px", borderRadius: "10px" }}>
@@ -131,13 +145,13 @@ const ApprovePosts: React.FC = (): JSX.Element => {
                                                     disableRipple
                                                     className={classes.btnLogin}
                                                     size='small'
-                                                    onClick={(e) => dispatch(deleteComment(post._id, comment._id))}> <DeleteForeverIcon style={{ width: '18px' }} />
+                                                    onClick={(e) => dispatch(deleteComment(event._id, comment._id))}> <DeleteForeverIcon style={{ width: '18px' }} />
                                                 </Button>
                                             </Box>
                                         </Card>
                                     </Box>
                                 )}
-                                <UpdateComment post={post} />
+                                <UpdateComment event={event} />
                             </Card>
                         </Box>
                     </Box>
@@ -147,4 +161,4 @@ const ApprovePosts: React.FC = (): JSX.Element => {
     );
 };
 
-export default ApprovePosts;
+export default ApproveEvents;

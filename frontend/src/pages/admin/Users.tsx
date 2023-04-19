@@ -7,7 +7,7 @@ import { IAdmin } from "redux/types/admin";
 import { ISManager } from "redux/types/sManager";
 import { IManager } from "redux/types/Manager";
 import { IUser } from "redux/types/user";
-import { TableSortLabel, Toolbar, OutlinedInput, InputAdornment, Button, Card, Container, Popover, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography } from "@mui/material";
+import { Box,TableSortLabel, Toolbar, OutlinedInput, InputAdornment, Button, Card, Container, Popover, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography } from "@mui/material";
 import { Link } from 'react-router-dom';
 import UserForm from "./UserForm";
 // @mui
@@ -15,7 +15,6 @@ import EditIcon from '@mui/icons-material/Edit';
 import SearchIcon from '@mui/icons-material/Search';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-import { Box } from "@mui/system";
 import { visuallyHidden } from '@mui/utils';
 
 const StyledRoot = styled(Toolbar)(({ theme }) => ({
@@ -389,7 +388,7 @@ const Users: React.FC = (): JSX.Element => {
                         },
                         '& .MuiTablePagination-selectLabel': {
                           fontSize: "12px"
-                        },
+                        },  
                         '& .MuiTablePagination-selectIcon': {
                           width: "16px"
                         },

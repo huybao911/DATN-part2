@@ -6,8 +6,8 @@ import * as Yup from "yup";
 import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import { useDispatch } from "react-redux";
-import { updatePost } from "redux/actions/Manager";
-import FormPost from "pages/Manager/FormPost";
+import { createJobEvent } from "redux/actions/Manager";
+import FormJobEvent from "pages/Manager/FormJobEvent";
 import FormEvent from "pages/auth/FormEvent-Manager";
 
 const useStyles = makeStyles((theme) => ({
@@ -26,25 +26,27 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 type Props = {
-    post: any;
+    jobEvent: any;
 };
 
 interface IInitialValues {
-    title: string;
-    content: string;
+    nameJob: string;
+    quantity: number;
+    unitPrice: number;
+    jobDescription: string;
     event: any;
-    image:string;
 }
 
-const CreatePost: React.FC<Props> = ({ post }): JSX.Element => {
+const CreateJobEvent: React.FC<Props> = ({ jobEvent }): JSX.Element => {
     const classes = useStyles();
     const dispatch = useDispatch();
 
     const initialValues: IInitialValues = {
-        title: post?.title ?? "",
-        content: post?.content ?? "",
-        event: post?.event ?? "",
-        image: post?.image ?? "",
+        nameJob: jobEvent?.nameJob ?? "",
+        quantity: jobEvent?.quantity ?? "",
+        unitPrice: jobEvent?.unitPrice ?? "",
+        jobDescription: jobEvent?.jobDescription ?? "",
+        event: jobEvent?.event ?? "",
     };
 
 
@@ -52,13 +54,14 @@ const CreatePost: React.FC<Props> = ({ post }): JSX.Element => {
         values: IInitialValues,
         { setSubmitting }: any
     ): Promise<void> =>
-        dispatch<any>(updatePost(values, post._id, setSubmitting));
+        dispatch<any>(createJobEvent(values, setSubmitting));
 
     const validationSchema = Yup.object({
-        title: Yup.string().required("required!"),
-        content: Yup.string().required("required!"),
+        nameJob: Yup.string().required("required!"),
+        quantity: Yup.string().required("required!"),
+        unitPrice: Yup.string().required("required!"),
+        jobDescription: Yup.string().required("required!"),
         event: Yup.string().required("required!"),
-        // image: Yup.string().required("required!"),
     });
 
     return (
@@ -79,10 +82,9 @@ const CreatePost: React.FC<Props> = ({ post }): JSX.Element => {
                 >
                     {({ isSubmitting, handleSubmit }) => (
                         <form noValidate onSubmit={handleSubmit}>
-                            <FormPost />
-                            <FormEvent isEvent={true}/> 
+                            <FormJobEvent />   
+                            <FormEvent isEvent={true}/>       
                             <Button
-                                style={{ backgroundColor: "black", color: "white" }}
                                 type='submit'
                                 variant='contained'
                                 color='primary'
@@ -90,7 +92,7 @@ const CreatePost: React.FC<Props> = ({ post }): JSX.Element => {
                                 className={classes.btnLogin}
                                 disabled={isSubmitting}
                             >
-                                {isSubmitting ? <CircularProgress size='1rem' /> : "Cập Nhật Bài Viết"}
+                                {isSubmitting ? <CircularProgress size='1rem' /> : "Tạo Công Việc Sự Kiện"}
                             </Button>
                         </form>
                     )}
@@ -100,4 +102,4 @@ const CreatePost: React.FC<Props> = ({ post }): JSX.Element => {
     );
 };
 
-export default CreatePost;
+export default CreateJobEvent;

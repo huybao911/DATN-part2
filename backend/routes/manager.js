@@ -9,24 +9,17 @@ router.post("/login", ManagerController.login);
 router.get("/auth-Manager", isAuth, ManagerController.getAuthManager);
 router.get("/users", isAuth, ManagerController.getUsers);
 router.get("/user", isAuth, ManagerController.getUser);
-router.get("/post", isAuth, ManagerController.getPost);
 
-router.get("/posts", isAuth, ManagerController.getPosts);
-router.get("/postUserApply", isAuth, ManagerController.getPostUserApply);
-router.post("/createPost/:id", isAuth, ManagerController.createPost);
+router.get("/event", isAuth, ManagerController.getEvent);
+router.post("/createEvent", isAuth, ManagerController.createEvent);
+router.patch("/event/:id", isAuth, ManagerController.updateEvent);
+router.delete("/event/:id", isAuth, ManagerController.deleteEvent);
 
-router.patch("/post/:id", isAuth, ManagerController.updatePost);
-router.delete("/post/:id", isAuth, ManagerController.deletePost);
-
-router.get("/events", isAuth, ManagerController.getEvents);
 router.get("/jobEvents", isAuth, ManagerController.getJobEvents);
+router.post("/createJobEvent", isAuth, ManagerController.createNewJobEvent);
+router.put("/jobEvent/:id", isAuth, ManagerController.updateJobEvent);
+router.delete("/jobEvent/:id", isAuth, ManagerController.deleteJobEvent);
 
-// router
-//   .route("/users/:id")
-//   .patch(isAuth, ManagerController.updateUser)
-//   .delete(isAuth, ManagerController.deleteUser);
-
-// router.delete("/users/:id", isAuth, adminController.deleteUser);
-// router.patch("/users/:id", isAuth, adminController.updateUser);
+router.get("/jobUserApply", isAuth, ManagerController.getJobUserApply);
 
 module.exports = router;

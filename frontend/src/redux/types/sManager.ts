@@ -3,7 +3,6 @@ import { IUser } from "./user";
 import { IManager } from "./Manager";
 import { IRole } from "./role";
 import { IDepartment } from "./department";
-import { IPost } from "./post";
 import { IEvent } from "./event";
 import { IJobEvent } from "./jobEvent";
 
@@ -44,23 +43,23 @@ interface IGetDepartments {
   payload: IDepartment[];
 }
 
-interface IGetPostApprove {
-  type: typeof types.GET_POSTAPPROVE_SMANAGER;
-  payload: IPost[];
+interface IGetEventApprove {
+  type: typeof types.GET_EVENTAPPROVE_SMANAGER;
+  payload: IEvent[];
 }
 
-interface IApprovePost {
+interface IApproveEvent {
   type: typeof types.APPROVE_POSTER;
   payload: {
-    post: IPost;
+    event: IEvent;
     id: number;
   };
 }
 
-interface ICommentPost {
-  type: typeof types.COMMENT_POST;
+interface ICommentEvent {
+  type: typeof types.COMMENT_EVENT;
   payload: {
-    post: IPost;
+    event: IEvent;
     id: number;
   };
 }
@@ -68,63 +67,9 @@ interface ICommentPost {
 interface IDeleteComment {
   type: typeof types.DELETE_COMMENT;
    payload: {
-    post: IPost;
+    event: IEvent;
     id: number;
   };
-}
-
-interface IGetEvents {
-  type: typeof types.GET_EVENTS;
-  payload: IEvent[];
-}
-
-interface ICreateEventSuccess {
-  type: typeof types.CREATE_EVENT_SUCCESS;
-  payload: IEvent[];
-}
-
-interface IUpdateEvent {
-  type: typeof types.UPDATE_EVENT;
-  payload: {
-    post: IEvent;
-    id: number;
-  };
-}
-
-interface IDeleteEvent {
-  type: typeof types.DELETE_EVENT;
-  payload: number;
-}
-
-interface IGetJobEvents {
-  type: typeof types.GET_JOBEVENTS;
-  payload: IJobEvent[];
-}
-
-interface ICreateJobEventSuccess {
-  type: typeof types.CREATE_JOBEVENT_SUCCESS;
-  payload: IJobEvent[];
-}
-
-interface IUpdateJobEvent {
-  type: typeof types.UPDATE_JOBEVENT;
-  payload: {
-    post: IJobEvent;
-    id: number;
-  };
-}
-
-interface IDeleteJobEvent {
-  type: typeof types.DELETE_JOBEVENT;
-  payload: number;
-}
-
-interface ICreateEventFail {
-  type: typeof types.CREATE_EVENT_FAIL;
-}
-
-interface ICreateJobEventFail {
-  type: typeof types.CREATE_JOBEVENT_FAIL;
 }
 
 interface ISManagerRegisterFail {
@@ -154,20 +99,10 @@ export type SManagerActions =
   | IGetUser
   | IGetUsers
   | IGetDepartments
-  | IGetPostApprove
-  | IApprovePost
-  | ICommentPost
-  | IDeleteComment
-  | IGetEvents
-  | ICreateEventSuccess
-  | ICreateEventFail
-  | IUpdateEvent
-  | IDeleteEvent
-  | IGetJobEvents
-  | ICreateJobEventSuccess
-  | ICreateJobEventFail
-  | IUpdateJobEvent
-  | IDeleteJobEvent;
+  | IGetEventApprove
+  | IApproveEvent
+  | ICommentEvent
+  | IDeleteComment;
 
 export type SManagerAdminActions =
 | ISManagerRegisterSuccess
@@ -183,7 +118,6 @@ export interface ISManagerState {
   getDepartment: IDepartment;
   manager: IManager[];
   users: IUser[];
-  posts: IPost[];
   events: IEvent[];
   jobevents: IJobEvent[];
 }

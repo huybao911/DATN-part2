@@ -3,8 +3,9 @@ import { IUserState, UserActions } from "../types/user";
 import { IUser } from "redux/types/user";
 import { IRole } from "redux/types/role";
 import { IDepartment } from "redux/types/department";
-import { IPost } from "redux/types/post";
-import { IPostStorage } from "redux/types/postStorage";
+import { IEvent } from "redux/types/event";
+import { IJobEvent } from "redux/types/jobEvent";
+import { IEventStorage } from "redux/types/eventStorage";
 import { IApplyJob } from "redux/types/applyJob";
 
 const initialState: IUserState = {
@@ -15,8 +16,9 @@ const initialState: IUserState = {
   getRole: {} as IRole,
   getDepartment: {} as IDepartment,
   users: [] as IUser[],
-  posts: [] as IPost[],
-  postStorages: [] as IPostStorage[],
+  events: [] as IEvent[],
+  jobs: [] as IJobEvent[],
+  eventStorages: [] as IEventStorage[],
   applyJobs: [] as IApplyJob[],
   departments: [] as IDepartment[],
 };
@@ -53,31 +55,31 @@ const userReducer = (state = initialState, action: UserActions): IUserState => {
         ...state,
         departments: action.payload,
       };
-    case types.GET_POSTS:
+    case types.GET_EVENTS:
       return {
         ...state,
-        posts: action.payload,
+        events: action.payload,
       };
-    case types.GET_POSTSTORAGE:
+    case types.GET_EVENTSTORAGE:
       return {
         ...state,
-        postStorages: action.payload,
+        eventStorages: action.payload,
       };
-    case types.STORAGE_POST:
+    case types.STORAGE_EVENT:
       return {
         ...state,
-        posts: state.posts.map((post) =>
-          post._id === action.payload.id ? { ...action.payload.post } : post
+        events: state.events.map((event) =>
+          event._id === action.payload.id ? { ...action.payload.event } : event
         ),
       };
-    case types.UNSTORAGE_POST:
+    case types.UNSTORAGE_EVENT:
       return {
         ...state,
-        posts: state.posts.map((post) =>
-          post._id === action.payload.id ? { ...action.payload.post } : post
+        events: state.events.map((event) =>
+          event._id === action.payload.id ? { ...action.payload.event } : event
         ),
       };
-    case types.GET_POST_APPLY_JOB:
+    case types.GET_JOB_USER_APPLY:
       return {
         ...state,
         applyJobs: action.payload,
@@ -85,15 +87,15 @@ const userReducer = (state = initialState, action: UserActions): IUserState => {
     case types.APPLY_JOB:
       return {
         ...state,
-        posts: state.posts.map((post) =>
-          post._id === action.payload.id ? { ...action.payload.post } : post
+        jobs: state.jobs.map((job) =>
+          job._id === action.payload.id ? { ...action.payload.job } : job
         ),
       };
     case types.UNAPPLY_JOB:
       return {
         ...state,
-        posts: state.posts.map((post) =>
-          post._id === action.payload.id ? { ...action.payload.post } : post
+        jobs: state.jobs.map((job) =>
+          job._id === action.payload.id ? { ...action.payload.job } : job
         ),
       };
     case types.GET_PROFILE:

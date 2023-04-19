@@ -1,27 +1,27 @@
 import * as React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getUser } from "redux/actions/sManager";
+import { getUser } from "redux/actions/Manager";
 import { RootState } from "redux/reducers";
-import { ISManager } from "redux/types/sManager";
+import { IManager } from "redux/types/Manager";
 import { Box } from "@mui/material";
 import CreateJobEvent from "./CreateJobEvent";
 const NewEvent: React.FC = (): JSX.Element => {
 
     const dispatch = useDispatch();
 
-    const [SManagers, setSManagers] = React.useState<ISManager[]>([]);
-    const smanager = useSelector((state: RootState) => state.smanager);
+    const [Managers, setManagers] = React.useState<IManager[]>([]);
+    const manager = useSelector((state: RootState) => state.manager);
 
     React.useEffect(() => {
         dispatch(getUser());
     }, [dispatch]);
 
     React.useEffect(() => {
-        setSManagers(() => 
-        smanager?.users?.filter((user: any) =>
-         user.role.keyRole === "smanager"
+        setManagers(() => 
+        manager?.users?.filter((user: any) =>
+         user.role.keyRole === "manager"
          ));
-    }, [smanager]);
+    }, [manager]);
 
     React.useEffect(() => {
         document.title = "JOB EVENT";
@@ -30,7 +30,7 @@ const NewEvent: React.FC = (): JSX.Element => {
     return (
 
         <>
-            {SManagers.map((jobEvent: any) =>
+            {Managers.map((jobEvent: any) =>
                 <Box key={jobEvent._id} >
                     <CreateJobEvent jobEvent={jobEvent}  />
                 </Box>

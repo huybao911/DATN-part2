@@ -1,10 +1,8 @@
 import React from "react";
 
 import { makeStyles } from "@material-ui/core/styles";
-import { FormControl, FormLabel } from "@material-ui/core";
+import { FormControl, FormLabel, MenuItem, Select } from "@material-ui/core";
 import { useFormikContext } from "formik";
-import { MenuItem } from "@mui/material";
-import Select from '@mui/material/Select';
 
 import { getDepartments } from "redux/actions/user";
 import { useDispatch, useSelector } from "react-redux";

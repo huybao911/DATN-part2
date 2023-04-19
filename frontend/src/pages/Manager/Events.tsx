@@ -1,417 +1,186 @@
 import * as React from "react";
-import { styled, alpha, makeStyles } from "@material-ui/core/styles";
 import { useDispatch, useSelector } from "react-redux";
-import { getEvents } from "redux/actions/Manager";
+import { getEvents, deleteEvent } from "redux/actions/Manager";
 import { RootState } from "redux/reducers";
 import { IEvent } from "redux/types/event";
-import { TableSortLabel, Toolbar, OutlinedInput, InputAdornment, Button, Card, Container, Popover, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography } from "@mui/material";
+
+import { Button, Container, Typography, Stack, Card, Popover, Box, Toolbar } from "@mui/material";
+import CardHeader from '@mui/material/CardHeader';
+import CardMedia from '@mui/material/CardMedia';
+import CardContent from '@mui/material/CardContent';
+import Avatar from '@mui/material/Avatar';
+import { red } from '@mui/material/colors';
+
+
 import { Link } from 'react-router-dom';
-// @mui
-import SearchIcon from '@mui/icons-material/Search';
-import { Box } from "@mui/system";
-import { visuallyHidden } from '@mui/utils';
+import UpdateEvent from "pages/Manager/UpdateEvent";
+const Posts: React.FC = (): JSX.Element => {
 
-const StyledRoot = styled(Toolbar)(({ theme }) => ({
-  height: 96,
-  display: 'flex',
-  justifyContent: 'space-between',
-  padding: theme.spacing(0, 1, 0, 3),
-}));
+    const dispatch = useDispatch();
 
-const StyledSearch = styled(OutlinedInput)(({ theme }) => ({
-  width: 240,
-  transition: theme.transitions.create(['box-shadow', 'width'], {
-    easing: theme.transitions.easing.easeInOut,
-    duration: theme.transitions.duration.shorter,
-  }),
-  '&.Mui-focused': {
-    width: 320,
-  },
-  '& fieldset': {
-    borderWidth: `1px !important`,
-    borderColor: `${alpha(theme.palette.grey[500], 0.32)} !important`,
-  },
-}));
+    const [events, setEvents] = React.useState<IEvent[]>([]);
+    const [anchorEl, setAnchorEl] = React.useState([null]);
+    const manager = useSelector((state: RootState) => state.manager);
 
-const useStyles = makeStyles((theme) => ({
-  btn: {
-    '&.MuiButton-root:hover': {
-      backgroundColor: "transparent",
+    const PF = process.env.REACT_APP_PUBLIC_FOLDER;
+
+    function formatDate(input: any) {
+        var datePart = input.match(/\d+/g),
+            year = datePart[0].substring(0),
+            month = datePart[1], day = datePart[2];
+
+        return day + '/' + month + '/' + year;
     }
-  },
-}));
 
-function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
-  return 0;
-}
+    React.useEffect(() => {
+        dispatch(getEvents());
+    }, [dispatch]);
 
-type Order = 'asc' | 'desc';
+    React.useEffect(() => {
+        setEvents(() =>
+            manager?.events?.filter((event: any) =>
+                event.nameEvent || event.poster || event.approver || event.comments || event.quantityUser
+                || event.job || event.location || event.departmentEvent || event.costs || event.dayStart
+                || event.dayEnd || event.image
+            ));
+    }, [manager]);
 
-function getComparator<Key extends keyof any>(
-  order: Order,
-  orderBy: Key,
-): (
-  a: { [key in Key]: number | string },
-  b: { [key in Key]: number | string },
-) => number {
-  return order === 'desc'
-    ? (a, b) => descendingComparator(a, b, orderBy)
-    : (a, b) => -descendingComparator(a, b, orderBy);
-}
-
-function stableSort<T>(array: T[], comparator: (a: T, b: T) => number) {
-  const stabilizedThis = array.map((el, index) => [el, index] as [T, number]);
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) {
-      return order;
-    }
-    return a[1] - b[1];
-  });
-  return stabilizedThis.map((el) => el[0]);
-}
-
-interface DataUser {
-  _id: keyof IEvent;
-  nameEvent: keyof IEvent;
-  quantityUser: keyof IEvent;
-  job: keyof IEvent;
-  departmentEvent: keyof IEvent;
-  costs: keyof IEvent;
-  dayStart: keyof IEvent;
-  dayEnd: keyof IEvent;
-}
-
-interface HeadCell {
-  _id: keyof DataUser;
-  label: string;
-  numeric: boolean;
-}
-
-const headCells: HeadCell[] = [
-  {
-    _id: 'nameEvent',
-    numeric: false,
-    label: 'Tên sự kiện',
-  },
-  {
-    _id: 'quantityUser',
-    numeric: false,
-    label: 'Số lượng người',
-  },
-  {
-    _id: 'job',
-    numeric: false,
-    label: 'Công việc',
-  },
-  {
-    _id: 'departmentEvent',
-    numeric: false,
-    label: 'Khoa',
-  },
-  {
-    _id: 'costs',
-    numeric: false,
-    label: 'Chi phí',
-  },
-  {
-    _id: 'dayStart',
-    numeric: false,
-    label: 'Ngày bắt đầu',
-  },
-  {
-    _id: 'dayEnd',
-    numeric: false,
-    label: 'Ngày kết thúc',
-  },
-];
-
-
-interface EnhancedTableProps {
-  onRequestSort: (event: React.MouseEvent<unknown>, property: keyof DataUser) => void;
-  order: Order;
-  orderBy: string;
-}
-
-function EnhancedTableHead(props: EnhancedTableProps) {
-  const { order, orderBy, onRequestSort } =
-    props;
-  const createSortHandler =
-    (property: keyof DataUser) => (event: React.MouseEvent<unknown>) => {
-      onRequestSort(event, property);
+    const handleOpenMenu = (event: any, index: any) => {
+        const newAnchorEls = [
+            ...anchorEl.slice(0, index),
+            event.currentTarget,
+            ...anchorEl.slice(index + 1)
+        ];
+        setAnchorEl(newAnchorEls);
     };
-  return (
-    <TableHead style={{ backgroundColor: "#f4f5f5" }}
-      sx={{
-        '& th:first-child': {
-          borderRadius: '1em 0 0 0'
-        },
-        '& th:last-child': {
-          borderRadius: '0 1em 0 0'
-        }
-      }}>
-      <TableRow>
-        {headCells.map((headCell) => (
-          <TableCell
-            key={headCell._id}
-            align={headCell.numeric ? 'right' : 'left'}
-            style={{ fontSize: '13px' }}
-            sortDirection={orderBy === headCell._id ? order : false}
-          >
-            <TableSortLabel
-              active={orderBy === headCell._id}
-              direction={orderBy === headCell._id ? order : 'asc'}
-              onClick={createSortHandler(headCell._id)}
-            >
-              {headCell.label}
-              {orderBy === headCell._id ? (
-                <Box component="span" sx={visuallyHidden}>
-                  {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
-                </Box>
-              ) : null}
-            </TableSortLabel>
-          </TableCell>
-        ))}
-      </TableRow>
-    </TableHead>
-  );
-}
 
-const Users: React.FC = (): JSX.Element => {
+    const handleCloseMenu = (index: any) => {
+        const newAnchorEls = [
+            ...anchorEl.slice(0, index),
+            null,
+            ...anchorEl.slice(index + 1)
+        ];
+        setAnchorEl(newAnchorEls);
+    };
 
-  const dispatch = useDispatch();
-  const classes = useStyles();
+    React.useEffect(() => {
+        document.title = "EVENT";
+    }, []);
 
-  const [events, setEvents] = React.useState<IEvent[]>([]);
-  const manager = useSelector((state: RootState) => state.manager);
+    return (
+        <>
 
-  const [anchorEl, setAnchorEl] = React.useState([null]);
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const [filterName, setFilterName] = React.useState('');
-
-  const [order, setOrder] = React.useState<Order>('asc');
-  const [orderBy, setOrderBy] = React.useState<keyof DataUser>('nameEvent');
-
-
-
-  const handleRequestSort = (
-    event: React.MouseEvent<unknown>,
-    property: keyof DataUser,
-  ) => {
-    const isAsc = orderBy === property && order === 'asc';
-    setOrder(isAsc ? 'desc' : 'asc');
-    setOrderBy(property);
-  };
-
-  const handleChangeRowsPerPage = (event: any) => {
-    setPage(0);
-    setRowsPerPage(parseInt(event.target.value, 10));
-  };
-
-  const handleChangePage = (event: any, newPage: any) => {
-    setPage(newPage);
-  };
-
-  const handleFilterByName = (event: any) => {
-    setPage(0);
-    const keyword = event.target.value;
-
-    if (keyword !== '') {
-      const results = manager?.events?.filter((event: any) => {
-        return event.nameEvent.toLowerCase().startsWith(keyword.toLowerCase());
-        // Use the toLowerCase() method to make it case-insensitive
-      });
-      setEvents(results);
-    } else {
-      setEvents(() => manager?.events?.filter((event: any) => event.nameEvent || event.quantityUser || event.departmentEvent || event.costs || event.dayStart || event.dayEnd));
-      // If the text field is empty, show all users
-    }
-
-    setFilterName(keyword);
-  };
-
-  const handleOpenMenu = (event: any, index: any) => {
-    const newAnchorEls = [
-      ...anchorEl.slice(0, index),
-      event.currentTarget,
-      ...anchorEl.slice(index + 1)
-    ];
-    setAnchorEl(newAnchorEls);
-  };
-
-  const handleCloseMenu = (index: any) => {
-    const newAnchorEls = [
-      ...anchorEl.slice(0, index),
-      null,
-      ...anchorEl.slice(index + 1)
-    ];
-    setAnchorEl(newAnchorEls);
-  };
-
-
-  const sortEvent = stableSort(events, getComparator(order, orderBy));
-
-  React.useEffect(() => {
-    dispatch(getEvents());
-  }, [dispatch]);
-
-  React.useEffect(() => {
-
-    setEvents(() => manager?.events?.filter((event: any) => event.nameEvent || event.quantityUser || event.departmentEvent || event.costs || event.dayStart || event.dayEnd));
-  }, [manager]);
-
-  React.useEffect(() => {
-    document.title = "EVENT";
-  }, []);
-
-  return (
-
-    <>
-      <Container>
-
-        <Card style={{ padding: "20px", marginTop: "80px", paddingBottom: "40px", borderRadius: "22px" }}>
-          <StyledRoot
-            style={{ display: "flex", flexDirection: "row" }}
-            sx={{
-              color: 'primary.main',
-              bgcolor: 'primary.lighter',
-            }}
-          >
             <Box>
-              <Typography gutterBottom style={{ color: "black", fontSize: "22px" }}>
-                Sự Kiện
-              </Typography>
+                <Typography variant="h4" gutterBottom>
+                    Sự Kiện
+                </Typography>
+
+                <Box component={Link} to={'/event/newevent'}>Tạo Sự Kiện</Box>
+
             </Box>
-            <Box>
-              <Box style={{ marginRight: "14px" }}>
-                <StyledSearch
-                  style={{ borderRadius: '30px', fontSize: '13px', height: "48px" }}
-                  value={filterName}
-                  onChange={handleFilterByName}
-                  placeholder="Tìm kiếm sự kiện..."
-                  startAdornment={
-                    <InputAdornment position="start" sx={{ paddingLeft: 1.3 }}>
-                      <SearchIcon style={{ width: '16px' }} sx={{ color: 'text.disabled' }} />
-                    </InputAdornment>
-                  }
-                />
-              </Box>
-            </Box>
-          </StyledRoot>
-          <TableContainer>
-            {/* Table user */}
-            <Table >
-              <EnhancedTableHead
-                order={order}
-                orderBy={orderBy}
-                onRequestSort={handleRequestSort}
-              />
-              {events && events.length > 0 ? (
-                <TableBody>
-                  {sortEvent.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((event: any, index) =>
-                    <TableRow key={event._id}>
-                      <TableCell align="left" sx={{ width: "300px", paddingLeft: "26px", fontSize: '12px' }}>
-                        {event.nameEvent}
-                      </TableCell>
 
-                      <TableCell align="left" sx={{ width: "400px", fontSize: '12px' }}>
-                        {event.quantityUser}
-                      </TableCell>
+            <Container>
+                <Toolbar style={{ display: "flex", flexDirection: "column" }}>
+                    {events.map((event: any, index) =>
+                        <Box key={event._id}>
+                            <Box>
+                                <Card sx={{ maxWidth: 500, height: 493 }}>
+                                    <Box>
+                                        <Box>
+                                            <Avatar sx={{ bgcolor: red[500] }} style={{ marginRight: "15px", width: '28px', height: '28px', fontSize: '13px' }}>
+                                                {event?.poster.username.charAt(0).toUpperCase()}
+                                            </Avatar>
+                                            <Typography style={{ fontWeight: "bold", fontSize: '13px' }}>{event?.poster.username}</Typography>
+                                        </Box>
+                                        <Box flexGrow={1} />
+                                        <CardContent>
+                                            <Typography variant="body2" color="text.secondary">
+                                                {event?.nameEvent ?? null}
+                                            </Typography>
+                                            <Typography variant="body2" color="text.secondary">
+                                                {event?.quantityUser ?? null}
+                                            </Typography>
+                                            <Typography variant="body2" color="text.secondary">
+                                                {event?.location ?? null}
+                                            </Typography>
+                                            <Typography variant="body2" color="text.secondary">
+                                                {event?.dayStart ?? null}
+                                            </Typography>
+                                            <Typography variant="body2" color="text.secondary">
+                                                {event?.dayEnd ?? null}
+                                            </Typography>
+                                        </CardContent>
+                                    </Box>
 
-                      <TableCell align="left">
-                        {event.job.map((job: any) =>
-                          <Typography key={job._id} sx={{ width: "100px", fontSize: '12px' }}>
-                            - {job.nameJob}
-                          </Typography>
-                        )}
-                      </TableCell>
+                                    {/* {formatDate(post?.createdAt.slice(0, 10))} */}
 
-                      <TableCell align="left" sx={{ width: "300px", fontSize: '12px' }}>
-                        {event.departmentEvent.nameDepartment}
-                      </TableCell>
+                                    <CardMedia
+                                        component="img"
+                                        height="300"
+                                        image={PF + event?.image ?? null}
+                                        alt="Paella dish"
+                                    />
+                                </Card>
+                                <Button style={{ backgroundColor: "black", color: "white", marginTop: "10px", height: "43px", width: "100px" }} onClick={(event) => handleOpenMenu(event, index)} >
+                                    Cập Nhật
+                                </Button>
+                                <Popover
+                                    open={!!anchorEl[index]}
+                                    anchorEl={anchorEl[index]}
+                                    onClose={() => handleCloseMenu(index)}
+                                    anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
+                                    transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                                    PaperProps={{
+                                        sx: {
+                                            p: 1,
+                                            width: 340,
+                                            '& .MuiMenuItem-root': {
+                                                px: 1,
+                                                typography: 'body2',
+                                                borderRadius: 0.75,
+                                            },
+                                        },
+                                    }}
+                                >
+                                    <Box>
+                                        <UpdateEvent event={event} key={event._id} />
+                                    </Box>
+                                </Popover>
+                                <Button style={{ backgroundColor: "red", color: "white", marginTop: "10px", marginLeft: "10px", height: "43px", width: "100px" }} onClick={(e) => dispatch(deleteEvent(event._id))} >
+                                    Xóa
+                                </Button>
+                            </Box>
+                            <Box>
+                                <Typography style={{ fontWeight: "bold" }}>Bình luận của Quản Lý Cấp Cao</Typography>
+                            </Box>
+                            {event.comments.map((comment: any) =>
+                                <Box>
+                                    <Card style={{ maxWidth: 400, height: 190, boxShadow: "none" }}>
+                                        <CardHeader
+                                            avatar={
+                                                <Avatar style={{ backgroundColor: "green" }} aria-label="recipe">
+                                                    {comment.commenter.username.charAt(0).toUpperCase()}
+                                                </Avatar>
+                                            }
+                                            title={comment.commenter.username}
+                                        // subheader={formatDate(post.createdAt)}
+                                        />
+                                        <CardContent>
+                                            <Typography variant="body2" style={{ fontSize: "20px" }}>
+                                                {comment.contentComment}
+                                            </Typography>
+                                        </CardContent>
+                                    </Card>
+                                </Box>
+                            )}
+                        </Box>
+                    )}
+                </Toolbar>
 
-                      <TableCell align="left" sx={{ width: "200px", fontSize: '12px' }}>
-                        {event.costs}
-                      </TableCell >
+            </Container>
 
-                      <TableCell align="left" sx={{ width: "300px", fontSize: '12px' }}>
-                        {event.dayStart}
-                      </TableCell >
-
-                      <TableCell align="left" sx={{ width: "300px", fontSize: '12px' }}>
-                        {event.dayEnd}
-                      </TableCell >
-                    </TableRow>
-                  )}
-
-                  <TableRow>
-                    <TablePagination
-                      style={{ fontSize: "12px" }}
-                      sx={{
-                        '& .MuiTablePagination-select': {
-                          width: "12px"
-                        },
-                        '& .MuiTablePagination-selectLabel': {
-                          fontSize: "12px"
-                        },
-                        '& .MuiTablePagination-selectIcon': {
-                          width: "16px"
-                        },
-                        '& .MuiTablePagination-displayedRows': {
-                          fontSize: "12px"
-                        },
-                        '& .MuiSvgIcon-root': {
-                          fontSize: "16px"
-                        },
-                      }}
-                      rowsPerPageOptions={[5, 10, 25]}
-                      labelRowsPerPage={"Số lượng hàng:"}
-                      count={events.length}
-                      rowsPerPage={rowsPerPage}
-                      page={page}
-                      onPageChange={handleChangePage}
-                      onRowsPerPageChange={handleChangeRowsPerPage}
-                      SelectProps={{
-                        MenuProps:{
-                          sx: {
-                            "&& .MuiTablePagination-menuItem": {
-                              fontSize: "12px"
-                            }
-                          }
-                        }
-                      }}
-                    />
-                  </TableRow>
-                </TableBody>
-              ) : (
-                <TableBody>
-                  <TableRow>
-                    <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
-                      <Typography variant="h6" paragraph>
-                        Không tồn tại sự kiện
-                      </Typography>
-
-                      <Typography variant="body2">
-                        Không tìm thấy kết quả &nbsp;
-                        <strong>&quot;{filterName}&quot;</strong>.
-                      </Typography>
-                    </TableCell>
-                  </TableRow>
-                </TableBody>
-              )}
-            </Table>
-          </TableContainer>
-        </Card>
-      </Container>
-    </>
-  );
+        </>
+    );
 };
 
-export default Users;
+export default Posts;

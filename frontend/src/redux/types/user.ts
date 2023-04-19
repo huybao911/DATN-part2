@@ -1,9 +1,10 @@
 import types from "redux/actions/types";
 import { IDepartment } from "./department";
 import { IRole } from "./role";
-import { IPost } from "./post";
-import { IPostStorage } from "./postStorage";
+import { IEvent } from "./event";
+import { IEventStorage } from "./eventStorage";
 import { IApplyJob } from "./applyJob";
+import { IJobEvent } from "./jobEvent";
 
 export interface IUser {
   _id: any;
@@ -42,61 +43,45 @@ interface IUserLoginFail {
   type: typeof types.USER_LOGIN_FAIL;
 }
 
-interface IGetPosts {
-  type: typeof types.GET_POSTS;
-  payload: IPost[];
+interface IGetEvents {
+  type: typeof types.GET_EVENTS;
+  payload: IEvent[];
 }
 
-interface IGetPostStorage {
-  type: typeof types.GET_POSTSTORAGE;
-  payload: IPostStorage[];
+interface IGetEventStorage {
+  type: typeof types.GET_EVENTSTORAGE;
+  payload: IEventStorage[];
 }
-
-interface storagePost {
-  type: typeof types.STORAGE_POST;
+interface storageEvent {
+  type: typeof types.STORAGE_EVENT;
   payload: {
-    post: IPost;
+    event: IEvent;
     id: number;
   };
 }
-interface unstoragePost {
-  type: typeof types.UNSTORAGE_POST;
+interface unstorageEvent {
+  type: typeof types.UNSTORAGE_EVENT;
   payload: {
-    post: IPost;
-    id: number;
-  };
-}
-
-interface storagePost {
-  type: typeof types.STORAGE_POST;
-  payload: {
-    post: IPost;
-    id: number;
-  };
-}
-interface unstoragePost {
-  type: typeof types.UNSTORAGE_POST;
-  payload: {
-    post: IPost;
+    event: IEvent;
     id: number;
   };
 }
 
-interface IGetPostApplyJob {
-  type: typeof types.GET_POST_APPLY_JOB;
-  payload: IPostStorage[];
+interface IGetJobUserApply {
+  type: typeof types.GET_JOB_USER_APPLY;
+  payload: IApplyJob[];
 }
 interface applyJob {
   type: typeof types.APPLY_JOB;
   payload: {
-    post: IPost;
+    job: IJobEvent;
     id: number;
   };
 }
 interface unapplyJob {
   type: typeof types.UNAPPLY_JOB;
   payload: {
-    post: IPost;
+    job: IJobEvent;
     id: number;
   };
 }
@@ -137,11 +122,11 @@ export type UserActions =
   | IUserRegisterFail
   | IUserAuthError
   | IGetDepartments
-  | IGetPosts
-  | IGetPostStorage
-  | storagePost
-  | unstoragePost
-  | IGetPostApplyJob
+  | IGetEvents
+  | IGetEventStorage
+  | storageEvent
+  | unstorageEvent
+  | IGetJobUserApply
   | applyJob
   | unapplyJob
   | IGetProfile
@@ -156,8 +141,9 @@ export interface IUserState {
   getRole: IRole;
   getDepartment: IDepartment;
   departments: IDepartment[];
-  posts: IPost[];
-  postStorages: IPostStorage[];
+  events: IEvent[];
+  jobs: IJobEvent[];
+  eventStorages: IEventStorage[];
   applyJobs: IApplyJob[];
   users: IUser[];
 }

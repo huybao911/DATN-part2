@@ -21,6 +21,7 @@ interface IValues {
     costs: string;
     dayStart: string;
     dayEnd: string;
+    image: string;
 }
 
 
@@ -125,6 +126,34 @@ const FormEvent: React.FC = (): JSX.Element => {
                     helperText={touched.dayEnd ? errors.dayEnd : ""}
                     error={touched.dayEnd ? Boolean(errors.dayEnd) : false}
                 />
+            </FormControl>
+            <FormControl fullWidth className={classes.formControl}>
+                <FormLabel classes={{ root: classes.formLabel }}>Hình ảnh</FormLabel>
+                {/* <Button
+                variant="contained"
+                component="label"
+                >
+                Upload File
+                <input
+                    type="file"
+                    accept=".png,.jpg"
+                    name='image'
+                    value={values.image}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    hidden
+                />
+                </Button> */}
+                {/* <input
+                    // fullWidth
+                    // variant="outlined"
+                    accept=".png,.jpg"
+                    name='image'
+                    type='file'
+                    value={values.image}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                /> */}
             </FormControl>
         </>
     );

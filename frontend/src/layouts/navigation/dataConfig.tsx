@@ -54,18 +54,8 @@ export const dataSManager = [
     },
     {
         icon: <EventIcon style={{width: '18px'}}/>,
-        name: 'Sự Kiện',
-        path: '/event'
-    },
-    {
-        icon: <WorkOutlineIcon style={{width: '18px'}}/>,
-        name: 'Công Việc Sự Kiện',
-        path: '/jobEvent'
-    },
-    {
-        icon: <WebIcon style={{width: '18px'}}/>,
-        name: 'Bài Viết',
-        path: '/approvePost'
+        name: 'Duyệt Sự Kiện',
+        path: '/approveEvent'
     },
 ];
 
@@ -78,12 +68,12 @@ export const dataManager = [
     {
         icon: <EventIcon style={{width: '18px'}}/>,
         name: 'Sự Kiện',
-        path: '/eventManager'
+        path: '/event'
     },
     {
-        icon: <WebIcon style={{width: '18px'}}/>,
-        name: 'Bài Viết',
-        path: '/postsManager'
+        icon: <WorkOutlineIcon style={{width: '18px'}}/>,
+        name: 'Công Việc Sự Kiện',
+        path: '/jobEvent'
     },
     {
         icon: <ListAltIcon style={{width: '18px'}}/>,

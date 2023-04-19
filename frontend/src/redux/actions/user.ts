@@ -56,7 +56,7 @@ export const loginUser =
         dispatch<any>(
           setAlert({
             msg: "Đăng nhập tài khoản User thất bại!",
-            status: 200,
+            status: error.response.status,
             alertType: "error",
           })
         );
@@ -94,7 +94,7 @@ export const registerUser =
         dispatch<any>(
           setAlert({
             msg: "Đăng ký tài khoản User thất bại!",
-            status: 200,
+            status: error.response.status,
             alertType: "error",
           })
         );
@@ -139,8 +139,8 @@ export const getDepartments =
     }
   };
 
-// GET POSTS
-export const getPosts =
+// GET EVENTS
+export const getEvents =
   () => async (dispatch: Dispatch<UserActions | AlertActions>) => {
     const config: any = {
       header: {
@@ -149,12 +149,12 @@ export const getPosts =
     };
 
     try {
-      const { data } = await axios.get(`${URI}/posts`, config);
-      dispatch({ type: types.GET_POSTS, payload: data });
+      const { data } = await axios.get(`${URI}/events`, config);
+      dispatch({ type: types.GET_EVENTS, payload: data });
     } catch (error: any) {
       dispatch<any>(
         setAlert({
-          msg: "Xảy ra lỗi khi lấy dữ liệu posts!",
+          msg: "Xảy ra lỗi khi lấy dữ liệu events!",
           status: error.response.status,
           alertType: "error",
         })
@@ -162,8 +162,8 @@ export const getPosts =
     }
   };
 
-// GET STORAGE POST
-export const getPostStorage =
+// GET STORAGE EVENT
+export const getEventStorage =
   () => async (dispatch: Dispatch<UserActions | AlertActions>) => {
     const config: any = {
       header: {
@@ -172,12 +172,12 @@ export const getPostStorage =
     };
 
     try {
-      const { data } = await axios.get(`${URI}/postStorage`, config);
-      dispatch({ type: types.GET_POSTSTORAGE, payload: data });
+      const { data } = await axios.get(`${URI}/eventStorage`, config);
+      dispatch({ type: types.GET_EVENTSTORAGE, payload: data });
     } catch (error: any) {
       dispatch<any>(
         setAlert({
-          msg: "Xảy ra lỗi khi lấy dữ liệu posts!",
+          msg: "Xảy ra lỗi khi lấy dữ liệu events!",
           status: error.response.status,
           alertType: "error",
         })
@@ -185,8 +185,8 @@ export const getPostStorage =
     }
   };
 
-// STORAGE POST
-export const storagePost =
+// STORAGE EVENT
+export const storageEvent =
   (id: NumberSchema) =>
     async (dispatch: Dispatch<UserActions | AlertActions>) => {
       const config: any = {
@@ -196,23 +196,15 @@ export const storagePost =
       };
 
       try {
-        const { data } = await axios.post(`${URI}/post/${id}`, config);
+        const { data } = await axios.post(`${URI}/event/${id}`, config);
         dispatch({
-          type: types.STORAGE_POST,
+          type: types.STORAGE_EVENT,
           payload: data,
         });
-        // dispatch<any>(getPostStorage());
-        // dispatch<any>(
-        //   setAlert({
-        //     msg: "Lưu post thành công!",
-        //     status: 200,
-        //     alertType: "success",
-        //   })
-        // );
       } catch (error: any) {
         dispatch<any>(
           setAlert({
-            msg: "Xảy ra lỗi khi lưu post!",
+            msg: "Xảy ra lỗi khi lưu event!",
             status: error.response.status,
             alertType: "error",
           })
@@ -220,8 +212,8 @@ export const storagePost =
       }
     };
 
-// UNSTORAGE POST
-export const unstoragePost =
+// UNSTORAGE EVENT
+export const unstorageEvent =
   (id: NumberSchema) =>
     async (dispatch: Dispatch<UserActions | AlertActions>) => {
       const config: any = {
@@ -231,15 +223,15 @@ export const unstoragePost =
       };
 
       try {
-        const { data } = await axios.delete(`${URI}/post/${id}`, config);
+        const { data } = await axios.delete(`${URI}/event/${id}`, config);
         dispatch({
-          type: types.UNSTORAGE_POST,
+          type: types.UNSTORAGE_EVENT,
           payload: data,
         });
-        dispatch<any>(getPosts());
+        dispatch<any>(getEvents());
         dispatch<any>(
           setAlert({
-            msg: "Bỏ lưu post thành công!",
+            msg: "Bỏ lưu event thành công!",
             status: 200,
             alertType: "success",
           })
@@ -247,7 +239,7 @@ export const unstoragePost =
       } catch (error: any) {
         dispatch<any>(
           setAlert({
-            msg: "Xảy ra lỗi khi bỏ lưu post!",
+            msg: "Xảy ra lỗi khi bỏ lưu event!",
             status: error.response.status,
             alertType: "error",
           })
@@ -255,8 +247,8 @@ export const unstoragePost =
       }
     };
 
-// UNSTORAGE POST IN LIST
-export const unstoragePostInList =
+// UNSTORAGE EVENT IN LIST
+export const unstorageEventInList =
   (id: NumberSchema) =>
     async (dispatch: Dispatch<UserActions | AlertActions>) => {
       const config: any = {
@@ -266,15 +258,15 @@ export const unstoragePostInList =
       };
 
       try {
-        const { data } = await axios.delete(`${URI}/post/${id}`, config);
+        const { data } = await axios.delete(`${URI}/event/${id}`, config);
         dispatch({
-          type: types.UNSTORAGE_POST,
+          type: types.UNSTORAGE_EVENT,
           payload: data,
         });
-        dispatch<any>(getPostStorage());
+        dispatch<any>(getEventStorage());
         dispatch<any>(
           setAlert({
-            msg: "Bỏ lưu post thành công!",
+            msg: "Bỏ lưu event thành công!",
             status: 200,
             alertType: "success",
           })
@@ -282,7 +274,7 @@ export const unstoragePostInList =
       } catch (error: any) {
         dispatch<any>(
           setAlert({
-            msg: "Xảy ra lỗi khi bỏ lưu post!",
+            msg: "Xảy ra lỗi khi bỏ lưu event!",
             status: error.response.status,
             alertType: "error",
           })
@@ -290,8 +282,8 @@ export const unstoragePostInList =
       }
     };
 
-// GET APPLY JOB POST
-export const getPostApplyJob =
+// GET APPLY JOB
+export const getApplyJob =
   () => async (dispatch: Dispatch<UserActions | AlertActions>) => {
     const config: any = {
       header: {
@@ -300,12 +292,12 @@ export const getPostApplyJob =
     };
 
     try {
-      const { data } = await axios.get(`${URI}/postApply`, config);
-      dispatch({ type: types.GET_POST_APPLY_JOB, payload: data });
+      const { data } = await axios.get(`${URI}/jobApply`, config);
+      dispatch({ type: types.GET_JOB_USER_APPLY, payload: data });
     } catch (error: any) {
       dispatch<any>(
         setAlert({
-          msg: "Xảy ra lỗi khi lấy dữ liệu post apply!",
+          msg: "Xảy ra lỗi khi lấy dữ liệu công việc ứng tuyển!",
           status: error.response.status,
           alertType: "error",
         })
@@ -324,7 +316,7 @@ export const applyJob =
       };
 
       try {
-        const { data } = await axios.post(`${URI}/postApply/${id}`, config);
+        const { data } = await axios.post(`${URI}/jobApply/${id}`, config);
         dispatch({
           type: types.APPLY_JOB,
           payload: data,
@@ -351,12 +343,12 @@ export const unapplyJob =
       };
 
       try {
-        const { data } = await axios.delete(`${URI}/postApply/${id}`, config);
+        const { data } = await axios.delete(`${URI}/jobApply/${id}`, config);
         dispatch({
           type: types.UNAPPLY_JOB,
           payload: data,
         });
-        dispatch<any>(getPosts());
+        dispatch<any>(getEvents());
         dispatch<any>(
           setAlert({
             msg: "Bỏ ứng tuyển thành công!",

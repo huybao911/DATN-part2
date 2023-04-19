@@ -31,7 +31,7 @@ const SManagerRoute: React.FC<Props> = ({
           return <Redirect to='/' />;
         }
         if (Manager.isAuthenticated && Manager.getRole.keyRole === "manager") {
-          return <Redirect to='/postsManager' />;
+          return <Redirect to='/event' />;
         }
         if (admin.isAuthenticated && admin.getRole.keyRole === "admin") {
           return <Redirect to='/users' />;

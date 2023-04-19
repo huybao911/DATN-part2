@@ -2,7 +2,6 @@ import types from "redux/actions/types";
 import { IUser } from "./user";
 import { IRole } from "./role";
 import { IDepartment } from "./department";
-import { IPost } from "./post";
 import { IApplyJob } from "./applyJob";
 import { IEvent } from "./event";
 import { IJobEvent } from "./jobEvent";
@@ -39,40 +38,9 @@ interface IGetUser {
   payload: IUser[];
 }
 
-interface IGetPost {
-  type: typeof types.GET_POST;
-  payload: IPost[];
-}
-
-interface IGetPosts {
-  type: typeof types.GET_POSTS;
-  payload: IPost[];
-}
-
-interface IGetPostUserApplys {
-  type: typeof types.GET_POST_USERAPPLY;
+interface IGetListUserApply {
+  type: typeof types.GET_LIST_USERAPPLY;
   payload: IApplyJob[];
-}
-
-interface ICreatePostSuccess {
-  type: typeof types.CREATE_POSTER_SUCCESS;
-  payload: {
-    manager: IManager;
-    id: number;
-  };
-}
-
-interface IUpdatePost {
-  type: typeof types.UPDATE_POSTER;
-  payload: {
-    post: IPost;
-    id: number;
-  };
-}
-
-interface IDeletePost {
-  type: typeof types.DELETE_POSTER;
-  payload: number;
 }
 
 interface IGetEvents {
@@ -80,9 +48,53 @@ interface IGetEvents {
   payload: IEvent[];
 }
 
+interface ICreateEventSuccess {
+  type: typeof types.CREATE_EVENT_SUCCESS;
+  payload: IEvent[];
+}
+
+interface IUpdateEvent {
+  type: typeof types.UPDATE_EVENT;
+  payload: {
+    event: IEvent;
+    id: number;
+  };
+}
+
+interface IDeleteEvent {
+  type: typeof types.DELETE_EVENT;
+  payload: number;
+}
+
 interface IGetJobEvents {
   type: typeof types.GET_JOBEVENTS;
   payload: IJobEvent[];
+}
+
+interface ICreateJobEventSuccess {
+  type: typeof types.CREATE_JOBEVENT_SUCCESS;
+  payload: IJobEvent[];
+}
+
+interface IUpdateJobEvent {
+  type: typeof types.UPDATE_JOBEVENT;
+  payload: {
+    jobEvent: IJobEvent;
+    id: number;
+  };
+}
+
+interface IDeleteJobEvent {
+  type: typeof types.DELETE_JOBEVENT;
+  payload: number;
+}
+
+interface ICreateEventFail {
+  type: typeof types.CREATE_EVENT_FAIL;
+}
+
+interface ICreateJobEventFail {
+  type: typeof types.CREATE_JOBEVENT_FAIL;
 }
 
 interface IManagerRegisterFail {
@@ -91,10 +103,6 @@ interface IManagerRegisterFail {
 
 interface IManagerLoginFail {
   type: typeof types.MANAGER_LOGIN_FAIL;
-}
-
-interface ICreatePostFail {
-  type: typeof types.CREATE_POSTER_FAIL;
 }
 
 interface IManagerAuthError {
@@ -115,15 +123,17 @@ export type ManagerActions =
   | IManagerLogout
   | IGetUsers
   | IGetUser
-  | IGetPost
-  | IGetPosts
-  | IGetPostUserApplys
-  | ICreatePostSuccess
-  | ICreatePostFail
-  | IUpdatePost
-  | IDeletePost
+  | IGetListUserApply
   | IGetEvents
-  | IGetJobEvents;
+  | ICreateEventSuccess
+  | ICreateEventFail
+  | IUpdateEvent
+  | IDeleteEvent
+  | IGetJobEvents
+  | ICreateJobEventSuccess
+  | ICreateJobEventFail
+  | IUpdateJobEvent
+  | IDeleteJobEvent;
 
 export type ManagerAdminActions =
 | IManagerRegisterSuccess
@@ -137,7 +147,6 @@ export interface IManagerState {
   getDepartment: IDepartment;
   manager: IManager;
   users: IUser[];
-  posts: IPost[];
   events: IEvent[];
   jobevents: IJobEvent[];
   appyjobs: IApplyJob[];

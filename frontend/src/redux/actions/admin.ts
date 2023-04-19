@@ -348,30 +348,6 @@ export const getRoles =
     }
   };
 
-// GET POSTS
-export const getPosts =
-  () => async (dispatch: Dispatch<AdminActions | AlertActions>) => {
-    const config: any = {
-      header: {
-        "Content-Type": "application/json",
-      },
-    };
-
-    try {
-      const { data } = await axios.get(`${URI}/posts`, config);
-      dispatch({ type: types.GET_POSTS, payload: data });
-    } catch (error: any) {
-      dispatch<any>(
-        setAlert({
-          msg: "Xảy ra lỗi khi lấy dữ liệu posts!",
-          status: error.response.status,
-          alertType: "error",
-        })
-      );
-    }
-  };
-
-
 // UPDATE USER DATA
 export const updateUser =
   (body: any, id: number, setSubmitting: any) =>

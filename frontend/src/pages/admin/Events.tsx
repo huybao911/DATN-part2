@@ -4,11 +4,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { getEvents } from "redux/actions/admin";
 import { RootState } from "redux/reducers";
 import { IEvent } from "redux/types/event";
-import { TableSortLabel, Toolbar, OutlinedInput, InputAdornment, Button, Card, Container, Popover, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography } from "@mui/material";
+import { Box,TableSortLabel, Toolbar, OutlinedInput, InputAdornment, Button, Card, Container, Popover, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography } from "@mui/material";
 import { Link } from 'react-router-dom';
 // @mui
 import SearchIcon from '@mui/icons-material/Search';
-import { Box } from "@mui/system";
 import { visuallyHidden } from '@mui/utils';
 
 const StyledRoot = styled(Toolbar)(({ theme }) => ({

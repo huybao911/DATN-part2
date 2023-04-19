@@ -8,7 +8,7 @@ import TabContext from '@mui/lab/TabContext';
 import TabPanel from '@mui/lab/TabPanel';
 import { green } from '@mui/material/colors';
 import { Box } from '@mui/material';
-import { storagePost, unstoragePost, applyJob, unapplyJob } from "redux/actions/user";
+import { storageEvent, unstorageEvent, applyJob, unapplyJob } from "redux/actions/user";
 
 import { StyledMenuItem } from '../../layouts/navigation/style'
 import { Link } from "react-router-dom";
@@ -25,7 +25,7 @@ const StyledRoot = styled(AppBar)(() => ({
     fontWeight: 'bold',
 }));
 type Props = {
-    post: any;
+    event: any;
 };
 
 const useStyles = makeStyles((theme) => ({
@@ -47,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
         maxWidth: '100%',
         maxHeight: '100%',
         width: '500px',
-        height: '500px',
+        height: '800px',
     },
     myMedia: {
         height: "250px",
@@ -110,7 +110,7 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
-const FeedContent: React.FC<Props> = ({ post }): JSX.Element => {
+const FeedContent: React.FC<Props> = ({ event }): JSX.Element => {
 
     const dispatch = useDispatch();
     const [value, setValue] = React.useState('1');
@@ -127,21 +127,21 @@ const FeedContent: React.FC<Props> = ({ post }): JSX.Element => {
     };
 
     function handleClickStorage() {
-        dispatch(storagePost(post._id));
+        dispatch(storageEvent(event._id));
     }
 
     function handleClickUnStorage() {
-        dispatch(unstoragePost(post._id));
+        dispatch(unstorageEvent(event._id));
     }
 
     const [clickedApply, setClickedApply] = React.useState(true);
 
     const PF = process.env.REACT_APP_PUBLIC_FOLDER;
 
-    const textAvatar = post?.poster.username ?? null;
+    const textAvatar = event?.poster.username ?? null;
     const letterAvatar = textAvatar.charAt(0).toUpperCase();
 
-    const lettercreatedAt = (formatDistance(new Date(post?.createdAt), Date.now(), { addSuffix: true })).split("about");
+    const lettercreatedAt = (formatDistance(new Date(event?.created_at), Date.now(), { addSuffix: true })).split("about");
 
     const classes = useStyles();
 
@@ -165,7 +165,7 @@ const FeedContent: React.FC<Props> = ({ post }): JSX.Element => {
                                         <MoreVert />
                                     </IconButton>
                                 }
-                                title={post?.poster.username ?? null}
+                                title={event?.poster.username ?? null}
                                 titleTypographyProps={{ align: 'left', fontSize: '16px', fontWeight: 'bold', paddingBottom: '2px' }}
                                 subheader={lettercreatedAt}
                                 subheaderTypographyProps={{ align: 'left', fontSize: '12px' }}
@@ -174,20 +174,43 @@ const FeedContent: React.FC<Props> = ({ post }): JSX.Element => {
 
                             <CardContent>
                                 <Typography sx={{ textAlign: 'left', fontSize: '24px', fontWeight: "bold" }}>
-                                    {post?.title ?? null}
+                                    {event?.nameEvent ?? null}
                                 </Typography>
                                 <Typography sx={{ textAlign: 'left', fontSize: '14px' }}>
-                                    {post?.content ?? null}
+                                    {event?.quantityUser ?? null}
                                 </Typography>
+                                <Typography sx={{ textAlign: 'left', fontSize: '14px' }}>
+                                    {event?.location ?? null}
+                                </Typography>
+                                <Typography sx={{ textAlign: 'left', fontSize: '14px' }}>
+                                    {event?.dayStart ?? null}
+                                </Typography>
+                                <Typography sx={{ textAlign: 'left', fontSize: '14px' }}>
+                                    {event?.dayEnd ?? null}
+                                </Typography>                         
+                                {event.job.map((job: any, index:any) =>
+                                    <Box>
+                                        <Box>
+                                            <Typography key={job._id} sx={{ width: "100px", fontSize: '12px' }}>
+                                                - {job.nameJob}
+                                            </Typography>
+                                        </Box>
+                                        <Box>
+                                            <IconButton onClick={() => setClickedApply(!clickedApply)} sx={{ border: '0px solid black', backgroundColor: '#D9D9D9', borderRadius: '4px' }} >
+                                                {clickedApply ? <button style={{ backgroundColor: "black", color: "white", height: "30px", width: "90px", fontWeight: "bold", borderRadius: "6px" }} onClick={(e) => dispatch(applyJob(job._id))}>Ứng Tuyển</button> : <button style={{ backgroundColor: "red", color: "white", height: "30px", width: "90px", fontWeight: "bold", borderRadius: "6px" }} onClick={(e) => dispatch(unapplyJob(job._id))}>Hủy Ứng Tuyển</button>}
+                                            </IconButton>
+                                        </Box>
+                                    </Box>
+                                )}
                             </CardContent >
                             <CardMedia
                                 className={classes.myMedia}
                                 component="img"
-                                image={PF + post?.image ?? null}
+                                image={PF + event?.image ?? null}
                                 alt="Paella dish"
                             >
                             </CardMedia>
-
+                        
                             <CardActions disableSpacing >
                                 <IconButton onClick={() => setClicked(!clicked)} sx={{ border: '0px solid black', backgroundColor: '#D9D9D9', borderRadius: '4px' }} >
                                     {clicked ? <Favorite onClick={handleClickUnStorage} sx={{ fontSize: '24px', color: 'red' }} /> : <FavoriteBorder onClick={handleClickStorage} sx={{ fontSize: '24px', color: 'red' }} />}
@@ -196,10 +219,6 @@ const FeedContent: React.FC<Props> = ({ post }): JSX.Element => {
 
                                 <IconButton>
                                     <Rating />
-                                </IconButton>
-
-                                <IconButton onClick={() => setClickedApply(!clickedApply)} sx={{ border: '0px solid black', backgroundColor: '#D9D9D9', borderRadius: '4px' }} >
-                                    {clickedApply ? <button style={{ backgroundColor: "black", color: "white", height: "30px", width: "90px", fontWeight: "bold", borderRadius: "6px" }} onClick={(e) => dispatch(applyJob(post._id))}>Ứng Tuyển</button> : <button style={{ backgroundColor: "red", color: "white", height: "30px", width: "90px", fontWeight: "bold", borderRadius: "6px" }} onClick={(e) => dispatch(unapplyJob(post._id))}>Hủy Ứng Tuyển</button>}
                                 </IconButton>
 
                             </CardActions>
@@ -268,7 +287,7 @@ const FeedContent: React.FC<Props> = ({ post }): JSX.Element => {
 
                                     <Divider />
 
-                                    <StyledMenuItem component={Link} to={'/loginuser'} >
+                                    <StyledMenuItem component={Link} to={'/register'} >
                                         <ListItemIcon>
                                             <PersonAdd fontSize="small" />
                                         </ListItemIcon>
@@ -298,7 +317,7 @@ const FeedContent: React.FC<Props> = ({ post }): JSX.Element => {
                                                 <MoreVert />
                                             </IconButton>
                                         }
-                                        title={post?.poster.username ?? null}
+                                        title={event?.poster.username ?? null}
                                         titleTypographyProps={{ align: 'left', fontSize: '16px', fontWeight: 'bold', paddingBottom: '2px' }}
                                         subheader={lettercreatedAt}
                                         subheaderTypographyProps={{ align: 'left', fontSize: '12px' }}
@@ -307,16 +326,25 @@ const FeedContent: React.FC<Props> = ({ post }): JSX.Element => {
 
                                     <CardContent>
                                         <Typography sx={{ textAlign: 'left', fontSize: '24px', fontWeight: "bold" }}>
-                                            {post?.title ?? null}
+                                            {event?.nameEvent ?? null}
                                         </Typography>
                                         <Typography sx={{ textAlign: 'left', fontSize: '14px' }}>
-                                            {post?.content ?? null}
+                                            {event?.quantityUser ?? null}
+                                        </Typography>
+                                        <Typography sx={{ textAlign: 'left', fontSize: '14px' }}>
+                                            {event?.location ?? null}
+                                        </Typography>
+                                        <Typography sx={{ textAlign: 'left', fontSize: '14px' }}>
+                                            {event?.dayStart ?? null}
+                                        </Typography>
+                                        <Typography sx={{ textAlign: 'left', fontSize: '14px' }}>
+                                            {event?.dayEnd ?? null}
                                         </Typography>
                                     </CardContent >
                                     <CardMedia
                                         className={classes.myMedia}
                                         component="img"
-                                        image={PF + post?.image ?? null}
+                                        image={PF + event?.image ?? null}
                                         alt="Paella dish"
                                     >
                                     </CardMedia>

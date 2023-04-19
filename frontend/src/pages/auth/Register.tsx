@@ -1,6 +1,5 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { Grid, Button, CircularProgress } from "@material-ui/core";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { useDispatch } from "react-redux";
@@ -8,7 +7,7 @@ import { useDispatch } from "react-redux";
 import FormField from "pages/auth/FormField";
 import { registerSManagerAdmin } from "redux/actions/sManager";
 import { registerManagerAdmin } from "redux/actions/Manager";
-import { FormControlLabel, Radio, RadioGroup, Typography } from "@mui/material";
+import { FormControlLabel, Radio, RadioGroup, Typography, Grid, Button, CircularProgress } from "@material-ui/core";
 import FormFieldDepartment from "pages/auth/FormDepartment_Admin";
 
 import { Link } from 'react-router-dom';

@@ -1,10 +1,10 @@
 const mongoose = require("mongoose");
 
-const PostStorage = new mongoose.Schema(
+const EventStorage = new mongoose.Schema(
   {
-    postId: {
+    eventId: {
       type: mongoose.Types.ObjectId,
-      ref: "Post",
+      ref: "Event",
       required: true,
     },
     userId: {
@@ -16,4 +16,4 @@ const PostStorage = new mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("PostStorage", PostStorage);
+module.exports = mongoose.model("EventStorage", EventStorage);

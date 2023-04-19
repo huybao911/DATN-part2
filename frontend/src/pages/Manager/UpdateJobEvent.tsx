@@ -6,9 +6,9 @@ import * as Yup from "yup";
 import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import { useDispatch } from "react-redux";
-import { updateJobEvent } from "redux/actions/sManager";
-import FormJobEvent from "pages/SManager/FormJobEvent";
-import FormEventSManager from "pages/auth/FormEvent-Smanager";
+import { updateJobEvent } from "redux/actions/Manager";
+import FormJobEvent from "pages/Manager/FormJobEvent";
+import FormEvent from "pages/auth/FormEvent-Manager";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -31,16 +31,22 @@ type Props = {
 
 interface IInitialValues {
     nameJob: string;
-    eventId: any;
+    quantity: number;
+    unitPrice: number;
+    jobDescription: string;
+    event: any;
 }
 
-const CreatePost: React.FC<Props> = ({ jobEvent }): JSX.Element => {
+const UpdateJobEvent: React.FC<Props> = ({ jobEvent }): JSX.Element => {
     const classes = useStyles();
     const dispatch = useDispatch();
 
     const initialValues: IInitialValues = {
         nameJob: jobEvent?.nameJob ?? "",
-        eventId: jobEvent?.eventId ?? "",
+        quantity: jobEvent?.quantity ?? "",
+        unitPrice: jobEvent?.unitPrice ?? "",
+        jobDescription: jobEvent?.jobDescription ?? "",
+        event: jobEvent?.event ?? "",
     };
 
 
@@ -52,7 +58,10 @@ const CreatePost: React.FC<Props> = ({ jobEvent }): JSX.Element => {
 
     const validationSchema = Yup.object({
         nameJob: Yup.string().required("required!"),
-        eventId: Yup.string().required("required!"),
+        quantity: Yup.string().required("required!"),
+        unitPrice: Yup.string().required("required!"),
+        jobDescription: Yup.string().required("required!"),
+        event: Yup.string().required("required!"),
     });
 
     return (
@@ -74,7 +83,7 @@ const CreatePost: React.FC<Props> = ({ jobEvent }): JSX.Element => {
                     {({ isSubmitting, handleSubmit }) => (
                         <form noValidate onSubmit={handleSubmit}>
                             <FormJobEvent />
-                            <FormEventSManager isEvent={true}/>
+                            <FormEvent isEvent={true}/>
                             <Button
                                 style={{ backgroundColor: "black", color: "white" }}
                                 type='submit'
@@ -94,4 +103,4 @@ const CreatePost: React.FC<Props> = ({ jobEvent }): JSX.Element => {
     );
 };
 
-export default CreatePost;
+export default UpdateJobEvent;

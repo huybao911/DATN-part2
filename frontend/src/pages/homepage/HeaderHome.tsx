@@ -31,14 +31,6 @@ const Homepage: React.FC = (): JSX.Element => {
   const handleCloseUser = () => {
     setAnchorElUser(null);
   };
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const open = Boolean(anchorEl);
-  const handleClick = (event: any) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
 
   const user = useSelector((state: RootState) => state.user);
   const manager = useSelector((state: RootState) => state.manager);
@@ -113,18 +105,18 @@ const Homepage: React.FC = (): JSX.Element => {
 
               <Divider />
 
-              <StyledMenuItem component={NavLink} to={'storagePost'}>
+              <StyledMenuItem component={NavLink} to={'/storageEvent'}>
                 <ListItemIcon>
                   <Favorite style={{ color: "red" }} fontSize="small" />
                 </ListItemIcon>
-                <Typography>Bài Viết Đã Lưu</Typography>
+                <Typography>Sự Kiện Đã Lưu</Typography>
               </StyledMenuItem>
 
               <StyledMenuItem component={NavLink} to={'/applyPost'}>
                 <ListItemIcon>
                   <Approval style={{ color: "black" }} fontSize="small" />
                 </ListItemIcon>
-                <Typography>Bài Viết Đã Ứng Tuyển</Typography>
+                <Typography>Sự Kiện Đã Ứng Tuyển</Typography>
               </StyledMenuItem>
 
               <MenuItem className="navbar-logout" onClick={(e) => dispatch(logOutUser())}>

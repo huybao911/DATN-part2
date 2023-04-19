@@ -1,10 +1,8 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { Button, CircularProgress } from "@material-ui/core";
+import { Button, CircularProgress, Accordion, AccordionDetails } from "@material-ui/core";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import Accordion from "@mui/material/Accordion";
-import AccordionDetails from "@mui/material/AccordionDetails";
 import { useDispatch } from "react-redux";
 import FormField from "pages/auth/FormField";
 import { updateUser } from "redux/actions/admin";

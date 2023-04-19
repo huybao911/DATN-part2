@@ -1,19 +1,16 @@
 import * as React from 'react';
 import { makeStyles } from "@material-ui/core/styles";
 
-import { Avatar, Card, CardActions, CardContent, CardHeader, CardMedia, Collapse, IconButton, Rating, Toolbar, Typography, ListItem } from '@mui/material';
-import { ArrowRight, Favorite, FavoriteBorder, MoreVert } from '@mui/icons-material';
+import { Avatar, Card, CardContent, CardHeader, CardMedia, Collapse, IconButton, Toolbar, Typography } from '@mui/material';
+import {  MoreVert } from '@mui/icons-material';
 import TabContext from '@mui/lab/TabContext';
 import TabPanel from '@mui/lab/TabPanel';
 import { green } from '@mui/material/colors';
 import { Box } from '@mui/material';
-import { storagePost, unstoragePostInList } from "redux/actions/user";
 import { formatDistance} from 'date-fns';
 
-import { useDispatch } from "react-redux";
-
 type Props = {
-    postStorage: any;
+    jobApply: any;
 };
 
 const useStyles = makeStyles((theme) => ({
@@ -99,27 +96,16 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
-const FeedStoragePost: React.FC<Props> = ({ postStorage }): JSX.Element => {
+const FeedStoragePost: React.FC<Props> = ({ jobApply }): JSX.Element => {
 
-    const dispatch = useDispatch();
     const [value, setValue] = React.useState('1');
-
-    const [clicked, setClicked] = React.useState(true);
-
-    function handleClickStorage () {
-        dispatch(storagePost(postStorage?.postId._id));
-    }
-
-    function handleClickUnStorage () {
-        dispatch(unstoragePostInList(postStorage?.postId._id));
-    }
 
     const PF = process.env.REACT_APP_PUBLIC_FOLDER;
 
-    const textAvatar = postStorage?.postId.poster.username ?? null;
+    const textAvatar = jobApply?.postId.poster.username ?? null;
     const letterAvatar = textAvatar.charAt(0).toUpperCase();
 
-    const lettercreatedAt = (formatDistance(new Date(postStorage?.postId.createdAt), Date.now(), {addSuffix: true})).split("about");
+    const lettercreatedAt = (formatDistance(new Date(jobApply?.postId.createdAt), Date.now(), {addSuffix: true})).split("about");
 
     const classes = useStyles();
 
@@ -142,7 +128,7 @@ const FeedStoragePost: React.FC<Props> = ({ postStorage }): JSX.Element => {
                                             <MoreVert />
                                         </IconButton>
                                     }
-                                    title={postStorage?.postId.poster.username ?? null}
+                                    title={jobApply?.postId.poster.username ?? null}
                                     titleTypographyProps={{ align: 'left', fontSize: '16px', fontWeight: 'bold', paddingBottom: '2px' }}
                                     subheader={lettercreatedAt}
                                     subheaderTypographyProps={{ align: 'left', fontSize: '12px' }}
@@ -151,36 +137,19 @@ const FeedStoragePost: React.FC<Props> = ({ postStorage }): JSX.Element => {
 
                                 <CardContent>
                                 <Typography sx={{ textAlign: 'left', fontSize: '24px', fontWeight:"bold" }}>
-                                        {postStorage?.postId.title ?? null}
+                                        {jobApply?.postId.title ?? null}
                                     </Typography>
                                     <Typography sx={{ textAlign: 'left', fontSize: '14px' }}>
-                                        {postStorage?.postId.content ?? null}
+                                        {jobApply?.postId.content ?? null}
                                     </Typography>
                                 </CardContent >
                                 <CardMedia
                                     className={classes.myMedia}
                                     component="img"
-                                    image={PF + postStorage?.postId.image ?? null}
+                                    image={PF + jobApply?.postId.image ?? null}
                                     alt="Paella dish"
                                 >
                                 </CardMedia>
-
-                                <CardActions disableSpacing >
-                                        <IconButton onClick={() => setClicked(!clicked)} sx={{ border: '0px solid black', backgroundColor: '#D9D9D9', borderRadius: '4px' }} >
-                                            {clicked  ? <Favorite onClick={handleClickUnStorage}  sx={{ fontSize: '24px', color: 'red' }} /> : <FavoriteBorder onClick={handleClickStorage} sx={{ fontSize: '24px', color: 'red' }} />}
-                                            {/* <button onClick={(e) => dispatch(storagePost(post._id))}>Like</button>:<button>Unlike</button> */}
-                                        </IconButton>
-
-                                        <IconButton>
-                                            <Rating />
-                                        </IconButton>
-
-                                        <IconButton sx={{ ml: 'auto' }}>
-                                            <ArrowRight />
-                                        </IconButton>
-
-                                </CardActions>
-
                                 <Collapse>
                                 </Collapse>
 

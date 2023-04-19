@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getDepartments, deleteDepartment } from "redux/actions/admin";
 import { RootState } from "redux/reducers";
 import { IDepartment } from "redux/types/department";
-import { TableSortLabel, Toolbar, OutlinedInput, InputAdornment, Button, Card, Container, Popover, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography } from "@mui/material";
+import { Box,TableSortLabel, Toolbar, OutlinedInput, InputAdornment, Button, Card, Container, Popover, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography } from "@mui/material";
 import { Link } from 'react-router-dom';
 import UpdateDepartment from "pages/admin/UpdateDepartment";
 // @mui
@@ -12,7 +12,6 @@ import EditIcon from '@mui/icons-material/Edit';
 import SearchIcon from '@mui/icons-material/Search';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-import { Box } from "@mui/system";
 import { visuallyHidden } from '@mui/utils';
 
 const StyledRoot = styled(Toolbar)(({ theme }) => ({
@@ -353,6 +352,9 @@ const Department: React.FC = (): JSX.Element => {
                         },
                         '& .MuiTablePagination-selectIcon': {
                           width: "16px"
+                        },
+                        '& .MuiInputBase-root':{
+                          fontSize: "12px"
                         },
                         '& .MuiTablePagination-displayedRows': {
                           fontSize: "12px"

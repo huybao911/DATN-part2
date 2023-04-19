@@ -4,9 +4,10 @@ const { sign } = require("jsonwebtoken");
 const User = require("../models/User");
 const Department = require("../models/Department");
 const Role = require("../models/Role");
-const Post = require("../models/Post");
-const PostStorage = require("../models/PostStorage");
+const Event = require("../models/Event");
+const EventStorage = require("../models/EventStorage");
 const ApplyJob = require("../models/ApplyJob");
+const JobEvent = require("../models/JobEvent");
 
 exports.register = async (req, res, next) => {
   const { username, email, password, role, department, fullName, birthday, mssv, classUser, phone, address } = req.body;
@@ -22,10 +23,10 @@ exports.register = async (req, res, next) => {
 
     let getDepartment = await Department.findById(userObj.department);
 
-    const token = sign({ user, getRole }, process.env.JWT_SECRET, { expiresIn: 360000 });
+    const token = sign({ user, getRole, getDepartment }, process.env.JWT_SECRET, { expiresIn: 360000 });
     return res
-      .status(201)
-      .json(getRole.keyRole === "user" ? { token, user: { ...user._doc, password: null, fullName: null, birthday: null, mssv: null, classUser: null, phone: null, address: null }, getRole } : { token, admin: { ...user._doc, password: null }, getRole }) //role: getRole, department: getDepartment
+      .status(200)
+      .json(getRole.keyRole === "user" ? { token, user: { ...user._doc, password: null, fullName: null, birthday: null, mssv: null, classUser: null, phone: null, address: null }, getRole } : getRole.keyRole === "admin" ? { token, admin: { ...user._doc, password: null }, getRole }: getRole.keyRole === "smanager" ? { token, smanager: { ...user._doc, password: null }, getRole } : { token, manager: { ...user._doc, password: null }, getRole }) //role: getRole, department: getDepartment
 
   } catch (error) {
     return res.status(500).send(error.message);
@@ -33,9 +34,9 @@ exports.register = async (req, res, next) => {
 };
 
 exports.login = async (req, res, next) => {
-  const { username, password } = req.body;
+  const { email, password } = req.body;
   try {
-    const user = await User.findOne({ username }).lean();
+    const user = await User.findOne({ email }).lean();
     let getRole = await Role.findById(user.role);
     let getDepartment = await Department.findById(user.department);
 
@@ -48,6 +49,31 @@ exports.login = async (req, res, next) => {
     return res.status(200).json({ token, user: { ...user, password: null }, getRole, getDepartment });
   } catch (error) {
     return res.status(500).send(error.message);
+  }
+};
+
+exports.resetPassword = async (req, res, next) => {
+  const { email, password, resetPass } = req.body;
+  if (!email || !password || !resetPass)
+    return res.status(400).send("Please fill in all the required fields!")
+  try {
+    const user = await User.findOne({ email }).lean();
+    if (!user) return res.status(400).send("Gmail does not exist");
+    const hashedPwd = await hash(password, 12);
+    const passwordObj = {
+      password: hashedPwd,
+    };
+    const isMatch = await compare(resetPass, passwordObj.password);
+    if (!isMatch) return res.status(400).send("Mật khẩu không trùng khớp");
+    const newPass = await User.findOneAndUpdate(
+      { email: user.email },
+      { password: passwordObj.password },
+      { new: true }
+    );
+    return res.status(200).json(newPass);
+  } catch (error) {
+    console.log(error.message);
+    return res.status(500).json(error);
   }
 };
 
@@ -64,68 +90,68 @@ exports.getAuthUser = async (req, res, next) => {
   }
 };
 
-exports.getPosts = async (req, res) => {
+exports.getEvents = async (req, res) => {
   const smanagerRole = await User.find({ role: "640cc3c229937ffacc4359f8" });
-  const smanagerPost = await Post.find({ approver: smanagerRole }).populate("poster").populate("approver");
+  const smanagerEvent = await Event.find({ approver: smanagerRole }).populate("poster").populate("approver");
   try {
-    return res.status(200).json(smanagerPost);
+    return res.status(200).json(smanagerEvent);
   } catch (error) {
     return res.status(500).json(error);
   }
 };
 
-exports.storagePost = async (req, res) => {
+exports.storageEvent = async (req, res) => {
   const userStorage = await User.findById(req?.user?._id).populate("role").populate("department");
   const { id } = req.params;
-  const postStorage = await Post.findById({ _id: id });
+  const eventStorage = await Event.findById({ _id: id });
   try {
-    if (!postStorage) {
-      throw new Error("Post does not exist");
+    if (!eventStorage) {
+      throw new Error("Event does not exist");
     }
-    const existingPostStorage = await PostStorage.findOne({ postId: postStorage, userId: userStorage, });
+    const existingEventStorage = await EventStorage.findOne({ eventId: eventStorage, userId: userStorage, });
 
-    if (existingPostStorage) {
-      throw new Error("Post is already storage");
+    if (existingEventStorage) {
+      throw new Error("Event is already storage");
     }
 
-    const newPostStorage = new PostStorage({
-      postId: postStorage,
+    const newEventStorage = new EventStorage({
+      eventId: eventStorage,
       userId: userStorage,
     });
-    await newPostStorage.save();
+    await newEventStorage.save();
 
-    res.status(200).json(newPostStorage);
+    res.status(200).json(newEventStorage);
   } catch (err) {
     res.status(404).json({ message: err.message });
   }
 };
 
-exports.unstoragePost = async (req, res) => {
+exports.unstorageEvent = async (req, res) => {
   const userStorage = await User.findById(req?.user?._id).populate("role").populate("department");
   const { id } = req.params;
-  const postStorage = await Post.findById({ _id: id });
+  const eventStorage = await Event.findById({ _id: id });
   try {
-    if (!postStorage) {
-      throw new Error("Post does not exist");
+    if (!eventStorage) {
+      throw new Error("Event does not exist");
     }
-    const RemovePostStorage = await PostStorage.findOne({ postId: postStorage, userId: userStorage });
+    const RemoveEventStorage = await EventStorage.findOne({ eventId: eventStorage, userId: userStorage });
 
-    if (!RemovePostStorage) {
-      throw new Error("Post is already not storage");
+    if (!RemoveEventStorage) {
+      throw new Error("Event is already not storage");
     }
-    await RemovePostStorage.remove();
+    await RemoveEventStorage.remove();
 
-    res.status(200).send("PostStorage has been deleted");
+    res.status(200).send("EventStorage has been deleted");
   } catch (err) {
     res.status(404).json({ message: err.message });
   }
 };
 
-exports.getPostStorage = async (req, res) => {
+exports.getEventStorage = async (req, res) => {
   const userStorage = await User.findById(req?.user?._id).populate("role").populate("department");
-  const findPostStorage = await PostStorage.find({ userId: userStorage }).populate("userId").populate({path:"postId",populate:[{path:"poster"}]});
+  const findEventStorage = await EventStorage.find({ userId: userStorage }).populate("userId").populate({ path: "eventId", populate: [{ path: "poster" }] });
   try {
-    return res.status(200).json(findPostStorage);
+    return res.status(200).json(findEventStorage);
   } catch (error) {
     return res.status(500).json(error);
   }
@@ -134,24 +160,24 @@ exports.getPostStorage = async (req, res) => {
 exports.applyJob = async (req, res) => {
   const userApplyJob = await User.findById(req?.user?._id).populate("role").populate("department");
   const { id } = req.params;
-  const postApplyJob = await Post.findById({ _id: id });
+  const jobUserApply = await JobEvent.findById({ _id: id });
   try {
-    if (!postApplyJob) {
-      throw new Error("Post does not exist");
+    if (!jobUserApply) {
+      throw new Error("ApplyJob does not exist");
     }
-    const existingPostApplyJob = await ApplyJob.findOne({ postId: postApplyJob, userId: userApplyJob, });
+    const existingJobUserApply = await ApplyJob.findOne({ jobId: jobUserApply, userId: userApplyJob, });
 
-    if (existingPostApplyJob) {
-      throw new Error("Post is already apply");
+    if (existingJobUserApply) {
+      throw new Error("ApplyJob is already apply");
     }
 
-    const newPostApplyJob = new ApplyJob({
-      postId: postApplyJob,
+    const newJobUserApply = new ApplyJob({
+      jobId: jobUserApply,
       userId: userApplyJob,
     });
-    await newPostApplyJob.save();
+    await newJobUserApply.save();
 
-    res.status(200).json(newPostApplyJob);
+    res.status(200).json(newJobUserApply);
   } catch (err) {
     res.status(404).json({ message: err.message });
   }
@@ -160,29 +186,29 @@ exports.applyJob = async (req, res) => {
 exports.unapplyJob = async (req, res) => {
   const userApplyJob = await User.findById(req?.user?._id).populate("role").populate("department");
   const { id } = req.params;
-  const postApplyJob = await Post.findById({ _id: id });
+  const jobUserApply = await JobEvent.findById({ _id: id });
   try {
-    if (!postApplyJob) {
-      throw new Error("Post does not exist");
+    if (!jobUserApply) {
+      throw new Error("ApplyJob does not exist");
     }
-    const RemovePostApplyJob = await ApplyJob.findOne({ postId: postApplyJob, userId: userApplyJob });
+    const RemoveJobUserApply = await ApplyJob.findOne({ jobId: jobUserApply, userId: userApplyJob });
 
-    if (!RemovePostApplyJob) {
-      throw new Error("Post is already not apply");
+    if (!RemoveJobUserApply) {
+      throw new Error("ApplyJob is already not apply");
     }
-    await RemovePostApplyJob.remove();
+    await RemoveJobUserApply.remove();
 
-    res.status(200).send("PostApplyJob has been deleted");
+    res.status(200).send("ApplyJob has been deleted");
   } catch (err) {
     res.status(404).json({ message: err.message });
   }
 };
 
-exports.getPostApplyJob = async (req, res) => {
+exports.getJobApplyJob = async (req, res) => {
   const userApplyJob = await User.findById(req?.user?._id).populate("role").populate("department");
-  const findPostApplyJob = await ApplyJob.find({ userId: userApplyJob }).populate("userId").populate({path:"postId",populate:[{path:"poster"}]});
+  const findJobUserApply = await ApplyJob.find({ userId: userApplyJob }).populate("userId").populate({ path: "jobId", populate: [{ path: "event" }] });
   try {
-    return res.status(200).json(findPostApplyJob);
+    return res.status(200).json(findJobUserApply);
   } catch (error) {
     return res.status(500).json(error);
   }
