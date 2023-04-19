@@ -21,7 +21,6 @@ router.delete("/department/:id", isAuth, adminController.deleteDepartment);
 router.get("/events", isAuth, adminController.getEvents);
 router.get("/jobEvents", isAuth, adminController.getJobEvents);
 
-router.get("/posts", isAuth, adminController.getPosts);
 router
   .route("/users/:id")
   .patch(isAuth, adminController.updateUser)

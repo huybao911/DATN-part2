@@ -32,32 +32,32 @@ const FormField: React.FC<Props> = ({ isRegister = false }): JSX.Element => {
     <>
         <Grid item xs={12}>
           <FormControl fullWidth className={classes.formControl}>
-            <FormLabel classes={{ root: classes.formLabel }}>Tên đăng nhập</FormLabel>
+            <FormLabel classes={{ root: classes.formLabel }}>Email</FormLabel>
             <TextField
               fullWidth
-              name='username'
-              value={values.username}
+              name='email'
+              value={values.email}
               onChange={handleChange}
               onBlur={handleBlur}
-              placeholder='Nhập tên đăng nhập'
-              helperText={touched.username ? errors.username : ""}
-              error={touched.username ? Boolean(errors.username) : false}
+              placeholder='Nhập email'
+              helperText={touched.email ? errors.email : ""}
+              error={touched.email ? Boolean(errors.email) : false}
             />
           </FormControl>
         </Grid>
         {isRegister ? (
           <Grid item xs={12}>
             <FormControl fullWidth className={classes.formControl}>
-              <FormLabel classes={{ root: classes.formLabel }}>Email</FormLabel>
+              <FormLabel classes={{ root: classes.formLabel }}>Tên tài khoản</FormLabel>
               <TextField
                 fullWidth
-                name='email'
-                value={values.email}
+                name='username'
+                value={values.username}
                 onChange={handleChange}
                 onBlur={handleBlur}
-                placeholder='Nhập email'
-                helperText={touched.email ? errors.email : ""}
-                error={touched.email ? Boolean(errors.email) : false}
+                placeholder='Nhập tên tài khoản'
+                helperText={touched.username ? errors.username : ""}
+                error={touched.username ? Boolean(errors.username) : false}
               />
             </FormControl>
           </Grid>

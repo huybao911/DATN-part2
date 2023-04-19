@@ -7,17 +7,19 @@ const router = Router({ strict: true });
 
 router.post("/login", userController.login);
 router.post("/register", userController.register);
+router.put("/resetPass", userController.resetPassword);
 router.get("/auth-user", isAuth, userController.getAuthUser);
-router.get("/posts", userController.getPosts);
-router.get("/postStorage", isAuth, userController.getPostStorage);
-router.get("/postApply", isAuth, userController.getPostApplyJob);
+
+router.get("/events", userController.getEvents);
 router.get("/departments", userController.getDepartments);
 
-router.post("/post/:id", isAuth, userController.storagePost);
-router.delete("/post/:id", isAuth, userController.unstoragePost);
+router.get("/eventStorage", isAuth, userController.getEventStorage);
+router.post("/event/:id", isAuth, userController.storageEvent);
+router.delete("/event/:id", isAuth, userController.unstorageEvent);
 
-router.post("/postApply/:id", isAuth, userController.applyJob);
-router.delete("/postApply/:id", isAuth, userController.unapplyJob);
+router.get("/jobApply", isAuth, userController.getJobApplyJob);
+router.post("/jobApply/:id", isAuth, userController.applyJob);
+router.delete("/jobApply/:id", isAuth, userController.unapplyJob);
 
 router.get("/profile", isAuth, userController.getProfileUser);
 router.put("/profile/:id", isAuth, userController.updateProfile);

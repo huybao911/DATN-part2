@@ -6,17 +6,17 @@ import * as Yup from "yup";
 import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import { useDispatch } from "react-redux";
-import { createEvent } from "redux/actions/sManager";
-import FormEvent from "pages/SManager/FormEvent";
+import { updateEvent } from "redux/actions/Manager";
+import FormEvent from "pages/Manager/FormEvent";
 
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
     },
-    btnLogin: {
-        marginTop: theme.spacing(1.5),
-        marginRight: theme.spacing(1),
-        padding: theme.spacing(1, 2),
+    btn: {
+        '&.MuiButton-root:hover': {
+            backgroundColor: "transparent",
+        }
     },
     accordion: {
         marginBottom: theme.spacing(3),
@@ -35,10 +35,10 @@ interface IInitialValues {
     costs: string;
     dayStart: string;
     dayEnd: string;
-    departmentEvent: any;
+    image: string;
 }
 
-const CreateEvent: React.FC<Props> = ({ event }): JSX.Element => {
+const CreatePost: React.FC<Props> = ({ event }): JSX.Element => {
     const classes = useStyles();
     const dispatch = useDispatch();
 
@@ -49,7 +49,7 @@ const CreateEvent: React.FC<Props> = ({ event }): JSX.Element => {
         costs: event?.costs ?? "",
         dayStart: event?.dayStart ?? "",
         dayEnd: event?.dayEnd ?? "",
-        departmentEvent: event?.departmentEvent ?? "",
+        image: event?.image ?? "",
     };
 
 
@@ -57,7 +57,7 @@ const CreateEvent: React.FC<Props> = ({ event }): JSX.Element => {
         values: IInitialValues,
         { setSubmitting }: any
     ): Promise<void> =>
-        dispatch<any>(createEvent(values, setSubmitting));
+        dispatch<any>(updateEvent(values, event._id, setSubmitting));
 
     const validationSchema = Yup.object({
         nameEvent: Yup.string().required("required!"),
@@ -66,17 +66,11 @@ const CreateEvent: React.FC<Props> = ({ event }): JSX.Element => {
         costs: Yup.string().required("required!"),
         dayStart: Yup.string().required("required!"),
         dayEnd: Yup.string().required("required!"),
+        image: Yup.string().required("required!"),
     });
 
     return (
         <Accordion className={classes.accordion} elevation={0}>
-            {/* <AccordionSummary
-        expandIcon={<ExpandMoreIcon />}
-        aria-controls='panel1a-content'
-        id={`panel1a-header-${user._id}`}
-      >
-        <Typography>{user?.username ?? null}</Typography>
-      </AccordionSummary> */}
             <AccordionDetails>
                 <Formik
                     enableReinitialize
@@ -86,16 +80,18 @@ const CreateEvent: React.FC<Props> = ({ event }): JSX.Element => {
                 >
                     {({ isSubmitting, handleSubmit }) => (
                         <form noValidate onSubmit={handleSubmit}>
-                            <FormEvent />        
+                            <FormEvent/>
                             <Button
+                                disableRipple
+                                style={{ backgroundColor: "black", color: "white" }}
                                 type='submit'
                                 variant='contained'
                                 color='primary'
                                 size='small'
-                                className={classes.btnLogin}
+                                className={classes.btn}
                                 disabled={isSubmitting}
                             >
-                                {isSubmitting ? <CircularProgress size='1rem' /> : "Tạo Sự Kiện"}
+                                {isSubmitting ? <CircularProgress size='1rem' /> : "Cập Nhật Sự Kiện"}
                             </Button>
                         </form>
                     )}
@@ -105,4 +101,4 @@ const CreateEvent: React.FC<Props> = ({ event }): JSX.Element => {
     );
 };
 
-export default CreateEvent;
+export default CreatePost;

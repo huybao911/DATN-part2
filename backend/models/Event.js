@@ -7,6 +7,27 @@ const eventSchema = new mongoose.Schema(
             trim: true,
             required: [true, "NameEvent is required"],
         },
+        poster: {
+            type: mongoose.Types.ObjectId,
+            ref: "User",
+        },
+        approver: {
+            type: mongoose.Types.ObjectId,
+            ref: "User",
+        },
+        comments: [
+            {
+                commenter: {
+                    type: mongoose.Types.ObjectId,
+                    ref: "User",
+                },
+                contentComment: {
+                    type: String,
+                    trim: true,
+                },
+                created: { type: Date, default: Date.now }
+            },
+        ],
         quantityUser: {
             type: Number,
             trim: true,
@@ -15,7 +36,7 @@ const eventSchema = new mongoose.Schema(
         job: {
             type: Array,
             required: [true, "Job is required"],
-            default:[],
+            default: [],
         },
         location: {
             type: String,
@@ -28,10 +49,12 @@ const eventSchema = new mongoose.Schema(
             ref: "Department",
         },
         costs: {
-            type: String,
-            trim: true,
-            required: [true, "Costs is required"],
+            type: Number,
         },
+        image: {
+            type: String,
+            required: true,
+          },
         dayStart: {
             type: String,
             trim: true,

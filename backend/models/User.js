@@ -25,6 +25,9 @@ const userSchema = new mongoose.Schema(
       trim: true,
       required: [true, "Password is required"],
     },
+    resetPass: {
+      type: String,
+    },
     department:
     {
       type: mongoose.Schema.Types.ObjectId,

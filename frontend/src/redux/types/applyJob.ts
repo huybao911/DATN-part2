@@ -1,5 +1,6 @@
 export interface IApplyJob {
     _id: any;
-    postId: any;
+    jobId: any;
     userId: any;
+    event: any;
   }

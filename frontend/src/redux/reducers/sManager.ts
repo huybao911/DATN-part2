@@ -5,7 +5,6 @@ import { ISManager } from "redux/types/sManager";
 import { ISManagerState, SManagerActions } from "../types/sManager";
 import { IRole } from "redux/types/role";
 import { IDepartment } from "redux/types/department";
-import { IPost } from "redux/types/post";
 import { IEvent } from "redux/types/event";
 import { IJobEvent } from "redux/types/jobEvent";
 
@@ -17,7 +16,6 @@ const initialState: ISManagerState = {
   manager: [] as IManager[],
   users: [] as IUser[],
   departments: [] as IDepartment[],
-  posts: [] as IPost[],
   events: [] as IEvent[],
   jobevents: [] as IJobEvent[],
   getRole: {} as IRole,
@@ -51,8 +49,6 @@ const sManagerReducer = (
       return {
         ...state,
         ...action.payload,
-        isAuthenticated: true,
-        loading: false,
       };
     case types.GET_USER:
       return {
@@ -71,87 +67,31 @@ const sManagerReducer = (
         departments: action.payload,
       };
 
-    case types.GET_POSTAPPROVE_SMANAGER:
+    case types.GET_EVENTAPPROVE_SMANAGER:
       return {
         ...state,
-        posts: action.payload,
+        events: action.payload,
       };
     case types.APPROVE_POSTER:
       return {
         ...state,
-        posts: state.posts.map((post) =>
-          post._id === action.payload.id ? { ...action.payload.post } : post
+        events: state.events.map((event) =>
+          event._id === action.payload.id ? { ...action.payload.event } : event
         ),
       };
-    case types.COMMENT_POST:
+    case types.COMMENT_EVENT:
       return {
         ...state,
-        posts: state.posts.map((post) =>
-          post._id === action.payload.id ? { ...action.payload.post } : post
+        events: state.events.map((event) =>
+          event._id === action.payload.id ? { ...action.payload.event } : event
         ),
       };
     case types.DELETE_COMMENT:
       return {
         ...state,
-        posts: state.posts.map((post) =>
-          post._id === action.payload.id ? { ...action.payload.post } : post
-        ),
-      };
-
-    case types.GET_EVENTS:
-      return {
-        ...state,
-        events: action.payload,
-      };
-
-    case types.CREATE_EVENT_SUCCESS:
-      return {
-        ...state,
-        ...action.payload,
-        isAuthenticated: true,
-        loading: false,
-      };
-
-    case types.UPDATE_EVENT:
-      return {
-        ...state,
         events: state.events.map((event) =>
-          event._id === action.payload.id ? { ...action.payload.post } : event
+          event._id === action.payload.id ? { ...action.payload.event } : event
         ),
-      };
-
-    case types.DELETE_EVENT:
-      return {
-        ...state,
-        events: state.events.filter((event) => event._id !== action.payload),
-      };
-
-    case types.GET_JOBEVENTS:
-      return {
-        ...state,
-        jobevents: action.payload,
-      };
-
-    case types.CREATE_JOBEVENT_SUCCESS:
-      return {
-        ...state,
-        ...action.payload,
-        isAuthenticated: true,
-        loading: false,
-      };
-
-    case types.UPDATE_JOBEVENT:
-      return {
-        ...state,
-        jobevents: state.jobevents.map((jobevent) =>
-          jobevent._id === action.payload.id ? { ...action.payload.post } : jobevent
-        ),
-      };
-
-    case types.DELETE_JOBEVENT:
-      return {
-        ...state,
-        jobevents: state.jobevents.filter((jobevent) => jobevent._id !== action.payload),
       };
 
     case types.SMANAGER_LOGIN_FAIL:

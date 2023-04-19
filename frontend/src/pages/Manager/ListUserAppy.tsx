@@ -1,12 +1,12 @@
 import * as React from "react";
 import { styled, alpha } from "@material-ui/core/styles";
 import { useDispatch, useSelector } from "react-redux";
-import { getPostUserApply } from "redux/actions/Manager";
+import { getListUserApply } from "redux/actions/Manager";
 import { RootState } from "redux/reducers";
 import { IApplyJob } from "redux/types/applyJob";
 import { TableSortLabel, Toolbar, OutlinedInput, InputAdornment, Button, Card, Container, Popover, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography } from "@mui/material";
 import { Link } from 'react-router-dom';
-import UpdateEvent from "pages/SManager/UpdateEvent";
+import UpdateEvent from "pages/Manager/UpdateEvent";
 // @mui
 import EditIcon from '@mui/icons-material/Edit';
 import SearchIcon from '@mui/icons-material/Search';
@@ -74,7 +74,8 @@ function stableSort<T>(array: T[], comparator: (a: T, b: T) => number) {
 
 interface DataUser {
   _id: keyof IApplyJob;
-  postId: keyof IApplyJob;
+  event: keyof IApplyJob;
+  jobId: keyof IApplyJob;
   userId: keyof IApplyJob;
 }
 
@@ -86,13 +87,18 @@ interface HeadCell {
 
 const headCells: HeadCell[] = [
   {
-    _id: 'postId',
+    _id: 'event',
     numeric: false,
     label: 'Tên sự kiện',
   },
   {
+    _id: 'jobId',
+    numeric: false,
+    label: 'Tên công việc',
+  },
+  {
     _id: 'userId',
-    numeric: true,
+    numeric: false,
     label: 'Người ứng tuyển',
   },
 ];
@@ -161,7 +167,7 @@ const Users: React.FC = (): JSX.Element => {
   const [filterName, setFilterName] = React.useState('');
 
   const [order, setOrder] = React.useState<Order>('asc');
-  const [orderBy, setOrderBy] = React.useState<keyof DataUser>('postId');
+  const [orderBy, setOrderBy] = React.useState<keyof DataUser>('event');
 
 
 
@@ -204,7 +210,7 @@ const Users: React.FC = (): JSX.Element => {
   const sortApplyJob = stableSort(applyJobs, getComparator(order, orderBy));
 
   React.useEffect(() => {
-    dispatch(getPostUserApply());
+    dispatch(getListUserApply());
   }, [dispatch]);
 
   React.useEffect(() => {
@@ -262,10 +268,14 @@ const Users: React.FC = (): JSX.Element => {
                   {sortApplyJob.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((applyJob: any, index) =>
                     <TableRow key={applyJob._id}>
                       <TableCell align="left" sx={{ fontSize: '12px' }}>
-                        {applyJob.postId.event.nameEvent}
+                        {applyJob.jobId.event.nameEvent}
                       </TableCell>
 
-                      <TableCell align="right" sx={{ fontSize: '12px' }}>
+                      <TableCell align="left" sx={{ fontSize: '12px' }}>
+                        {applyJob.jobId.nameJob}
+                      </TableCell>
+
+                      <TableCell align="left" sx={{ fontSize: '12px' }}>
                         {applyJob.userId.username}
                       </TableCell>
                     </TableRow>

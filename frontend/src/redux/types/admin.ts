@@ -4,7 +4,6 @@ import { ISManager } from "./sManager";
 import { IManager } from "./Manager";
 import { IDepartment } from "./department";
 import { IRole } from "./role";
-import { IPost } from "./post";
 import { IEvent } from "./event";
 import { IJobEvent } from "./jobEvent";
 
@@ -81,11 +80,6 @@ interface IGetRoles {
   payload: IRole[];
 }
 
-interface IGetPosts {
-  type: typeof types.GET_POSTS;
-  payload: IPost[];
-}
-
 interface IUpdateUser {
   type: typeof types.UPDATE_USER;
   payload: {
@@ -135,7 +129,6 @@ export type AdminActions =
   | IUpdateDepartment
   | IDeleteDepartment
   | IGetRoles
-  | IGetPosts
   | IGetEvents
   | IGetJobEvents
   | IUpdateUser
@@ -151,7 +144,6 @@ export interface IAdminState {
   manager: IManager[];
   users: IUser[];
   roles: IRole[];
-  posts: IPost[];
   departments: IDepartment[];
   events: IEvent[];
   jobevents: IJobEvent[];

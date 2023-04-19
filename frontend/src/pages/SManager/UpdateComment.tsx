@@ -5,7 +5,7 @@ import { Formik } from "formik";
 import * as Yup from "yup";
 import SendIcon from '@mui/icons-material/Send';
 import { useDispatch } from "react-redux";
-import { commentPost } from "redux/actions/sManager";
+import { commentEvent } from "redux/actions/sManager";
 import FormComment from "pages/SManager/FormComment";
 
 const useStyles = makeStyles((theme) => ({
@@ -17,19 +17,19 @@ const useStyles = makeStyles((theme) => ({
   }));
 
 type Props = {
-    post: any;
+    event: any;
 };
 
 interface IInitialValues {
     contentComment: string;
 }
 
-const CommentPost: React.FC<Props> = ({ post }): JSX.Element => {
+const CommentPost: React.FC<Props> = ({ event }): JSX.Element => {
     const dispatch = useDispatch();
     const classes = useStyles();
 
     const initialValues: IInitialValues = {
-        contentComment: post?.contentComment ?? "",
+        contentComment: event?.contentComment ?? "",
     };
 
 
@@ -37,7 +37,7 @@ const CommentPost: React.FC<Props> = ({ post }): JSX.Element => {
         values: IInitialValues,
         { setSubmitting }: any
     ): Promise<void> =>
-        dispatch<any>(commentPost(values, post._id, setSubmitting));
+        dispatch<any>(commentEvent(values, event._id, setSubmitting));
 
     const validationSchema = Yup.object({
         contentComment: Yup.string().required("required!"),

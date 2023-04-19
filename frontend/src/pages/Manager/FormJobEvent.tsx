@@ -17,6 +17,8 @@ const useStyles = makeStyles((theme) => ({
 interface IValues {
     nameJob: string;
     quantity: number;
+    unitPrice: number;
+    jobDescription: string;
 }
 
 
@@ -53,6 +55,34 @@ const FormEvent: React.FC = (): JSX.Element => {
                     placeholder='Nhập số lượng người'
                     helperText={touched.quantity ? errors.quantity : ""}
                     error={touched.quantity ? Boolean(errors.quantity) : false}
+                />
+            </FormControl>
+            <FormControl fullWidth className={classes.formControl}>
+                <FormLabel classes={{ root: classes.formLabel }}>Đơn giá</FormLabel>
+                <TextField
+                    fullWidth
+                    variant="outlined"
+                    name='unitPrice'
+                    value={values.unitPrice}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    placeholder='Nhập đơn giá'
+                    helperText={touched.unitPrice ? errors.unitPrice : ""}
+                    error={touched.unitPrice ? Boolean(errors.unitPrice) : false}
+                />
+            </FormControl>
+            <FormControl fullWidth className={classes.formControl}>
+                <FormLabel classes={{ root: classes.formLabel }}>Mô tả công việc</FormLabel>
+                <TextField
+                    fullWidth
+                    variant="outlined"
+                    name='jobDescription'
+                    value={values.jobDescription}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    placeholder='Nhập mô tả công việc'
+                    helperText={touched.jobDescription ? errors.jobDescription : ""}
+                    error={touched.jobDescription ? Boolean(errors.jobDescription) : false}
                 />
             </FormControl>
         </>

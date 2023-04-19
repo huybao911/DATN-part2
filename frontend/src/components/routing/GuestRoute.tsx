@@ -22,14 +22,14 @@ const GuestRoute: React.FC<Props> = ({
   return (
     <Route
       render={(props) => {
-        if (user.loading || admin.loading || SManager.loading || Manager.loading) {
-          return <AppLoader />;
+        // if (user.loading || admin.loading || SManager.loading || Manager.loading) {
+        //   return <AppLoader />;
         // } else if (admin.isAuthenticated && user.isAuthenticated && SManager.isAuthenticated && Manager.isAuthenticated) {
         //     return <Login />;
-        } else if (user.isAuthenticated && user.getRole.keyRole === "user") {
+          if (user.isAuthenticated && user.getRole.keyRole === "user") {
           return <Redirect to='/'/>;
         } else if (Manager.isAuthenticated && Manager.getRole.keyRole === "manager") {
-          return <Redirect to='/postsManager' />;
+          return <Redirect to='/event' />;
         } else if (SManager.isAuthenticated && SManager.getRole.keyRole === "smanager") {
           return <Redirect to='/smanager' />;
         } else if (admin.isAuthenticated && admin.getRole.keyRole === "admin") {

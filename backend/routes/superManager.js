@@ -12,11 +12,11 @@ router.get("/user", isAuth, sManagerController.getUser);
 router.get("/users", isAuth, sManagerController.getUsers);
 router.get("/departments", isAuth, sManagerController.getDepartments);
 
-router.get("/postApprove", isAuth, sManagerController.getPostApprove);
-router.put("/post/:id", isAuth, sManagerController.approvePost);
+router.get("/eventApprove", isAuth, sManagerController.getEventApprove);
+router.put("/event/:id", isAuth, sManagerController.approveEvent);
 
-router.put("/comment/:id", isAuth, sManagerController.commentPost);
-router.put("/comment/:postId/:id", isAuth, sManagerController.deleteCommentPost);
+router.put("/comment/:id", isAuth, sManagerController.commentEvent);
+router.put("/comment/:eventId/:id", isAuth, sManagerController.deleteCommentEvent);
 
 router.get("/events", isAuth, sManagerController.getEvents);
 router.post("/createEvent", isAuth, sManagerController.createEvent);

@@ -4,8 +4,8 @@ import { getUser } from "redux/actions/Manager";
 import { RootState } from "redux/reducers";
 import { IManager } from "redux/types/Manager";
 import { Box } from "@mui/material";
-import CreatePost from "./CreatePost";
-const NewPost: React.FC = (): JSX.Element => {
+import CreateEvent from "./CreateEvent";
+const NewEvent: React.FC = (): JSX.Element => {
 
     const dispatch = useDispatch();
 
@@ -24,19 +24,18 @@ const NewPost: React.FC = (): JSX.Element => {
     }, [manager]);
 
     React.useEffect(() => {
-        document.title = "POST";
+        document.title = "EVENT";
     }, []);
 
     return (
-
         <>
-            {Managers.map((post: any) =>
-                <Box key={post._id} >
-                    <CreatePost post={post}  />
+            {Managers.map((event: any) =>
+                <Box key={event._id} >
+                    <CreateEvent event={event}  />
                 </Box>
             )}
         </>
     );
 };
 
-export default NewPost;
+export default NewEvent;

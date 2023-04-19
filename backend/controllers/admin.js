@@ -4,7 +4,6 @@ const { sign } = require("jsonwebtoken");
 const User = require("../models/User");
 const Department = require("../models/Department");
 const Role = require("../models/Role");
-const Post = require("../models/Post");
 const Event = require("../models/Event");
 const JobEvent = require("../models/JobEvent");
 
@@ -166,17 +165,8 @@ exports.deleteUser = async (req, res, next) => {
   const { id } = req.params;
   try {
     if (!req.admin) return res.status(400).send("You dont have permission");
-    await User.deleteOne({ _id: id });
+    const deleteUser = await User.deleteOne({ _id: id });
     return res.status(200).send("User has been deleted");
-  } catch (error) {
-    return res.status(500).json(error);
-  }
-};
-
-exports.getPosts = async (req, res) => {
-  try {
-    if (!req.admin) return res.status(400).send("You dont have permission");
-    return res.status(200).json(await Post.find().populate({ path: "poster", populate: [{ path: "department" }] }).populate("approver"));
   } catch (error) {
     return res.status(500).json(error);
   }
@@ -194,7 +184,7 @@ exports.getEvents = async (req, res) => {
 exports.getJobEvents = async (req, res) => {
   try {
     if (!req.admin) return res.status(400).send("You dont have permission");
-    return res.status(200).json(await JobEvent.find().populate("eventId"));
+    return res.status(200).json(await JobEvent.find().populate("event"));
   } catch (error) {
     return res.status(500).json(error);
   }

@@ -6,10 +6,8 @@ import * as Yup from "yup";
 import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import { useDispatch } from "react-redux";
-import { createPost } from "redux/actions/Manager";
-import FormPost from "pages/Manager/FormPost";
-import FormEvent from "pages/auth/FormEvent-Manager";
-import FormJobEvent from "pages/auth/FormJobEvent-Manager";
+import { createEvent } from "redux/actions/Manager";
+import FormEvent from "pages/Manager/FormEvent";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -27,27 +25,31 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 type Props = {
-    post: any;
+    event: any;
 };
 
 interface IInitialValues {
-    title: string;
-    content: string;
-    event: any;
-    jobEvent: any;
-    image:string;
+    nameEvent: string;
+    quantityUser: number;
+    location: string;
+    costs: string;
+    dayStart: string;
+    dayEnd: string;
+    image: string;
 }
 
-const CreatePost: React.FC<Props> = ({ post }): JSX.Element => {
+const CreateEvent: React.FC<Props> = ({ event }): JSX.Element => {
     const classes = useStyles();
     const dispatch = useDispatch();
 
     const initialValues: IInitialValues = {
-        title: post?.title ?? "",
-        content: post?.content ?? "",
-        event: post?.event ?? "",
-        jobEvent: post?.jobEvent ?? "",
-        image: post?.image ?? "",
+        nameEvent: event?.nameEvent ?? "",
+        quantityUser: event?.quantityUser ?? "",
+        location: event?.location ?? "",
+        costs: event?.costs ?? "",
+        dayStart: event?.dayStart ?? "",
+        dayEnd: event?.dayEnd ?? "",
+        image: event?.image ?? "",
     };
 
 
@@ -55,13 +57,15 @@ const CreatePost: React.FC<Props> = ({ post }): JSX.Element => {
         values: IInitialValues,
         { setSubmitting }: any
     ): Promise<void> =>
-        dispatch<any>(createPost(values, post._id, setSubmitting));
+        dispatch<any>(createEvent(values, setSubmitting));
 
     const validationSchema = Yup.object({
-        title: Yup.string().required("required!"),
-        content: Yup.string().required("required!"),
-        event: Yup.string().required("required!"),
-        jobEvent: Yup.string().required("required!"),
+        nameEvent: Yup.string().required("required!"),
+        quantityUser: Yup.string().required("required!"),
+        location: Yup.string().required("required!"),
+        costs: Yup.string().required("required!"),
+        dayStart: Yup.string().required("required!"),
+        dayEnd: Yup.string().required("required!"),
         image: Yup.string().required("required!"),
     });
 
@@ -83,9 +87,7 @@ const CreatePost: React.FC<Props> = ({ post }): JSX.Element => {
                 >
                     {({ isSubmitting, handleSubmit }) => (
                         <form noValidate onSubmit={handleSubmit}>
-                            <FormPost />  
-                            <FormEvent isEvent={true}/>  
-                            <FormJobEvent isJobEvent={true}/>        
+                            <FormEvent />        
                             <Button
                                 type='submit'
                                 variant='contained'
@@ -94,7 +96,7 @@ const CreatePost: React.FC<Props> = ({ post }): JSX.Element => {
                                 className={classes.btnLogin}
                                 disabled={isSubmitting}
                             >
-                                {isSubmitting ? <CircularProgress size='1rem' /> : "Tạo Bài Viết"}
+                                {isSubmitting ? <CircularProgress size='1rem' /> : "Tạo Sự Kiện"}
                             </Button>
                         </form>
                     )}
@@ -104,4 +106,4 @@ const CreatePost: React.FC<Props> = ({ post }): JSX.Element => {
     );
 };
 
-export default CreatePost;
+export default CreateEvent;

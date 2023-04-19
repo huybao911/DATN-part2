@@ -5,7 +5,6 @@ import { getJobEvents } from "redux/actions/admin";
 import { RootState } from "redux/reducers";
 import { IJobEvent } from "redux/types/jobEvent";
 import { TableSortLabel, Toolbar, OutlinedInput, InputAdornment, Button, Card, Container, Popover, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography } from "@mui/material";
-import { Link } from 'react-router-dom';
 // @mui
 import SearchIcon from '@mui/icons-material/Search';
 import { Box } from "@mui/system";
@@ -72,7 +71,10 @@ function stableSort<T>(array: T[], comparator: (a: T, b: T) => number) {
 interface DataUser {
   _id: keyof IJobEvent;
   nameJob: keyof IJobEvent;
-  eventId: keyof IJobEvent;
+  event: keyof IJobEvent;
+  quantity: keyof IJobEvent;
+  unitPrice: keyof IJobEvent;
+  jobDescription: keyof IJobEvent;
 }
 
 interface HeadCell {
@@ -83,14 +85,29 @@ interface HeadCell {
 
 const headCells: HeadCell[] = [
   {
+    _id: 'event',
+    numeric: false,
+    label: 'Tên sự kiện',
+  },
+  {
     _id: 'nameJob',
     numeric: false,
     label: 'Tên công việc',
   },
   {
-    _id: 'eventId',
-    numeric: true,
-    label: 'Tên sự kiện',
+    _id: 'quantity',
+    numeric: false,
+    label: 'Số lượng người',
+  },
+  {
+    _id: 'unitPrice',
+    numeric: false,
+    label: 'Đơn giá',
+  },
+  {
+    _id: 'jobDescription',
+    numeric: false,
+    label: 'Mô tả công việc',
   },
 ];
 
@@ -153,7 +170,7 @@ const Users: React.FC = (): JSX.Element => {
 
   const [jobEvents, setJobEvents] = React.useState<IJobEvent[]>([]);
   const admin = useSelector((state: RootState) => state.admin);
-  
+
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [filterName, setFilterName] = React.useState('');
@@ -244,7 +261,7 @@ const Users: React.FC = (): JSX.Element => {
                     </InputAdornment>
                   }
                 />
-              </Box>            
+              </Box>
             </Box>
           </StyledRoot>
           <TableContainer>
@@ -259,13 +276,28 @@ const Users: React.FC = (): JSX.Element => {
                 <TableBody>
                   {sortJobEvent.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((jobEvent: any, index) =>
                     <TableRow key={jobEvent._id}>
+
+                      <TableCell align="left" sx={{ fontSize: '12px' }}>
+                        {jobEvent.event.nameEvent}
+                      </TableCell>
+
                       <TableCell align="left" sx={{ fontSize: '12px' }}>
                         {jobEvent.nameJob}
                       </TableCell>
 
-                      <TableCell align="right" sx={{ fontSize: '12px' }}>
-                        {jobEvent.eventId.nameEvent}
-                      </TableCell>                     
+                      <TableCell align="left" sx={{ fontSize: '12px' }}>
+                        {jobEvent.quantity}
+                      </TableCell>
+
+                      <TableCell align="left" sx={{ fontSize: '12px' }}>
+                        {jobEvent.unitPrice}
+
+                      </TableCell>
+
+                      <TableCell align="left" sx={{ fontSize: '12px' }}>
+                        {jobEvent.jobDescription}
+                      </TableCell>
+
                     </TableRow>
                   )}
 

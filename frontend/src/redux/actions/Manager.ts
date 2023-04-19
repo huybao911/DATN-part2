@@ -57,7 +57,7 @@ export const loginManager =
         dispatch<any>(
           setAlert({
             msg: "Đăng nhập tài khoản Quản Lý thất bại!",
-            status: 200,
+            status: error.response.status,
             alertType: "error",
           })
         );
@@ -89,13 +89,12 @@ export const registerManager =
             alertType: "success",
           })
         );
-        dispatch<any>(loadManager());
       } catch (error: any) {
         dispatch({ type: types.MANAGER_REGISTER_FAIL });
         dispatch<any>(
           setAlert({
             msg: "Đăng ký tài khoản Quản Lý thất bại!",
-            status: 200,
+            status: error.response.status,
             alertType: "error",
           })
         );
@@ -187,8 +186,8 @@ export const getUser =
     }
   };
 
-// GET POST
-export const getPost =
+// GET LIST USER APPLY
+export const getListUserApply =
   () => async (dispatch: Dispatch<ManagerActions | AlertActions>) => {
     const config: any = {
       header: {
@@ -197,167 +196,12 @@ export const getPost =
     };
 
     try {
-      const { data } = await axios.get(`${URI}/post`, config);
-      dispatch({ type: types.GET_POST, payload: data });
+      const { data } = await axios.get(`${URI}/jobUserApply`, config);
+      dispatch({ type: types.GET_LIST_USERAPPLY, payload: data });
     } catch (error: any) {
       dispatch<any>(
         setAlert({
-          msg: "Xảy ra lỗi khi lấy dữ liệu post!",
-          status: error.response.status,
-          alertType: "error",
-        })
-      );
-    }
-  };
-
-// GET POSTS
-export const getPosts =
-  () => async (dispatch: Dispatch<ManagerActions | AlertActions>) => {
-    const config: any = {
-      header: {
-        "Content-Type": "application/json",
-      },
-    };
-
-    try {
-      const { data } = await axios.get(`${URI}/posts`, config);
-      dispatch({ type: types.GET_POSTS, payload: data });
-    } catch (error: any) {
-      dispatch<any>(
-        setAlert({
-          msg: "Xảy ra lỗi khi lấy dữ liệu posts!",
-          status: error.response.status,
-          alertType: "error",
-        })
-      );
-    }
-  };
-
-// GET POST USER APPLY
-export const getPostUserApply =
-  () => async (dispatch: Dispatch<ManagerActions | AlertActions>) => {
-    const config: any = {
-      header: {
-        "Content-Type": "application/json",
-      },
-    };
-
-    try {
-      const { data } = await axios.get(`${URI}/postUserApply`, config);
-      dispatch({ type: types.GET_POST_USERAPPLY, payload: data });
-    } catch (error: any) {
-      dispatch<any>(
-        setAlert({
-          msg: "Xảy ra lỗi khi lấy dữ liệu post user apply!",
-          status: error.response.status,
-          alertType: "error",
-        })
-      );
-    }
-  };
-
-// CREATE POST
-export const createPost =
-  (body: any, id: number, setSubmitting: any) =>
-    async (dispatch: Dispatch<ManagerActions | AlertActions>) => {
-      const config: any = {
-        header: {
-          "Content-Type": "application/json",
-        },
-      };
-
-      try {
-        const { data } = await axios.post(`${URI}/createPost/${id}`, body, config);
-        dispatch({
-          type: types.CREATE_POSTER_SUCCESS,
-          payload: data,
-        });
-        // dispatch<any>(loadManager());
-        dispatch<any>(
-          setAlert({
-            msg: "Thêm post thành công!",
-            status: 200,
-            alertType: "success",
-          })
-        );
-        dispatch<any>(loadManager());
-      } catch (error: any) {
-        dispatch({ type: types.CREATE_POSTER_FAIL });
-        dispatch<any>(
-          setAlert({
-            msg: "Thêm post thất bại!",
-            status: 200,
-            // msg: error.response.data,
-            // status: error.response.status,
-            alertType: "error",
-          })
-        );
-      } finally {
-        setSubmitting(false);
-      }
-    };
-
-// UPDATE POST
-export const updatePost =
-  (body: any, id: number, setSubmitting: any) =>
-    async (dispatch: Dispatch<ManagerActions | AlertActions>) => {
-      const config: any = {
-        header: {
-          "Content-Type": "application/json",
-        },
-      };
-
-      try {
-        const { data } = await axios.patch(`${URI}/post/${id}`, body, config);
-        dispatch({
-          type: types.UPDATE_POSTER,
-          payload: data,
-        });
-        dispatch<any>(getPosts());
-        dispatch<any>(
-          setAlert({
-            msg: "Cập nhật post thành công!",
-            status: 200,
-            alertType: "success",
-          })
-        );
-      } catch (error: any) {
-        dispatch<any>(
-          setAlert({
-            msg: "Xảy ra lỗi khi cập nhật post!",
-            status: error.response.status,
-            alertType: "error",
-          })
-        );
-      } finally {
-        setSubmitting(false);
-      }
-    };
-
-// DELETE USER
-export const deletePost =
-  (id: number) => async (dispatch: Dispatch<ManagerActions | AlertActions>) => {
-    const config: any = {
-      header: {
-        "Content-Type": "application/json",
-      },
-    };
-
-    try {
-      await axios.delete(`${URI}/post/${id}`, config);
-      dispatch({ type: types.DELETE_POSTER, payload: id });
-      dispatch<any>(loadManager());
-      dispatch<any>(
-        setAlert({
-          msg: "Xóa post thành công!",
-          status: 200,
-          alertType: "success",
-        })
-      );
-    } catch (error: any) {
-      dispatch<any>(
-        setAlert({
-          msg: "Xảy ra lỗi khi xóa post!",
+          msg: "Xảy ra lỗi khi lấy dữ liệu event user apply!",
           status: error.response.status,
           alertType: "error",
         })
@@ -375,12 +219,121 @@ export const getEvents =
     };
 
     try {
-      const { data } = await axios.get(`${URI}/events`, config);
+      const { data } = await axios.get(`${URI}/event`, config);
       dispatch({ type: types.GET_EVENTS, payload: data });
     } catch (error: any) {
       dispatch<any>(
         setAlert({
           msg: "Xảy ra lỗi khi lấy dữ liệu events!",
+          status: error.response.status,
+          alertType: "error",
+        })
+      );
+    }
+  };
+
+// CREATE JOBEVENT
+export const createEvent =
+  (body: any, setSubmitting: any) =>
+    async (dispatch: Dispatch<ManagerActions | AlertActions>) => {
+      const config: any = {
+        header: {
+          "Content-Type": "application/json",
+        },
+      };
+
+      try {
+        const { data } = await axios.post(`${URI}/createEvent`, body, config);
+        dispatch({
+          type: types.CREATE_EVENT_SUCCESS,
+          payload: data,
+        });
+        // dispatch<any>(loadManager());
+        dispatch<any>(
+          setAlert({
+            msg: "Thêm event thành công!",
+            status: 200,
+            alertType: "success",
+          })
+        );
+        dispatch<any>(loadManager());
+      } catch (error: any) {
+        dispatch({ type: types.CREATE_EVENT_FAIL });
+        dispatch<any>(
+          setAlert({
+            msg: "Thêm event thất bại!",
+            status: 200,
+            // msg: error.response.data,
+            // status: error.response.status,
+            alertType: "error",
+          })
+        );
+      } finally {
+        setSubmitting(false);
+      }
+    };
+
+// UPDATE EVENT
+export const updateEvent =
+  (body: any, id: number, setSubmitting: any) =>
+    async (dispatch: Dispatch<ManagerActions | AlertActions>) => {
+      const config: any = {
+        header: {
+          "Content-Type": "application/json",
+        },
+      };
+
+      try {
+        const { data } = await axios.patch(`${URI}/event/${id}`, body, config);
+        dispatch({
+          type: types.UPDATE_EVENT,
+          payload: data,
+        });
+        dispatch<any>(getEvents());
+        dispatch<any>(
+          setAlert({
+            msg: "Cập nhật event thành công!",
+            status: 200,
+            alertType: "success",
+          })
+        );
+      } catch (error: any) {
+        dispatch<any>(
+          setAlert({
+            msg: "Xảy ra lỗi khi cập nhật event!",
+            status: error.response.status,
+            alertType: "error",
+          })
+        );
+      } finally {
+        setSubmitting(false);
+      }
+    };
+
+// DELETE EVENT
+export const deleteEvent =
+  (id: number) => async (dispatch: Dispatch<ManagerActions | AlertActions>) => {
+    const config: any = {
+      header: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    try {
+      await axios.delete(`${URI}/event/${id}`, config);
+      dispatch({ type: types.DELETE_EVENT, payload: id });
+      dispatch<any>(loadManager());
+      dispatch<any>(
+        setAlert({
+          msg: "Xóa event thành công!",
+          status: 200,
+          alertType: "success",
+        })
+      );
+    } catch (error: any) {
+      dispatch<any>(
+        setAlert({
+          msg: "Xảy ra lỗi khi xóa event!",
           status: error.response.status,
           alertType: "error",
         })
@@ -410,7 +363,114 @@ export const getJobEvents =
       );
     }
   };
+// CREATE JOBEVENT
+export const createJobEvent =
+  (body: any, setSubmitting: any) =>
+    async (dispatch: Dispatch<ManagerActions | AlertActions>) => {
+      const config: any = {
+        header: {
+          "Content-Type": "application/json",
+        },
+      };
 
+      try {
+        const { data } = await axios.post(`${URI}/createJobEvent`, body, config);
+        dispatch({
+          type: types.CREATE_JOBEVENT_SUCCESS,
+          payload: data,
+        });
+        // dispatch<any>(loadManager());
+        dispatch<any>(
+          setAlert({
+            msg: "Thêm jobevent thành công!",
+            status: 200,
+            alertType: "success",
+          })
+        );
+        dispatch<any>(loadManager());
+      } catch (error: any) {
+        dispatch({ type: types.CREATE_JOBEVENT_FAIL });
+        dispatch<any>(
+          setAlert({
+            msg: "Thêm jobevent thất bại!",
+            status: 200,
+            // msg: error.response.data,
+            // status: error.response.status,
+            alertType: "error",
+          })
+        );
+      } finally {
+        setSubmitting(false);
+      }
+    };
+
+// UPDATE JOBEVENT
+export const updateJobEvent =
+  (body: any, id: number, setSubmitting: any) =>
+    async (dispatch: Dispatch<ManagerActions | AlertActions>) => {
+      const config: any = {
+        header: {
+          "Content-Type": "application/json",
+        },
+      };
+
+      try {
+        const { data } = await axios.patch(`${URI}/jobEvent/${id}`, body, config);
+        dispatch({
+          type: types.UPDATE_JOBEVENT,
+          payload: data,
+        });
+        dispatch<any>(getJobEvents());
+        dispatch<any>(
+          setAlert({
+            msg: "Cập nhật jobevent thành công!",
+            status: 200,
+            alertType: "success",
+          })
+        );
+      } catch (error: any) {
+        dispatch<any>(
+          setAlert({
+            msg: "Xảy ra lỗi khi cập nhật jobevent!",
+            status: error.response.status,
+            alertType: "error",
+          })
+        );
+      } finally {
+        setSubmitting(false);
+      }
+    };
+
+// DELETE JOBEVENT
+export const deleteJobEvent =
+  (id: number) => async (dispatch: Dispatch<ManagerActions | AlertActions>) => {
+    const config: any = {
+      header: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    try {
+      await axios.delete(`${URI}/jobEvent/${id}`, config);
+      dispatch({ type: types.DELETE_JOBEVENT, payload: id });
+      dispatch<any>(loadManager());
+      dispatch<any>(
+        setAlert({
+          msg: "Xóa jobevent thành công!",
+          status: 200,
+          alertType: "success",
+        })
+      );
+    } catch (error: any) {
+      dispatch<any>(
+        setAlert({
+          msg: "Xảy ra lỗi khi xóa jobevent!",
+          status: error.response.status,
+          alertType: "error",
+        })
+      );
+    }
+  };
 // LOGOUT MANAGER
 export const logOutManager =
   () => (dispatch: Dispatch<ManagerActions | AlertActions>) => {

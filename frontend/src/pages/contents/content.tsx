@@ -1,24 +1,26 @@
 import * as React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getPosts } from "redux/actions/user";
+import { getEvents } from "redux/actions/user";
 import { RootState } from "redux/reducers";
-import { IPost } from "redux/types/post";
+import { IEvent } from "redux/types/event";
 import FeedContent from "pages/contents/FeedContent";
 const Content: React.FC = (): JSX.Element => {
 
     const dispatch = useDispatch();
 
-    const [posts, setPosts] = React.useState<IPost[]>([]);
+    const [events, setEvents] = React.useState<IEvent[]>([]);
     const user = useSelector((state: RootState) => state.user);
 
     React.useEffect(() => {
-        dispatch(getPosts());
+        dispatch(getEvents());
     }, [dispatch]);
 
     React.useEffect(() => {
-        setPosts(() =>
-            user?.posts?.filter((post: any) =>
-                post.title || post.content || post.image
+        setEvents(() =>
+            user?.events?.filter((event: any) =>
+                event.nameEvent || event.poster || event.approver || event.comments || event.quantityUser
+                || event.job || event.location || event.departmentEvent || event.costs || event.dayStart
+                || event.dayEnd || event.image
             ));
     }, [user]);
 
@@ -28,8 +30,8 @@ const Content: React.FC = (): JSX.Element => {
 
     return (
         <>
-            {posts.map((post: any) =>
-                <FeedContent post={post} key={post._id} />) ?? (
+            {events.map((event: any) =>
+                <FeedContent event={event} key={event._id} />) ?? (
                     <p>No FeedContent Found.</p>
                 )}
         </>

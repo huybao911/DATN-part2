@@ -2,9 +2,9 @@ const mongoose = require("mongoose");
 
 const ApplyJob = new mongoose.Schema(
   {
-    postId: {
+    jobId: {
       type: mongoose.Types.ObjectId,
-      ref: "Post",
+      ref: "JobEvent",
       required: true,
     },
     userId: {

@@ -1,18 +1,19 @@
 import * as React from 'react';
 import { makeStyles } from "@material-ui/core/styles";
 
-import { Avatar, Card, CardActions, CardContent, CardHeader, CardMedia, Collapse, IconButton, Toolbar, Typography, ListItem } from '@mui/material';
-import {  MoreVert } from '@mui/icons-material';
+import { Avatar, Card, CardActions, CardContent, CardHeader, CardMedia, Collapse, IconButton, Rating, Toolbar, Typography, ListItem } from '@mui/material';
+import { ArrowRight, Favorite, FavoriteBorder, MoreVert } from '@mui/icons-material';
 import TabContext from '@mui/lab/TabContext';
 import TabPanel from '@mui/lab/TabPanel';
 import { green } from '@mui/material/colors';
 import { Box } from '@mui/material';
-import { formatDistance} from 'date-fns';
+import { storageEvent, unstorageEventInList } from "redux/actions/user";
+import { formatDistance } from 'date-fns';
 
 import { useDispatch } from "react-redux";
 
 type Props = {
-    postApply: any;
+    eventStorage: any;
 };
 
 const useStyles = makeStyles((theme) => ({
@@ -98,18 +99,27 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
-const FeedStoragePost: React.FC<Props> = ({ postApply }): JSX.Element => {
+const FeedStorageEvent: React.FC<Props> = ({ eventStorage }): JSX.Element => {
 
     const dispatch = useDispatch();
     const [value, setValue] = React.useState('1');
 
+    const [clicked, setClicked] = React.useState(true);
+
+    function handleClickStorage() {
+        dispatch(storageEvent(eventStorage?.eventId._id));
+    }
+
+    function handleClickUnStorage() {
+        dispatch(unstorageEventInList(eventStorage?.eventId._id));
+    }
 
     const PF = process.env.REACT_APP_PUBLIC_FOLDER;
 
-    const textAvatar = postApply?.postId.poster.username ?? null;
+    const textAvatar = eventStorage?.eventId.poster.username ?? null;
     const letterAvatar = textAvatar.charAt(0).toUpperCase();
 
-    const lettercreatedAt = (formatDistance(new Date(postApply?.postId.createdAt), Date.now(), {addSuffix: true})).split("about");
+    const lettercreatedAt = (formatDistance(new Date(eventStorage?.eventId.created_at), Date.now(), { addSuffix: true })).split("about");
 
     const classes = useStyles();
 
@@ -132,7 +142,7 @@ const FeedStoragePost: React.FC<Props> = ({ postApply }): JSX.Element => {
                                             <MoreVert />
                                         </IconButton>
                                     }
-                                    title={postApply?.postId.poster.username ?? null}
+                                    title={eventStorage?.eventId.poster.username ?? null}
                                     titleTypographyProps={{ align: 'left', fontSize: '16px', fontWeight: 'bold', paddingBottom: '2px' }}
                                     subheader={lettercreatedAt}
                                     subheaderTypographyProps={{ align: 'left', fontSize: '12px' }}
@@ -140,20 +150,46 @@ const FeedStoragePost: React.FC<Props> = ({ postApply }): JSX.Element => {
                                 </CardHeader>
 
                                 <CardContent>
-                                <Typography sx={{ textAlign: 'left', fontSize: '24px', fontWeight:"bold" }}>
-                                        {postApply?.postId.title ?? null}
+                                    <Typography sx={{ textAlign: 'left', fontSize: '24px', fontWeight: "bold" }}>
+                                        {eventStorage?.eventId.nameEvent ?? null}
                                     </Typography>
                                     <Typography sx={{ textAlign: 'left', fontSize: '14px' }}>
-                                        {postApply?.postId.content ?? null}
+                                        {eventStorage?.eventId.quantityUser ?? null}
+                                    </Typography>
+                                    <Typography sx={{ textAlign: 'left', fontSize: '14px' }}>
+                                        {eventStorage?.eventId.location ?? null}
+                                    </Typography>
+                                    <Typography sx={{ textAlign: 'left', fontSize: '14px' }}>
+                                        {eventStorage?.eventId.dayStart ?? null}
+                                    </Typography>
+                                    <Typography sx={{ textAlign: 'left', fontSize: '14px' }}>
+                                        {eventStorage?.eventId.dayEnd ?? null}
                                     </Typography>
                                 </CardContent >
                                 <CardMedia
                                     className={classes.myMedia}
                                     component="img"
-                                    image={PF + postApply?.postId.image ?? null}
+                                    image={PF + eventStorage?.eventId.image ?? null}
                                     alt="Paella dish"
                                 >
                                 </CardMedia>
+
+                                <CardActions disableSpacing >
+                                    <IconButton onClick={() => setClicked(!clicked)} sx={{ border: '0px solid black', backgroundColor: '#D9D9D9', borderRadius: '4px' }} >
+                                        {clicked ? <Favorite onClick={handleClickUnStorage} sx={{ fontSize: '24px', color: 'red' }} /> : <FavoriteBorder onClick={handleClickStorage} sx={{ fontSize: '24px', color: 'red' }} />}
+                                        {/* <button onClick={(e) => dispatch(storagePost(post._id))}>Like</button>:<button>Unlike</button> */}
+                                    </IconButton>
+
+                                    <IconButton>
+                                        <Rating />
+                                    </IconButton>
+
+                                    <IconButton sx={{ ml: 'auto' }}>
+                                        <ArrowRight />
+                                    </IconButton>
+
+                                </CardActions>
+
                                 <Collapse>
                                 </Collapse>
 
@@ -167,4 +203,4 @@ const FeedStoragePost: React.FC<Props> = ({ postApply }): JSX.Element => {
     );
 };
 
-export default FeedStoragePost;
+export default FeedStorageEvent;

@@ -3,11 +3,14 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Grid, Button, CircularProgress, Typography } from "@material-ui/core";
 import { Formik } from "formik";
 import * as Yup from "yup";
+import { Container, Drawer, Box, FormControl, FormLabel, TextField } from "@mui/material";
 
 import { useDispatch } from "react-redux";
 import { loginUser } from "redux/actions/user";
-import FormField from "pages/auth/FormField";
 import { Link } from "react-router-dom";
+import { InputAdornment } from "@mui/material";
+import PersonIcon from '@mui/icons-material/Person';
+import PasswordIcon from '@mui/icons-material/Password';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -21,17 +24,28 @@ const useStyles = makeStyles((theme) => ({
   btnLogin: {
     marginTop: theme.spacing(2),
     padding: theme.spacing(1, 2),
-    textDecoration: 'none'
   },
   checkboxWrapper: {
     display: "flex",
     justifyContent: "flex-start",
     marginTop: theme.spacing(2),
   },
+
+  textField: {
+    margin: theme.spacing(2, 0),
+    textAlign: 'left',
+    fontSize: '13px',
+    "& .MuiInputBase-root": {
+      "& fieldset": {
+        borderRadius: "10px",
+      },
+    },
+  },
+
 }));
 
 interface IInitialValues {
-  username: string;
+  email: string;
   password: string;
 }
 
@@ -41,7 +55,7 @@ const LoginUser: React.FC = (): JSX.Element => {
   // const [checked, setChecked] = React.useState<boolean>(false);
 
   const initialValues: IInitialValues = {
-    username: "",
+    email: "",
     password: "",
   };
 
@@ -50,7 +64,7 @@ const LoginUser: React.FC = (): JSX.Element => {
   };
 
   const validationSchema = Yup.object({
-    username: Yup.string().required("Invalid username!"),
+    email: Yup.string().required("Invalid username!"),
     password: Yup.string().required("Invalid password!"),
   });
 
@@ -59,53 +73,132 @@ const LoginUser: React.FC = (): JSX.Element => {
   }, []);
 
   return (
-    <Grid
-      container
-      className={classes.root}
-      direction='column'
-      alignItems='center'
-      justifyContent='center'
+
+    <Box component={"nav"}
+      color={"black"}
+      display={"flex"}
     >
-      <img style={{ height: "96px", width: "90px" }} src="https://cdn.haitrieu.com/wp-content/uploads/2021/09/Logo-DH-CONG-NGHE-THANH-PHO-HO-CHI-MINH-HUTECH.png" />
-      <Typography style={{ fontWeight: "bold", fontSize: "20px", marginTop: "5px" }} >
-        Đăng Nhập
-      </Typography>
-      <Formik
-        initialValues={initialValues}
-        validationSchema={validationSchema}
-        onSubmit={onHandleSubmit}
+      <Box flexGrow={1} style={{ paddingRight: 360 }}>
+
+      </Box>
+      <Drawer
+        anchor="right"
+        open
+        variant="permanent"
+        style={{}}
+        BackdropProps={{ style: { position: 'absolute' } }}
+        PaperProps={{
+          sx: {
+            width: 400,
+            bgcolor: 'background.default',
+            borderLeftStyle: 'none',
+          },
+        }}
       >
-        {({ isSubmitting, handleSubmit }) => (
-          <form noValidate onSubmit={handleSubmit}>
-            <Grid container spacing={2}>
-              <FormField isRegister={false} />
-            </Grid>
-            <Button
-              fullWidth
-              type='submit'
-              variant='contained'
-              style={{ backgroundColor: 'black', color: "white" }}
-              className={classes.btnLogin}
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? <CircularProgress size='1rem' /> : "Đăng Nhập"}
-            </Button>
-            <Grid style={{ marginTop: "10px" }} container>
-              <Grid item xs>
-                <Link to="/login" style={{ color: 'black', float: 'left', textDecoration: "none" }}>
-                  Bạn quên mật khẩu?
-                </Link>
-              </Grid>
-              <Grid item>
-                <Link to="/register" style={{ color: 'black', textDecoration: "none" }}>
+        <Container style={{ maxWidth: 360, }}>
+          <Box>
+            <Box display={"flex"} flexDirection={'column'} justifyContent={'center'} style={{ backgroundColor: 'white', padding: '220px 0px 0px', borderRadius: '20px' }}>
+              <Box display={"flex"} flexDirection={'column'} justifyContent={'center'} textAlign={'left'}>
+                <Typography style={{ fontWeight: "500", fontSize: "20px", margin: "14px 0px", letterSpacing: '0.6px', paddingBottom: '4px' }} >
+                  Đăng nhập vào Cộng Tác Viên
+                </Typography>
+              </Box>
+              <Box display={'flex'} textAlign={'left'} flexDirection={'row'} style={{ fontSize: "14px", fontWeight: '380' }} >
+                <Box style={{ color: 'black', marginRight: '4px' }}>
+                  Bạn là người mới ?
+                </Box>
+                <Box component={Link} to="/register" style={{ color: 'black', textDecoration: "none", cursor: 'pointer' }} >
                   Tạo tài khoản
-                </Link>
-              </Grid>
-            </Grid>
-          </form>
-        )}
-      </Formik>
-    </Grid>
+                </Box>
+              </Box>
+              <Box textAlign={'center'}>
+                <Formik
+                  initialValues={initialValues}
+                  validationSchema={validationSchema}
+                  onSubmit={onHandleSubmit}
+                >
+                  {({ isSubmitting, handleSubmit, handleChange, handleBlur, values, errors, touched }) => (
+                    <form noValidate onSubmit={handleSubmit}>
+                      <Box style={{ margin: '30px 0px 0px 0px' }}>
+
+                        <TextField
+                          className={classes.textField}
+                          fullWidth
+                          variant={'outlined'}
+                          name='email'
+                          value={values.email}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          placeholder='Nhập gmail'
+                          InputProps={{
+                            startAdornment: (
+                              <InputAdornment position="start" sx={{ paddingLeft: 1.3 }}>
+                                <PersonIcon style={{ width: '16px' }} sx={{ color: 'text.disabled' }} />
+                              </InputAdornment>
+                            ),
+                          }}
+                          inputProps={{
+                            style: {
+                              fontSize: '12px',
+                            }
+                          }}
+                          helperText={touched.email ? errors.email : ""}
+                          error={touched.email ? Boolean(errors.email) : false}
+                        />
+
+                        <TextField
+                          className={classes.textField}
+                          fullWidth
+                          style={{ paddingBottom: '30px' }}
+                          variant={'outlined'}
+                          type='password'
+                          name='password'
+                          value={values.password}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          placeholder='Nhập mật khẩu'
+                          InputProps={{
+                            startAdornment: (
+                              <InputAdornment position="start" sx={{ paddingLeft: 1.3 }}>
+                                <PasswordIcon style={{ width: '16px' }} sx={{ color: 'text.disabled' }} />
+                              </InputAdornment>
+                            )
+                          }}
+                          inputProps={{
+                            style: {
+                              fontSize: '12px',
+                            }
+                          }}
+                          helperText={touched.password ? errors.password : ""}
+                          error={touched.password ? Boolean(errors.password) : false}
+                        />
+                        <Box textAlign={'right'} style={{ fontSize: "14px", fontWeight: '380' }}>
+                          <Box component={Link} to="/login" style={{ color: 'black', cursor: 'pointer', paddingBottom: '4px' }}>
+                            Quên mật khẩu?
+                          </Box>
+                        </Box>
+
+                      </Box>
+                      <Button
+                        fullWidth
+                        disableRipple
+                        type='submit'
+                        style={{ backgroundColor: 'rgb(33, 43, 54)', color: "white", borderRadius: 10, textTransform: 'capitalize', fontWeight: 'normal' }}
+                        className={classes.btnLogin}
+                        disabled={isSubmitting}
+                      >
+                        {isSubmitting ? <CircularProgress size='1rem' /> : "Đăng Nhập"}
+                      </Button>
+                    </form>
+                  )}
+                </Formik>
+              </Box>
+            </Box>
+          </Box>
+        </Container>
+      </Drawer>
+
+    </Box>
   );
 };
 
