@@ -3,4 +3,8 @@ export interface IApplyJob {
     jobId: any;
     userId: any;
     event: any;
+    applyStatus: string;
+    notiApplyJob: string;
+    approve: string;
+    unapprove: string;
   }

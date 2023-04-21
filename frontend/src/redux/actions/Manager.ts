@@ -209,6 +209,99 @@ export const getListUserApply =
     }
   };
 
+// GET LIST CTV
+export const getListCTV =
+  () => async (dispatch: Dispatch<ManagerActions | AlertActions>) => {
+    const config: any = {
+      header: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    try {
+      const { data } = await axios.get(`${URI}/ctv`, config);
+      dispatch({ type: types.GET_LIST_CTV, payload: data });
+    } catch (error: any) {
+      dispatch<any>(
+        setAlert({
+          msg: "Xảy ra lỗi khi lấy dữ liệu cộng tác viên!",
+          status: error.response.status,
+          alertType: "error",
+        })
+      );
+    }
+  };  
+
+// APPROVE USER APPLY JOB
+export const approveUserApplyJob =
+  (id: number) =>
+    async (dispatch: Dispatch<ManagerActions | AlertActions>) => {
+      const config: any = {
+        header: {
+          "Content-Type": "application/json",
+        },
+      };
+
+      try {
+        const { data } = await axios.put(`${URI}/approveUser/${id}`, config);
+        dispatch({
+          type: types.APPROVE_USER_APPLY_JOB,
+          payload: data,
+        });
+        dispatch<any>(getListUserApply());
+        // dispatch<any>(
+        //   setAlert({
+        //     msg: "Duyệt người dùng thành công!",
+        //     status: 200,
+        //     alertType: "success",
+        //   })
+        // );
+      } catch (error: any) {
+        dispatch<any>(
+          setAlert({
+            msg: "Duyệt người dùng thất bại!",
+            status: error.response.status,
+            alertType: "error",
+          })
+        );
+      }
+    };
+
+// APPROVE USER APPLY JOB
+export const unapproveUserApplyJob =
+  (id: number) =>
+    async (dispatch: Dispatch<ManagerActions | AlertActions>) => {
+      const config: any = {
+        header: {
+          "Content-Type": "application/json",
+        },
+      };
+
+      try {
+        const { data } = await axios.put(`${URI}/unapproveUser/${id}`, config);
+        dispatch({
+          type: types.UNAPPROVE_USER_APPLY_JOB,
+          payload: data,
+        });
+        dispatch<any>(getListUserApply());
+        // dispatch<any>(
+        //   setAlert({
+        //     msg: "Không duyệt người dùng thành công!",
+        //     status: 200,
+        //     alertType: "success",
+        //   })
+        // );
+      } catch (error: any) {
+        dispatch<any>(
+          setAlert({
+            msg: "Không duyệt người dùng thất bại!",
+            status: error.response.status,
+            alertType: "error",
+          })
+        );
+      }
+    };
+
 // GET EVENTS
 export const getEvents =
   () => async (dispatch: Dispatch<ManagerActions | AlertActions>) => {
@@ -415,7 +508,7 @@ export const updateJobEvent =
       };
 
       try {
-        const { data } = await axios.patch(`${URI}/jobEvent/${id}`, body, config);
+        const { data } = await axios.put(`${URI}/jobEvent/${id}`, body, config);
         dispatch({
           type: types.UPDATE_JOBEVENT,
           payload: data,

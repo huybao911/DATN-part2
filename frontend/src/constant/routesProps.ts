@@ -139,6 +139,14 @@ const routesProps: ROUTES[] = [
     auth: true,
   },
   {
+    name: "listCTV",
+    path: "/listCTV",
+    component: React.lazy(() => import("pages/Manager/ListCTV")),
+    exact: true,
+    keyRole: "manager",
+    auth: true,
+  },
+  {
     name: "event",
     path: "/event",
     component: React.lazy(() => import("pages/Manager/Events")),

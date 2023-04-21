@@ -19,7 +19,7 @@ type Props = {
 
 interface IValues {
   username: string;
-  email?: string;
+  email: string;
   password: string;
 }
 

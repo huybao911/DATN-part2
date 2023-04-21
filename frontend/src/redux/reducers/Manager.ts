@@ -73,6 +73,27 @@ const ManagerReducer = (
         appyjobs: action.payload,
       };
 
+    case types.GET_LIST_CTV:
+      return {
+        ...state,
+        appyjobs: action.payload,
+      };
+
+    case types.APPROVE_USER_APPLY_JOB:
+      return {
+        ...state,
+        appyjobs: state.appyjobs.map((applyjob) =>
+          applyjob._id === action.payload.id ? { ...action.payload.applyjob } : applyjob
+        ),
+      };
+    case types.UNAPPROVE_USER_APPLY_JOB:
+      return {
+        ...state,
+        appyjobs: state.appyjobs.map((applyjob) =>
+          applyjob._id === action.payload.id ? { ...action.payload.applyjob } : applyjob
+        ),
+      };
+
     case types.CREATE_EVENT_SUCCESS:
       return {
         ...state,

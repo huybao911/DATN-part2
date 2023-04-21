@@ -101,6 +101,9 @@ const Posts: React.FC = (): JSX.Element => {
                                                 {event?.quantityUser ?? null}
                                             </Typography>
                                             <Typography variant="body2" color="text.secondary">
+                                                {event?.costs ?? null}
+                                            </Typography>
+                                            <Typography variant="body2" color="text.secondary">
                                                 {event?.location ?? null}
                                             </Typography>
                                             <Typography variant="body2" color="text.secondary">

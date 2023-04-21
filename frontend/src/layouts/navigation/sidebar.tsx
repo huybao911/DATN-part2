@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const NAV_WIDTH = 230;
+const NAV_WIDTH = 270;
 
 const SideBar: React.FC = (): JSX.Element => {
   const classes = useStyles();
@@ -193,21 +193,21 @@ const SideBar: React.FC = (): JSX.Element => {
           variant='permanent'
           PaperProps={{
             sx: {
-              width: 230,
+              width: NAV_WIDTH,
               bgcolor: 'background.default',
-              borderRightStyle: 'solid'
+              borderRightStyle: 'dashed'
             }
           }}>
 
           <Box sx={{ px: 2, py: 3, display: 'inline-block', fontWeight: "bold" }}>
             {topLinks}
           </Box>
-          <Divider />
+          <Divider style={{ borderStyle: "dashed" }} />
 
           <NavSection />
           <Box flexGrow={1} />
 
-          <Divider />
+          <Divider style={{ borderStyle: "dashed" }} />
           {bottomLinks}
 
         </Drawer>

@@ -60,19 +60,6 @@ exports.getAuthManager = async (req, res, next) => {
   }
 };
 
-exports.getJobUserApply = async (req, res) => {
-  const managerUser = await User.findById(req?.manager?._id);
-  const managerPost = await Event.find({ poster: managerUser._id }).populate("poster");
-  const managerJob = await JobEvent.find({ event: managerPost }).populate("event");
-  const findJobUserApply = await ApplyJob.find({ jobId: managerJob }).populate({ path: "jobId", populate: [{ path: "event" }] }).populate("userId");
-  try {
-    if (!req.manager) return res.status(400).send("You dont have permission");
-    return res.status(200).json(findJobUserApply);
-  } catch (error) {
-    return res.status(500).json(error);
-  }
-};
-
 exports.getEvent = async (req, res) => {
   const managerUser = await User.findById(req?.manager?._id);
   const managerEvent = await Event.find({ poster: managerUser._id }).populate("poster").populate("approver").populate("departmentEvent").populate({ path: "comments", populate: [{ path: "commenter" }] });
@@ -86,24 +73,22 @@ exports.getEvent = async (req, res) => {
 
 
 exports.createEvent = async (req, res) => {
-  const { nameEvent,comments, quantityUser, job, location, costs, dayStart, dayEnd, image } = req.body;
+  const { nameEvent,comments, job, location, dayStart, dayEnd, image } = req.body;
   const managerUser = await User.findById(req?.manager?._id);
   const managerDepartment = await Department.findOne({ _id: managerUser.department });
   const imagePath = image.replace(/^.*\\/, "");
   try {
     if (!req.manager) return res.status(400).send("You dont have permission");
-    if (!nameEvent || !quantityUser || !location || !costs || !dayStart || !dayEnd ||!image)
+    if (!nameEvent || !location || !dayStart || !dayEnd ||!image)
     return res.status(400).send("Please fill in all the required fields!")
     const newEvent = new Event({
       nameEvent,
       poster: managerUser,
       approver: null,
       comments,
-      quantityUser,
       job,
       location,
       departmentEvent:managerDepartment,
-      costs,
       dayStart,
       dayEnd,
       image: imagePath,
@@ -121,7 +106,13 @@ exports.createEvent = async (req, res) => {
 exports.updateEvent = async (req, res) => {
   const { id } = req.params;
   const getJobEvent = await JobEvent.find({event:id});
-  const { nameEvent, poster, approver, quantityUser, location, costs, dayStart, dayEnd, image } = req.body;
+  const getQuantity = getJobEvent.map((job) => job.quantity);
+  const sumQuantity = getQuantity.reduce((a,b) => a+b);
+
+  const getTotalJob = getJobEvent.map((job) => job.total);
+  const sumTotalJob = getTotalJob.reduce((a,b) => a+b);
+  
+  const { nameEvent, poster, approver, location, dayStart, dayEnd, image } = req.body;
   try {
     if (!req.manager) return res.status(400).send("You dont have permission");
     const event = await Event.findById(id).lean();
@@ -130,10 +121,10 @@ exports.updateEvent = async (req, res) => {
       nameEvent: nameEvent,
       poster: poster,
       approver: approver,
-      quantityUser: quantityUser,
+      quantityUser: sumQuantity,
       job: getJobEvent,
       location: location,
-      costs: costs,
+      costs: sumTotalJob,
       dayStart: dayStart,
       dayEnd: dayEnd,
       image:image,
@@ -196,6 +187,7 @@ exports.createNewJobEvent = async (req, res) => {
       nameJob: nameJob,
       event: event,
       quantity: quantity,
+      quantityRemaining: quantity,
       unitPrice: unitPrice,
       total: totalJob,
       jobDescription: jobDescription,
@@ -210,7 +202,8 @@ exports.createNewJobEvent = async (req, res) => {
 
 exports.updateJobEvent = async (req, res, next) => {
   const { id } = req.params;
-  const { nameJob,event, quantity, unitPrice, jobDescription} = req.body;
+  const { nameJob,event, quantity,quantityRemaining, unitPrice, jobDescription} = req.body;
+  totalJob = quantity * unitPrice;
   try {
     if (!req.manager) return res.status(400).send("You dont have permission");
     const jobEvent = await JobEvent.findById(id).lean();
@@ -219,7 +212,9 @@ exports.updateJobEvent = async (req, res, next) => {
       nameJob: nameJob,
       event: event,
       quantity:quantity,
+      quantityRemaining: quantityRemaining,
       unitPrice:unitPrice,
+      total:totalJob,
       jobDescription:jobDescription,
      };
     const newJobEvent = await JobEvent.findByIdAndUpdate(
@@ -228,7 +223,9 @@ exports.updateJobEvent = async (req, res, next) => {
         nameJob: jobEventObj.nameJob,
         event: jobEventObj.event,
         quantity: jobEventObj.quantity,
+        quantityRemaining: jobEventObj.quantityRemaining,
         unitPrice: jobEventObj.unitPrice,
+        total: jobEventObj.total,
         jobDescription: jobEventObj.jobDescription,
        },
       { new: true }
@@ -250,4 +247,103 @@ exports.deleteJobEvent = async (req, res) => {
     return res.status(500).json(error);
   }
 };
+
+exports.getJobUserApply = async (req, res) => {
+  const managerUser = await User.findById(req?.manager?._id);
+  const managerPost = await Event.find({ poster: managerUser._id }).populate("poster");
+  const managerJob = await JobEvent.find({ event: managerPost }).populate("event");
+  const findJobUserApply = await ApplyJob.find({ jobId: managerJob, applyStatus:"Chờ phê duyệt" }).populate({ path: "jobId", populate: [{ path: "event" }] }).populate("userId");
+  try {
+    if (!req.manager) return res.status(400).send("You dont have permission");
+    return res.status(200).json(findJobUserApply);
+  } catch (error) {
+    return res.status(500).json(error);
+  }
+};
+
+exports.getCTV = async (req, res) => {
+  const managerUser = await User.findById(req?.manager?._id);
+  const managerPost = await Event.find({ poster: managerUser._id }).populate("poster");
+  const managerJob = await JobEvent.find({ event: managerPost }).populate("event");
+  const findCTV = await ApplyJob.find({ jobId: managerJob, applyStatus:"Duyệt" }).populate({ path: "jobId", populate: [{ path: "event" }] }).populate("userId");
+  try {
+    if (!req.manager) return res.status(400).send("You dont have permission");
+    return res.status(200).json(findCTV);
+  } catch (error) {
+    return res.status(500).json(error);
+  }
+};
+
+exports.approveUserApplyJob = async (req, res, next) => {
+  const { id } = req.params;
+  try {
+    if (!req.manager) return res.status(400).send("You dont have permission");
+    const applyJob = await ApplyJob.findById(id).lean();
+    const jobEvent = await JobEvent.findById(applyJob.jobId);
+    quantityRe = jobEvent.quantityRemaining - 1;
+    const event = await Event.findById(jobEvent.event);
+    const getJobEvent = await JobEvent.find({event:event._id});
+    if (!applyJob) return res.status(400).send("ApplyJob does not exist");
+    const applyJobObj = { 
+      applyStatus: "Duyệt",
+      notiApplyJob:"Bạn đã ứng tuyển thành công",
+     };
+     const eventObj = {
+      job: getJobEvent,
+    };
+    const newApplyJob = await ApplyJob.findByIdAndUpdate(
+      { _id: id },
+      { 
+        applyStatus: applyJobObj.applyStatus,
+        notiApplyJob: applyJobObj.notiApplyJob,
+       },
+      { new: true }
+    );
+    await JobEvent.findByIdAndUpdate(
+      { _id: jobEvent._id },
+      { 
+        quantityRemaining: quantityRe,
+       },
+       { new: true }
+    );
+    await Event.findByIdAndUpdate(
+      { _id: event._id },
+      {
+        job: eventObj.job,
+      },
+      { new: true }
+    );
+    return res.status(200).json(newApplyJob);
+  } catch (error) {
+    console.log(error.message);
+    return res.status(500).json(error);
+  }
+};
+
+exports.unapproveUserApplyJob = async (req, res, next) => {
+  const { id } = req.params;
+  try {
+    if (!req.manager) return res.status(400).send("You dont have permission");
+    const applyJob = await ApplyJob.findById(id).lean();
+    if (!applyJob) return res.status(400).send("ApplyJob does not exist");
+    const applyJobObj = { 
+      applyStatus: "Không Duyệt",
+      notiApplyJob:"Bạn đã ứng tuyển thất bại",
+     };
+    const newApplyJob = await ApplyJob.findByIdAndUpdate(
+      { _id: id },
+      { 
+        applyStatus: applyJobObj.applyStatus,
+        notiApplyJob: applyJobObj.notiApplyJob,
+       },
+      { new: true }
+    );
+    return res.status(200).json(newApplyJob);
+  } catch (error) {
+    console.log(error.message);
+    return res.status(500).json(error);
+  }
+};
+
+
 

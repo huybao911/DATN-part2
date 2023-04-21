@@ -30,8 +30,7 @@ const eventSchema = new mongoose.Schema(
         ],
         quantityUser: {
             type: Number,
-            trim: true,
-            required: [true, "QuantityUser is required"],
+            default: 0,
         },
         job: {
             type: Array,
@@ -50,6 +49,7 @@ const eventSchema = new mongoose.Schema(
         },
         costs: {
             type: Number,
+            default: 0,
         },
         image: {
             type: String,

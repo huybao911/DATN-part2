@@ -30,9 +30,7 @@ type Props = {
 
 interface IInitialValues {
     nameEvent: string;
-    quantityUser: number;
     location: string;
-    costs: string;
     dayStart: string;
     dayEnd: string;
     image: string;
@@ -44,9 +42,7 @@ const CreatePost: React.FC<Props> = ({ event }): JSX.Element => {
 
     const initialValues: IInitialValues = {
         nameEvent: event?.nameEvent ?? "",
-        quantityUser: event?.quantityUser ?? "",
         location: event?.location ?? "",
-        costs: event?.costs ?? "",
         dayStart: event?.dayStart ?? "",
         dayEnd: event?.dayEnd ?? "",
         image: event?.image ?? "",
@@ -61,9 +57,7 @@ const CreatePost: React.FC<Props> = ({ event }): JSX.Element => {
 
     const validationSchema = Yup.object({
         nameEvent: Yup.string().required("required!"),
-        quantityUser: Yup.string().required("required!"),
         location: Yup.string().required("required!"),
-        costs: Yup.string().required("required!"),
         dayStart: Yup.string().required("required!"),
         dayEnd: Yup.string().required("required!"),
         image: Yup.string().required("required!"),

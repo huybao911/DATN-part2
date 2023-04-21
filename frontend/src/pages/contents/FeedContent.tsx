@@ -191,8 +191,8 @@ const FeedContent: React.FC<Props> = ({ event }): JSX.Element => {
                                 {event.job.map((job: any, index:any) =>
                                     <Box>
                                         <Box>
-                                            <Typography key={job._id} sx={{ width: "100px", fontSize: '12px' }}>
-                                                - {job.nameJob}
+                                            <Typography key={job._id} sx={{ width: "200px", fontSize: '12px' }}>
+                                                - {job.nameJob} {job.quantityRemaining}
                                             </Typography>
                                         </Box>
                                         <Box>

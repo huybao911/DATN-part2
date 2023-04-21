@@ -69,7 +69,7 @@ const LoginUser: React.FC = (): JSX.Element => {
   });
 
   React.useEffect(() => {
-    document.title = "ĐĂNG NHẬP ";
+    document.title = "Đăng nhập | CTV";
   }, []);
 
   return (

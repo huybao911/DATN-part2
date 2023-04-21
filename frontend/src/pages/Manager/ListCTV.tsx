@@ -1,13 +1,11 @@
 import * as React from "react";
 import { styled, alpha } from "@material-ui/core/styles";
 import { useDispatch, useSelector } from "react-redux";
-import { getListUserApply, approveUserApplyJob, unapproveUserApplyJob } from "redux/actions/Manager";
+import { getListCTV} from "redux/actions/Manager";
 import { RootState } from "redux/reducers";
 import { IApplyJob } from "redux/types/applyJob";
-import { TableSortLabel, IconButton, Toolbar, OutlinedInput, InputAdornment, Button, Card, Container, Popover, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography } from "@mui/material";
+import { TableSortLabel, Toolbar, OutlinedInput, InputAdornment, Button, Card, Container, Popover, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography } from "@mui/material";
 // @mui
-import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
-import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import SearchIcon from '@mui/icons-material/Search';
 import { Box } from "@mui/system";
 import { visuallyHidden } from '@mui/utils';
@@ -106,16 +104,6 @@ const headCells: HeadCell[] = [
     _id: 'applyStatus',
     numeric: false,
     label: 'Trạng thái',
-  },
-  {
-    _id: 'approve',
-    numeric: false,
-    label: '',
-  },
-  {
-    _id: 'unapprove',
-    numeric: false,
-    label: '',
   },
 ];
 
@@ -226,7 +214,7 @@ const Users: React.FC = (): JSX.Element => {
   const sortApplyJob = stableSort(applyJobs, getComparator(order, orderBy));
 
   React.useEffect(() => {
-    dispatch(getListUserApply());
+    dispatch(getListCTV());
   }, [dispatch]);
 
   React.useEffect(() => {
@@ -252,7 +240,7 @@ const Users: React.FC = (): JSX.Element => {
           >
             <Box>
               <Typography gutterBottom style={{ color: "black", fontSize: "22px" }}>
-                Danh Sách Ứng Tuyển
+                Danh Sách Cộng Tác Viên
               </Typography>
             </Box>
             <Box style={{ display: "flex", flexDirection: "row" }} >
@@ -296,16 +284,6 @@ const Users: React.FC = (): JSX.Element => {
                       </TableCell>
                       <TableCell align="left" sx={{ fontSize: '12px' }}>
                         {applyJob.applyStatus}
-                      </TableCell>
-                      <TableCell align="left">
-                      <IconButton onClick={(e) => dispatch(approveUserApplyJob(applyJob._id))} style={{color:"green"}}>
-                        <CheckCircleOutlineIcon/>
-                      </IconButton>
-                      </TableCell>
-                      <TableCell align="left">
-                      <IconButton onClick={(e) => dispatch(unapproveUserApplyJob(applyJob._id))} style={{color:"red"}}>
-                        <HighlightOffIcon/>
-                      </IconButton>
                       </TableCell>
                     </TableRow>
                   )}

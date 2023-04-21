@@ -16,6 +16,9 @@ const JobEvent = new mongoose.Schema(
       type: Number,
       required: [true, "Quantity is required"],
     },
+    quantityRemaining: {
+      type: Number,
+    },
     unitPrice: {
       type: Number,
       required: [true, "UnitPrice is required"],

@@ -21,5 +21,8 @@ router.put("/jobEvent/:id", isAuth, ManagerController.updateJobEvent);
 router.delete("/jobEvent/:id", isAuth, ManagerController.deleteJobEvent);
 
 router.get("/jobUserApply", isAuth, ManagerController.getJobUserApply);
+router.get("/ctv", isAuth, ManagerController.getCTV);
+router.put("/approveUser/:id", isAuth, ManagerController.approveUserApplyJob);
+router.put("/unapproveUser/:id", isAuth, ManagerController.unapproveUserApplyJob);
 
 module.exports = router;

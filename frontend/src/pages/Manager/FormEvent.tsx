@@ -16,14 +16,11 @@ const useStyles = makeStyles((theme) => ({
 
 interface IValues {
     nameEvent: string;
-    quantityUser: number;
     location: string;
-    costs: string;
     dayStart: string;
     dayEnd: string;
     image: string;
 }
-
 
 const FormEvent: React.FC = (): JSX.Element => {
     const classes = useStyles();
@@ -46,23 +43,6 @@ const FormEvent: React.FC = (): JSX.Element => {
                     error={touched.nameEvent ? Boolean(errors.nameEvent) : false}
                 />
             </FormControl>
-
-            <FormControl fullWidth className={classes.formControl}>
-                <FormLabel classes={{ root: classes.formLabel }}>Số lượng người</FormLabel>
-                <TextField
-                    fullWidth
-                    maxRows={10}
-                    multiline
-                    variant="outlined"
-                    name='quantityUser'
-                    value={values.quantityUser}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    placeholder='Nhập số lượng người'
-                    helperText={touched.quantityUser ? errors.quantityUser : ""}
-                    error={touched.quantityUser ? Boolean(errors.quantityUser) : false}
-                />
-            </FormControl>
             <FormControl fullWidth className={classes.formControl}>
                 <FormLabel classes={{ root: classes.formLabel }}>Địa điểm tổ chức</FormLabel>
                 <TextField
@@ -77,22 +57,6 @@ const FormEvent: React.FC = (): JSX.Element => {
                     placeholder='Nhập địa điểm tổ chức'
                     helperText={touched.location ? errors.location : ""}
                     error={touched.location ? Boolean(errors.location) : false}
-                />
-            </FormControl>
-            <FormControl fullWidth className={classes.formControl}>
-                <FormLabel classes={{ root: classes.formLabel }}>Tổng chi phí</FormLabel>
-                <TextField
-                    fullWidth
-                    maxRows={10}
-                    multiline
-                    variant="outlined"
-                    name='costs'
-                    value={values.costs}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    placeholder='Nhập tổng chi phí'
-                    helperText={touched.costs ? errors.costs : ""}
-                    error={touched.costs ? Boolean(errors.costs) : false}
                 />
             </FormControl>
             <FormControl fullWidth className={classes.formControl}>

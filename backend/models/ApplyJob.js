@@ -12,6 +12,14 @@ const ApplyJob = new mongoose.Schema(
       ref: "User",
       required: true,
     },
+    applyStatus: {
+      type: String,
+      default:"Chờ phê duyệt",
+    },
+    notiApplyJob: {
+      type: String,
+      default:"Chờ phê duyệt",
+    },
   },
   { timestamps: true }
 );
