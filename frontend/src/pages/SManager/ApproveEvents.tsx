@@ -105,7 +105,10 @@ const ApproveEvents: React.FC = (): JSX.Element => {
                                         {event?.nameEvent}
                                     </Typography>
                                     <Typography style={{ width: "200px", fontSize: "12px" }}>
-                                        {event.quantityUser}
+                                        Số lượng: {event.quantityUser}
+                                    </Typography>
+                                    <Typography style={{ width: "200px", fontSize: "12px" }}>
+                                        Tổng chi phí: {new Intl.NumberFormat().format(event.costs)} VND
                                     </Typography>
                                     <Typography style={{ width: "200px", fontSize: "12px" }}>
                                         {event.location}

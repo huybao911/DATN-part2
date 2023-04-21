@@ -4,7 +4,7 @@ import EventIcon from '@mui/icons-material/Event';
 import SchoolIcon from '@mui/icons-material/School';
 import WorkOutlineIcon from '@mui/icons-material/WorkOutline';
 import ListAltIcon from '@mui/icons-material/ListAlt';
-import WebIcon from '@mui/icons-material/Web';
+import RecentActorsIcon from '@mui/icons-material/RecentActors';
 
 export const dataAdmin = [
     {
@@ -27,11 +27,6 @@ export const dataAdmin = [
         icon: <WorkOutlineIcon style={{width: '18px'}}/>,
         name: 'Công Việc Sự Kiện',
         path: '/jobEventAdmin'
-    },
-    {
-        icon: <WebIcon style={{width: '18px'}} />,
-        name: 'Bài Viết',
-        path: '/postAdmin'
     },
     {
         icon: <SchoolIcon style={{width: '18px'}}/>,
@@ -79,5 +74,10 @@ export const dataManager = [
         icon: <ListAltIcon style={{width: '18px'}}/>,
         name: 'Danh Sách Ứng Tuyển',
         path: '/listUserApply'
+    },
+    {
+        icon: <RecentActorsIcon style={{width: '18px'}}/>,
+        name: 'Danh Sách Cộng Tác Viên',
+        path: '/listCTV'
     },
 ];

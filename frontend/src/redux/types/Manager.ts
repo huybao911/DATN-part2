@@ -43,6 +43,27 @@ interface IGetListUserApply {
   payload: IApplyJob[];
 }
 
+interface IGetListCTV {
+  type: typeof types.GET_LIST_CTV;
+  payload: IApplyJob[];
+}
+
+interface IApproveUserJobApply {
+  type: typeof types.APPROVE_USER_APPLY_JOB;
+  payload: {
+    applyjob: IApplyJob;
+    id: number;
+  };
+}
+
+interface IUnapproveUserJobApply {
+  type: typeof types.UNAPPROVE_USER_APPLY_JOB;
+  payload: {
+    applyjob: IApplyJob;
+    id: number;
+  };
+}
+
 interface IGetEvents {
   type: typeof types.GET_EVENTS;
   payload: IEvent[];
@@ -124,6 +145,9 @@ export type ManagerActions =
   | IGetUsers
   | IGetUser
   | IGetListUserApply
+  | IGetListCTV
+  | IApproveUserJobApply
+  | IUnapproveUserJobApply
   | IGetEvents
   | ICreateEventSuccess
   | ICreateEventFail

@@ -61,7 +61,6 @@ const UpdateJobEvent: React.FC<Props> = ({ jobEvent }): JSX.Element => {
         quantity: Yup.string().required("required!"),
         unitPrice: Yup.string().required("required!"),
         jobDescription: Yup.string().required("required!"),
-        event: Yup.string().required("required!"),
     });
 
     return (
