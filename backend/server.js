@@ -29,6 +29,7 @@ app.use(express.urlencoded({ extended: false }));
 
 //Upload 
 app.use("/images", express.static(path.join(__dirname, "public/images")));
+// app.use(express.static(path.join('public/images')));
 
 //middleware
 app.use(express.json());
@@ -40,12 +41,13 @@ const storage = multer.diskStorage({
     cb(null, "public/images");
   },
   filename: (req, file, cb) => {
-    cb(null, req.body.name);
+     cb(null, file.fieldname + '-' + Date.now() + 
+    path.extname(file.originalname));
   },
 });
 
 const upload = multer({ storage: storage });
-app.post("/api/upload", upload.single("file"), (req, res) => {
+app.post("/api/v1/upload", upload.single("image"),(req, res) => {
   try {
     return res.status(200).json("File uploded successfully");
   } catch (error) {

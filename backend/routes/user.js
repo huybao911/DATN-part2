@@ -13,13 +13,13 @@ router.get("/auth-user", isAuth, userController.getAuthUser);
 router.get("/events", userController.getEvents);
 router.get("/departments", userController.getDepartments);
 
-router.get("/eventStorage", isAuth, userController.getEventStorage);
-router.post("/event/:id", isAuth, userController.storageEvent);
-router.delete("/event/:id", isAuth, userController.unstorageEvent);
+router.get("/eventStorager", isAuth, userController.getEventStorager);
+router.put("/storager/:id", isAuth, userController.createStorager);
+router.put("/unstorager/:id", isAuth, userController.deleteStorager);
 
-router.get("/jobApply", isAuth, userController.getJobApplyJob);
-router.post("/jobApply/:id", isAuth, userController.applyJob);
-router.delete("/jobApply/:id", isAuth, userController.unapplyJob);
+router.get("/jobUserApply", isAuth, userController.getJobApply);
+router.put("/userApply/:eventId/:jobId", isAuth, userController.createUserApplyJob);
+router.put("/userUnApply/:eventId/:jobId", isAuth, userController.deleteUserApplyJob);
 
 router.get("/profile", isAuth, userController.getProfileUser);
 router.put("/profile/:id", isAuth, userController.updateProfile);

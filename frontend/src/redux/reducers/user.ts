@@ -5,8 +5,6 @@ import { IRole } from "redux/types/role";
 import { IDepartment } from "redux/types/department";
 import { IEvent } from "redux/types/event";
 import { IJobEvent } from "redux/types/jobEvent";
-import { IEventStorage } from "redux/types/eventStorage";
-import { IApplyJob } from "redux/types/applyJob";
 
 const initialState: IUserState = {
   token: localStorage.getItem("user__token"),
@@ -18,8 +16,6 @@ const initialState: IUserState = {
   users: [] as IUser[],
   events: [] as IEvent[],
   jobs: [] as IJobEvent[],
-  eventStorages: [] as IEventStorage[],
-  applyJobs: [] as IApplyJob[],
   departments: [] as IDepartment[],
 };
 
@@ -60,19 +56,19 @@ const userReducer = (state = initialState, action: UserActions): IUserState => {
         ...state,
         events: action.payload,
       };
-    case types.GET_EVENTSTORAGE:
+    case types.GET_STORAGER:
       return {
         ...state,
-        eventStorages: action.payload,
+        events: action.payload,
       };
-    case types.STORAGE_EVENT:
+    case types.CREATE_STORAGER:
       return {
         ...state,
         events: state.events.map((event) =>
           event._id === action.payload.id ? { ...action.payload.event } : event
         ),
       };
-    case types.UNSTORAGE_EVENT:
+    case types.DELETE_STORAGER:
       return {
         ...state,
         events: state.events.map((event) =>
@@ -82,20 +78,20 @@ const userReducer = (state = initialState, action: UserActions): IUserState => {
     case types.GET_JOB_USER_APPLY:
       return {
         ...state,
-        applyJobs: action.payload,
+        events: action.payload,
       };
-    case types.APPLY_JOB:
+    case types.USER_APPLY_JOB:
       return {
         ...state,
-        jobs: state.jobs.map((job) =>
-          job._id === action.payload.id ? { ...action.payload.job } : job
+        events: state.events.map((event) =>
+          event._id === action.payload.id ? { ...action.payload.event } : event
         ),
       };
-    case types.UNAPPLY_JOB:
+    case types.USER_UNAPPLY_JOB:
       return {
         ...state,
-        jobs: state.jobs.map((job) =>
-          job._id === action.payload.id ? { ...action.payload.job } : job
+        events: state.events.map((event) =>
+          event._id === action.payload.id ? { ...action.payload.event } : event
         ),
       };
     case types.GET_PROFILE:

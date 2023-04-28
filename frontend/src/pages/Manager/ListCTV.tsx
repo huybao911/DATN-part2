@@ -1,11 +1,13 @@
 import * as React from "react";
 import { styled, alpha } from "@material-ui/core/styles";
 import { useDispatch, useSelector } from "react-redux";
-import { getListCTV} from "redux/actions/Manager";
+import { getListCTV, approveUserApplyJob, unapproveUserApplyJob } from "redux/actions/Manager";
 import { RootState } from "redux/reducers";
-import { IApplyJob } from "redux/types/applyJob";
-import { TableSortLabel, Toolbar, OutlinedInput, InputAdornment, Button, Card, Container, Popover, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography } from "@mui/material";
+import { IEvent } from "redux/types/event";
+import { TableSortLabel, IconButton, Toolbar, OutlinedInput, InputAdornment, Button, Card, Container, Popover, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography } from "@mui/material";
 // @mui
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import SearchIcon from '@mui/icons-material/Search';
 import { Box } from "@mui/system";
 import { visuallyHidden } from '@mui/utils';
@@ -69,13 +71,13 @@ function stableSort<T>(array: T[], comparator: (a: T, b: T) => number) {
 }
 
 interface DataUser {
-  _id: keyof IApplyJob;
-  event: keyof IApplyJob;
-  jobId: keyof IApplyJob;
-  userId: keyof IApplyJob;
-  applyStatus: keyof IApplyJob;
-  approve: keyof IApplyJob;
-  unapprove: keyof IApplyJob;
+  _id: keyof IEvent;
+  nameEvent: keyof IEvent;
+  nameJob: keyof IEvent;
+  userApply: keyof IEvent;
+  unitPrice: keyof IEvent;
+  // approve: keyof IEvent;
+  // unapprove: keyof IEvent;
 }
 
 interface HeadCell {
@@ -86,25 +88,40 @@ interface HeadCell {
 
 const headCells: HeadCell[] = [
   {
-    _id: 'event',
+    _id: 'nameEvent',
     numeric: false,
     label: 'Tên sự kiện',
   },
   {
-    _id: 'jobId',
+    _id: 'nameJob',
     numeric: false,
     label: 'Tên công việc',
   },
   {
-    _id: 'userId',
+    _id: 'userApply',
     numeric: false,
     label: 'Người ứng tuyển',
   },
   {
-    _id: 'applyStatus',
+    _id: 'unitPrice',
     numeric: false,
-    label: 'Trạng thái',
+    label: 'Lương',
   },
+  // {
+  //   _id: 'applyStatus',
+  //   numeric: false,
+  //   label: 'Trạng thái',
+  // },
+  // {
+  //   _id: 'approve',
+  //   numeric: false,
+  //   label: '',
+  // },
+  // {
+  //   _id: 'unapprove',
+  //   numeric: false,
+  //   label: '',
+  // },
 ];
 
 
@@ -163,7 +180,7 @@ const Users: React.FC = (): JSX.Element => {
   const dispatch = useDispatch();
 
 
-  const [applyJobs, setApplyJobs] = React.useState<IApplyJob[]>([]);
+  const [events, setEvents] = React.useState<IEvent[]>([]);
   const manager = useSelector((state: RootState) => state.manager);
 
   const [page, setPage] = React.useState(0);
@@ -171,7 +188,7 @@ const Users: React.FC = (): JSX.Element => {
   const [filterName, setFilterName] = React.useState('');
 
   const [order, setOrder] = React.useState<Order>('asc');
-  const [orderBy, setOrderBy] = React.useState<keyof DataUser>('event');
+  const [orderBy, setOrderBy] = React.useState<keyof DataUser>('nameEvent');
 
 
 
@@ -198,20 +215,22 @@ const Users: React.FC = (): JSX.Element => {
     const keyword = event.target.value;
 
     if (keyword !== '') {
-      const results = manager?.appyjobs?.filter((applyJob: any) => {
-        return applyJob.postId.event.nameEvent.toLowerCase().startsWith(keyword.toLowerCase());
+      const results = manager?.events?.filter((event: any) => {
+        return event.nameEvent.toLowerCase().startsWith(keyword.toLowerCase());
         // Use the toLowerCase() method to make it case-insensitive
       });
-      setApplyJobs(results);
+      setEvents(results);
     } else {
-      setApplyJobs(() => manager?.appyjobs?.filter((applyJob: any) => applyJob.postId || applyJob.userId));
+      setEvents(() => manager?.events?.filter((event: any) => event.nameEvent));
       // If the text field is empty, show all users
     }
 
     setFilterName(keyword);
   };
 
-  const sortApplyJob = stableSort(applyJobs, getComparator(order, orderBy));
+  const sortApplyJob = stableSort(events, getComparator(order, orderBy));
+
+  const checkUserApply = manager?.events?.filter((event: any) => event.nameEvent);
 
   React.useEffect(() => {
     dispatch(getListCTV());
@@ -219,11 +238,11 @@ const Users: React.FC = (): JSX.Element => {
 
   React.useEffect(() => {
 
-    setApplyJobs(() => manager?.appyjobs?.filter((applyJob: any) => applyJob.postId || applyJob.userId));
+    setEvents(() => checkUserApply);
   }, [manager]);
 
   React.useEffect(() => {
-    document.title = "JOB EVENT";
+    document.title = "LIST CVT";
   }, []);
 
   return (
@@ -267,24 +286,48 @@ const Users: React.FC = (): JSX.Element => {
                 orderBy={orderBy}
                 onRequestSort={handleRequestSort}
               />
-              {applyJobs && applyJobs.length > 0 ? (
+              {events && events.length > 0 ? (
                 <TableBody>
-                  {sortApplyJob.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((applyJob: any, index) =>
-                    <TableRow key={applyJob._id}>
-                      <TableCell align="left" sx={{ fontSize: '12px' }}>
-                        {applyJob.jobId.event.nameEvent}
+                  {sortApplyJob.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((event: any, index) =>
+                    <TableRow key={event._id}>
+                      <TableCell align="left" sx={{ width: "200px", fontSize: '12px' }}>
+                        {event.usersApplyJob.filter((jobApply: any) => jobApply.notiApplyJob.includes("Bạn đã ứng tuyển thành công")).map((job: any) =>
+                          <Box style={{ display: "flex", flexDirection: "column", marginTop: "20px", paddingBottom: "20px" }}>
+                            {job.jobEvent.event.nameEvent}
+                          </Box>
+                        )}
                       </TableCell>
-
-                      <TableCell align="left" sx={{ fontSize: '12px' }}>
-                        {applyJob.jobId.nameJob}
+                      <TableCell align="left" sx={{ width: "200px", fontSize: '12px' }}>
+                        {event.usersApplyJob.filter((jobApply: any) => jobApply.notiApplyJob.includes("Bạn đã ứng tuyển thành công")).map((job: any) =>
+                          <Box style={{ display: "flex", flexDirection: "column", marginTop:"20px", paddingBottom:"20px" }}>
+                            {job.jobEvent.nameJob}
+                          </Box>
+                        )}
                       </TableCell>
-
-                      <TableCell align="left" sx={{ fontSize: '12px' }}>
-                        {applyJob.userId.username}
+                      <TableCell align="left" sx={{ width: "200px", fontSize: '12px' }}>
+                        {event.usersApplyJob.filter((jobApply: any) => jobApply.notiApplyJob.includes("Bạn đã ứng tuyển thành công")).map((job: any) =>
+                          <Box style={{ display: "flex", flexDirection: "column", marginTop:"20px", paddingBottom:"20px" }}>
+                            {job.userApply.username}
+                          </Box>
+                        )}
                       </TableCell>
-                      <TableCell align="left" sx={{ fontSize: '12px' }}>
-                        {applyJob.applyStatus}
+                      <TableCell align="left" sx={{ width: "300px", fontSize: '12px' }}>
+                        {event.usersApplyJob.filter((jobApply: any) => jobApply.notiApplyJob.includes("Bạn đã ứng tuyển thành công")).map((job: any) =>
+                          <Box style={{ display: "flex", flexDirection: "column", marginTop:"20px", paddingBottom:"20px" }}>
+                            {new Intl.NumberFormat().format(job.jobEvent.unitPrice)} VND
+                          </Box>
+                        )}
                       </TableCell>
+                      {/* <TableCell align="left">
+                      <IconButton onClick={(e) => dispatch(approveUserApplyJob(applyJob._id))} style={{color:"green"}}>
+                        <CheckCircleOutlineIcon/>
+                      </IconButton>
+                      </TableCell>
+                      <TableCell align="left">
+                      <IconButton onClick={(e) => dispatch(unapproveUserApplyJob(applyJob._id))} style={{color:"red"}}>
+                        <HighlightOffIcon/>
+                      </IconButton>
+                      </TableCell> */}
                     </TableRow>
                   )}
 
@@ -307,7 +350,7 @@ const Users: React.FC = (): JSX.Element => {
                       }}
                       rowsPerPageOptions={[5, 10, 25]}
                       labelRowsPerPage={"Số lượng hàng:"}
-                      count={applyJobs.length}
+                      count={events.length}
                       rowsPerPage={rowsPerPage}
                       page={page}
                       onPageChange={handleChangePage}
@@ -343,7 +386,7 @@ const Users: React.FC = (): JSX.Element => {
             </Table>
           </TableContainer>
         </Card>
-      </Container>
+      </Container >
     </>
   );
 };

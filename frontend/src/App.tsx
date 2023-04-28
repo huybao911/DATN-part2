@@ -35,6 +35,7 @@ const APP_BAR_DESKTOP = 92;
 const Main = styled('div')(({ theme }) => ({
   flexGrow: 2,
   overflow: 'auto',
+  // marginLeft: 270,
   minHeight: '100%',
   paddingTop: APP_BAR_MOBILE + 24,
   paddingBottom: theme.spacing(10),

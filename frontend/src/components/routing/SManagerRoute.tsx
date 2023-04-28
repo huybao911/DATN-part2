@@ -28,7 +28,7 @@ const SManagerRoute: React.FC<Props> = ({
           return <Redirect to='/login' />;
         }
         if (user.isAuthenticated && user.getRole.keyRole === "user") {
-          return <Redirect to='/' />;
+          return <Redirect to='/user' />;
         }
         if (Manager.isAuthenticated && Manager.getRole.keyRole === "manager") {
           return <Redirect to='/event' />;

@@ -4,7 +4,6 @@ import { IManager } from "redux/types/Manager";
 import { IManagerState, ManagerActions } from "../types/Manager";
 import { IRole } from "redux/types/role";
 import { IDepartment } from "redux/types/department";
-import { IApplyJob } from "redux/types/applyJob";
 import { IEvent } from "redux/types/event";
 import { IJobEvent } from "redux/types/jobEvent";
 
@@ -14,7 +13,6 @@ const initialState: IManagerState = {
   isAuthenticated: null,
   manager: {} as IManager,
   users: [] as IUser[],
-  appyjobs: [] as IApplyJob[],
   events: [] as IEvent[],
   jobevents: [] as IJobEvent[],
   getRole: {} as IRole,
@@ -70,27 +68,27 @@ const ManagerReducer = (
     case types.GET_LIST_USERAPPLY:
       return {
         ...state,
-        appyjobs: action.payload,
+        events: action.payload,
       };
 
     case types.GET_LIST_CTV:
       return {
         ...state,
-        appyjobs: action.payload,
+        events: action.payload,
       };
 
     case types.APPROVE_USER_APPLY_JOB:
       return {
         ...state,
-        appyjobs: state.appyjobs.map((applyjob) =>
-          applyjob._id === action.payload.id ? { ...action.payload.applyjob } : applyjob
+        events: state.events.map((event) =>
+          event._id === action.payload.id ? { ...action.payload.event } : event
         ),
       };
     case types.UNAPPROVE_USER_APPLY_JOB:
       return {
         ...state,
-        appyjobs: state.appyjobs.map((applyjob) =>
-          applyjob._id === action.payload.id ? { ...action.payload.applyjob } : applyjob
+        events: state.events.map((event) =>
+          event._id === action.payload.id ? { ...action.payload.event } : event
         ),
       };
 

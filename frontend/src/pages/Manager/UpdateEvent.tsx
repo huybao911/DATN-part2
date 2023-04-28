@@ -33,7 +33,7 @@ interface IInitialValues {
     location: string;
     dayStart: string;
     dayEnd: string;
-    image: string;
+    image: any;
 }
 
 const CreatePost: React.FC<Props> = ({ event }): JSX.Element => {
@@ -60,7 +60,7 @@ const CreatePost: React.FC<Props> = ({ event }): JSX.Element => {
         location: Yup.string().required("required!"),
         dayStart: Yup.string().required("required!"),
         dayEnd: Yup.string().required("required!"),
-        image: Yup.string().required("required!"),
+        // image: Yup.string().required("required!"),
     });
 
     return (

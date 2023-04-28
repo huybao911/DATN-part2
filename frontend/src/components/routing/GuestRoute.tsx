@@ -27,7 +27,7 @@ const GuestRoute: React.FC<Props> = ({
         // } else if (admin.isAuthenticated && user.isAuthenticated && SManager.isAuthenticated && Manager.isAuthenticated) {
         //     return <Login />;
           if (user.isAuthenticated && user.getRole.keyRole === "user") {
-          return <Redirect to='/'/>;
+          return <Redirect to='/user'/>;
         } else if (Manager.isAuthenticated && Manager.getRole.keyRole === "manager") {
           return <Redirect to='/event' />;
         } else if (SManager.isAuthenticated && SManager.getRole.keyRole === "smanager") {

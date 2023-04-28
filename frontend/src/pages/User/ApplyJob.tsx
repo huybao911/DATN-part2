@@ -2,15 +2,15 @@ import * as React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getApplyJob } from "redux/actions/user";
 import { RootState } from "redux/reducers";
-import { IApplyJob } from "redux/types/applyJob";
 import FeedApplyJob from "pages/User/FeedApplyJob";
-import { Typography} from '@mui/material';
+import { Typography } from '@mui/material';
+import { IEvent } from "redux/types/event";
 
-const StoragePost: React.FC = (): JSX.Element => {
+const ApplyJob: React.FC = (): JSX.Element => {
 
     const dispatch = useDispatch();
 
-    const [jobs, setJobs] = React.useState<IApplyJob[]>([]);
+    const [events, setEvents] = React.useState<IEvent[]>([]);
     const user = useSelector((state: RootState) => state.user);
 
     React.useEffect(() => {
@@ -18,9 +18,9 @@ const StoragePost: React.FC = (): JSX.Element => {
     }, [dispatch]);
 
     React.useEffect(() => {
-        setJobs(() =>
-            user?.applyJobs?.filter((post: any) =>
-                post.postId
+        setEvents(() =>
+            user?.events?.filter((event: any) =>
+                event.nameEvent
             ));
     }, [user]);
 
@@ -32,12 +32,12 @@ const StoragePost: React.FC = (): JSX.Element => {
 
         <>
             <Typography style={{ fontSize: "30px", fontWeight: "bold" }}>Công Việc Đã Ứng Tuyển</Typography>
-            {jobs.map((jobApply: any) =>
-                <FeedApplyJob jobApply={jobApply} key={jobApply._id} />) ?? (
-                    <p>No FeedStoragePost Found.</p>
+            {events.map((event: any) =>
+                <FeedApplyJob event={event} key={event._id} />) ?? (
+                    <p>No FeedApplyJob Found.</p>
                 )}
         </>
     );
 };
 
-export default StoragePost;
+export default ApplyJob;

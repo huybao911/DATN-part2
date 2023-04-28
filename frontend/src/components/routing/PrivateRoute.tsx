@@ -24,7 +24,7 @@ const PrivateRoute: React.FC<Props> = ({
           return <AppLoader />;
         }
         if (!user.isAuthenticated) {
-          return <Redirect to='/loginuser' />;
+          return <Redirect to='/' />;
         }
         if (admin.isAuthenticated && admin.getRole.keyRole === "admin") {
           return <Redirect to='/users' />;
