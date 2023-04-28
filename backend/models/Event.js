@@ -54,7 +54,7 @@ const eventSchema = new mongoose.Schema(
         image: {
             type: String,
             required: true,
-          },
+        },
         dayStart: {
             type: String,
             trim: true,
@@ -65,6 +65,34 @@ const eventSchema = new mongoose.Schema(
             trim: true,
             required: [true, "DayEnd is required"],
         },
+        storagers: [
+            {
+                storager: {
+                    type: mongoose.Types.ObjectId,
+                    ref: "User",
+                },
+            },
+        ],
+        usersApplyJob: [
+            {
+                jobEvent: {
+                    type: mongoose.Types.ObjectId,
+                    ref: "JobEvent",
+                },
+                userApply: {
+                    type: mongoose.Types.ObjectId,
+                    ref: "User",
+                },
+                applyStatus: {
+                    type: String,
+                    default: "Chờ phê duyệt",
+                },
+                notiApplyJob: {
+                    type: String,
+                    default: "Chờ phê duyệt",
+                },
+            },
+        ],
     },
     { timestamps: { createdAt: "created_at", updatedAt: "updated_at" } }
 );

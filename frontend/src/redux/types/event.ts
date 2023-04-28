@@ -15,4 +15,13 @@ export interface IEvent {
     delete: string;
     image: string;
     created_at:string;
+    usersApplyJob:any;
+
+    nameJob: string;
+    unitPrice: number;
+    
+    userApply: any;
+    applyStatus: string;
+    approve: string;
+    unapprove: string;
   }

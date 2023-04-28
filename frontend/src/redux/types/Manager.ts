@@ -2,7 +2,6 @@ import types from "redux/actions/types";
 import { IUser } from "./user";
 import { IRole } from "./role";
 import { IDepartment } from "./department";
-import { IApplyJob } from "./applyJob";
 import { IEvent } from "./event";
 import { IJobEvent } from "./jobEvent";
 
@@ -40,18 +39,18 @@ interface IGetUser {
 
 interface IGetListUserApply {
   type: typeof types.GET_LIST_USERAPPLY;
-  payload: IApplyJob[];
+  payload: IEvent[];
 }
 
 interface IGetListCTV {
   type: typeof types.GET_LIST_CTV;
-  payload: IApplyJob[];
+  payload: IEvent[];
 }
 
 interface IApproveUserJobApply {
   type: typeof types.APPROVE_USER_APPLY_JOB;
   payload: {
-    applyjob: IApplyJob;
+    event: IEvent;
     id: number;
   };
 }
@@ -59,7 +58,7 @@ interface IApproveUserJobApply {
 interface IUnapproveUserJobApply {
   type: typeof types.UNAPPROVE_USER_APPLY_JOB;
   payload: {
-    applyjob: IApplyJob;
+    event: IEvent;
     id: number;
   };
 }
@@ -160,8 +159,8 @@ export type ManagerActions =
   | IDeleteJobEvent;
 
 export type ManagerAdminActions =
-| IManagerRegisterSuccess
-| IManagerRegisterFail;
+  | IManagerRegisterSuccess
+  | IManagerRegisterFail;
 
 export interface IManagerState {
   token: string | null;
@@ -173,5 +172,4 @@ export interface IManagerState {
   users: IUser[];
   events: IEvent[];
   jobevents: IJobEvent[];
-  appyjobs: IApplyJob[];
 }

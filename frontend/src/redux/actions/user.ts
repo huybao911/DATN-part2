@@ -162,8 +162,8 @@ export const getEvents =
     }
   };
 
-// GET STORAGE EVENT
-export const getEventStorage =
+// GET STORAGER
+export const getStorager =
   () => async (dispatch: Dispatch<UserActions | AlertActions>) => {
     const config: any = {
       header: {
@@ -172,8 +172,8 @@ export const getEventStorage =
     };
 
     try {
-      const { data } = await axios.get(`${URI}/eventStorage`, config);
-      dispatch({ type: types.GET_EVENTSTORAGE, payload: data });
+      const { data } = await axios.get(`${URI}/eventStorager`, config);
+      dispatch({ type: types.GET_STORAGER, payload: data });
     } catch (error: any) {
       dispatch<any>(
         setAlert({
@@ -185,9 +185,9 @@ export const getEventStorage =
     }
   };
 
-// STORAGE EVENT
-export const storageEvent =
-  (id: NumberSchema) =>
+// CREATE STORAGER
+export const createStorager =
+  (id: number) =>
     async (dispatch: Dispatch<UserActions | AlertActions>) => {
       const config: any = {
         header: {
@@ -196,50 +196,16 @@ export const storageEvent =
       };
 
       try {
-        const { data } = await axios.post(`${URI}/event/${id}`, config);
+        const { data } = await axios.put(`${URI}/storager/${id}`, config);
         dispatch({
-          type: types.STORAGE_EVENT,
-          payload: data,
-        });
-      } catch (error: any) {
-        dispatch<any>(
-          setAlert({
-            msg: "Xảy ra lỗi khi lưu event!",
-            status: error.response.status,
-            alertType: "error",
-          })
-        );
-      }
-    };
-
-// UNSTORAGE EVENT
-export const unstorageEvent =
-  (id: NumberSchema) =>
-    async (dispatch: Dispatch<UserActions | AlertActions>) => {
-      const config: any = {
-        header: {
-          "Content-Type": "application/json",
-        },
-      };
-
-      try {
-        const { data } = await axios.delete(`${URI}/event/${id}`, config);
-        dispatch({
-          type: types.UNSTORAGE_EVENT,
+          type: types.CREATE_STORAGER,
           payload: data,
         });
         dispatch<any>(getEvents());
-        dispatch<any>(
-          setAlert({
-            msg: "Bỏ lưu event thành công!",
-            status: 200,
-            alertType: "success",
-          })
-        );
       } catch (error: any) {
         dispatch<any>(
           setAlert({
-            msg: "Xảy ra lỗi khi bỏ lưu event!",
+            msg: "Xảy ra lỗi khi tạo storager!",
             status: error.response.status,
             alertType: "error",
           })
@@ -247,9 +213,9 @@ export const unstorageEvent =
       }
     };
 
-// UNSTORAGE EVENT IN LIST
-export const unstorageEventInList =
-  (id: NumberSchema) =>
+// DELETE STORAGER
+export const deleteStorager =
+  (id: number) =>
     async (dispatch: Dispatch<UserActions | AlertActions>) => {
       const config: any = {
         header: {
@@ -258,23 +224,44 @@ export const unstorageEventInList =
       };
 
       try {
-        const { data } = await axios.delete(`${URI}/event/${id}`, config);
+        const { data } = await axios.put(`${URI}/unstorager/${id}`, config);
         dispatch({
-          type: types.UNSTORAGE_EVENT,
+          type: types.DELETE_STORAGER,
           payload: data,
         });
-        dispatch<any>(getEventStorage());
-        dispatch<any>(
-          setAlert({
-            msg: "Bỏ lưu event thành công!",
-            status: 200,
-            alertType: "success",
-          })
-        );
+        dispatch<any>(getEvents());
       } catch (error: any) {
         dispatch<any>(
           setAlert({
-            msg: "Xảy ra lỗi khi bỏ lưu event!",
+            msg: "Xảy ra lỗi khi xóa storager!",
+            status: error.response.status,
+            alertType: "error",
+          })
+        );
+      }
+    };
+
+// DELETE STORAGER IN LIST
+export const deleteStoragerInList =
+  (id: number) =>
+    async (dispatch: Dispatch<UserActions | AlertActions>) => {
+      const config: any = {
+        header: {
+          "Content-Type": "application/json",
+        },
+      };
+
+      try {
+        const { data } = await axios.put(`${URI}/unstorager/${id}`, config);
+        dispatch({
+          type: types.DELETE_STORAGER,
+          payload: data,
+        });
+        dispatch<any>(getStorager());
+      } catch (error: any) {
+        dispatch<any>(
+          setAlert({
+            msg: "Xảy ra lỗi khi xóa storager!",
             status: error.response.status,
             alertType: "error",
           })
@@ -292,7 +279,7 @@ export const getApplyJob =
     };
 
     try {
-      const { data } = await axios.get(`${URI}/jobApply`, config);
+      const { data } = await axios.get(`${URI}/jobUserApply`, config);
       dispatch({ type: types.GET_JOB_USER_APPLY, payload: data });
     } catch (error: any) {
       dispatch<any>(
@@ -305,9 +292,9 @@ export const getApplyJob =
     }
   };
 
-// APPLY JOB
-export const applyJob =
-  (id: NumberSchema) =>
+// USER APPLY JOB
+export const userApplyJob =
+  (eventId: number, jobId: number) =>
     async (dispatch: Dispatch<UserActions | AlertActions>) => {
       const config: any = {
         header: {
@@ -316,11 +303,12 @@ export const applyJob =
       };
 
       try {
-        const { data } = await axios.post(`${URI}/jobApply/${id}`, config);
+        const { data } = await axios.put(`${URI}/userApply/${eventId}/${jobId}`, config);
         dispatch({
-          type: types.APPLY_JOB,
+          type: types.USER_APPLY_JOB,
           payload: data,
         });
+        dispatch<any>(getEvents());
       } catch (error: any) {
         dispatch<any>(
           setAlert({
@@ -329,12 +317,12 @@ export const applyJob =
             alertType: "error",
           })
         );
-      }
+      } 
     };
 
-// UNAPPLY JOB
-export const unapplyJob =
-  (id: NumberSchema) =>
+// USER UNAPPLY JOB
+export const userUnApplyJob =
+  (eventId: number, jobId: number) =>
     async (dispatch: Dispatch<UserActions | AlertActions>) => {
       const config: any = {
         header: {
@@ -343,19 +331,12 @@ export const unapplyJob =
       };
 
       try {
-        const { data } = await axios.delete(`${URI}/jobApply/${id}`, config);
+        const { data } = await axios.put(`${URI}/userUnApply/${eventId}/${jobId}`, config);
         dispatch({
-          type: types.UNAPPLY_JOB,
+          type: types.USER_UNAPPLY_JOB,
           payload: data,
         });
         dispatch<any>(getEvents());
-        dispatch<any>(
-          setAlert({
-            msg: "Bỏ ứng tuyển thành công!",
-            status: 200,
-            alertType: "success",
-          })
-        );
       } catch (error: any) {
         dispatch<any>(
           setAlert({
@@ -365,7 +346,7 @@ export const unapplyJob =
           })
         );
       }
-    };
+    };  
 
 // GET PROFILE
 export const getProfile =

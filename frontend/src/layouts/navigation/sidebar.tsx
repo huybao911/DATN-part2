@@ -202,12 +202,12 @@ const SideBar: React.FC = (): JSX.Element => {
           <Box sx={{ px: 2, py: 3, display: 'inline-block', fontWeight: "bold" }}>
             {topLinks}
           </Box>
-          <Divider style={{ borderStyle: "dashed" }} />
+          <Divider />
 
           <NavSection />
           <Box flexGrow={1} />
 
-          <Divider style={{ borderStyle: "dashed" }} />
+          <Divider  />
           {bottomLinks}
 
         </Drawer>

@@ -234,7 +234,7 @@ export const getListCTV =
 
 // APPROVE USER APPLY JOB
 export const approveUserApplyJob =
-  (id: number) =>
+  (eventId: number, userApplyId: number) =>
     async (dispatch: Dispatch<ManagerActions | AlertActions>) => {
       const config: any = {
         header: {
@@ -243,7 +243,7 @@ export const approveUserApplyJob =
       };
 
       try {
-        const { data } = await axios.put(`${URI}/approveUser/${id}`, config);
+        const { data } = await axios.put(`${URI}/approveUser/${eventId}/${userApplyId}`, config);
         dispatch({
           type: types.APPROVE_USER_APPLY_JOB,
           payload: data,
@@ -269,7 +269,7 @@ export const approveUserApplyJob =
 
 // APPROVE USER APPLY JOB
 export const unapproveUserApplyJob =
-  (id: number) =>
+  (eventId: number, userApplyId: number) =>
     async (dispatch: Dispatch<ManagerActions | AlertActions>) => {
       const config: any = {
         header: {
@@ -278,7 +278,7 @@ export const unapproveUserApplyJob =
       };
 
       try {
-        const { data } = await axios.put(`${URI}/unapproveUser/${id}`, config);
+        const { data } = await axios.put(`${URI}/unapproveUser/${eventId}/${userApplyId}`, config);
         dispatch({
           type: types.UNAPPROVE_USER_APPLY_JOB,
           payload: data,

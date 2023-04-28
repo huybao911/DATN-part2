@@ -2,15 +2,18 @@ import * as React from 'react';
 import { makeStyles } from "@material-ui/core/styles";
 
 import { Avatar, Card, CardContent, CardHeader, CardMedia, Collapse, IconButton, Toolbar, Typography } from '@mui/material';
-import {  MoreVert } from '@mui/icons-material';
+import { MoreVert } from '@mui/icons-material';
 import TabContext from '@mui/lab/TabContext';
 import TabPanel from '@mui/lab/TabPanel';
 import { green } from '@mui/material/colors';
 import { Box } from '@mui/material';
-import { formatDistance} from 'date-fns';
+import { formatDistance } from 'date-fns';
+
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "redux/reducers";
 
 type Props = {
-    jobApply: any;
+    event: any;
 };
 
 const useStyles = makeStyles((theme) => ({
@@ -96,19 +99,28 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
-const FeedStoragePost: React.FC<Props> = ({ jobApply }): JSX.Element => {
-
+const FeedApplyJob: React.FC<Props> = ({ event }): JSX.Element => {
+    
     const [value, setValue] = React.useState('1');
+
+    const user = useSelector((state: RootState) => state.user);
 
     const PF = process.env.REACT_APP_PUBLIC_FOLDER;
 
-    const textAvatar = jobApply?.postId.poster.username ?? null;
+    const textAvatar = event?.poster.username ?? null;
     const letterAvatar = textAvatar.charAt(0).toUpperCase();
 
-    const lettercreatedAt = (formatDistance(new Date(jobApply?.postId.createdAt), Date.now(), {addSuffix: true})).split("about");
+    const lettercreatedAt = (formatDistance(new Date(event?.created_at), Date.now(), { addSuffix: true })).split("about");
 
     const classes = useStyles();
 
+    const findJobUserApply = event.usersApplyJob.filter((userapply: any) => userapply.userApply.username === user.user.username);
+
+    // const applySuccess = jobApply.notiApplyJob == "Bạn đã ứng tuyển thành công" ? (
+    //     <Typography sx={{ textAlign: 'left', fontSize: '14px' }}>
+    //         {jobApply?.jobId.jobDescription}
+    //     </Typography>
+    // ) : null
     return (
         <>
             <Toolbar className={classes.toolBar}>
@@ -128,7 +140,7 @@ const FeedStoragePost: React.FC<Props> = ({ jobApply }): JSX.Element => {
                                             <MoreVert />
                                         </IconButton>
                                     }
-                                    title={jobApply?.postId.poster.username ?? null}
+                                    title={event?.poster.username ?? null}
                                     titleTypographyProps={{ align: 'left', fontSize: '16px', fontWeight: 'bold', paddingBottom: '2px' }}
                                     subheader={lettercreatedAt}
                                     subheaderTypographyProps={{ align: 'left', fontSize: '12px' }}
@@ -136,17 +148,28 @@ const FeedStoragePost: React.FC<Props> = ({ jobApply }): JSX.Element => {
                                 </CardHeader>
 
                                 <CardContent>
-                                <Typography sx={{ textAlign: 'left', fontSize: '24px', fontWeight:"bold" }}>
-                                        {jobApply?.postId.title ?? null}
-                                    </Typography>
-                                    <Typography sx={{ textAlign: 'left', fontSize: '14px' }}>
-                                        {jobApply?.postId.content ?? null}
-                                    </Typography>
-                                </CardContent >
+
+                                    {findJobUserApply.map((job: any) =>
+                                        <Box>
+                                            <Box>
+                                                <Typography sx={{ textAlign: 'left', fontSize: '14px' }}>
+                                                    {job?.jobEvent.nameJob ?? null}
+                                                </Typography>
+                                            </Box>
+                                            <Box>
+                                                <Typography sx={{ textAlign: 'left', fontSize: '14px' }}>
+                                                    {job?.notiApplyJob ?? null}
+                                                </Typography>
+                                            </Box>
+                                        </Box>
+                                    )}
+                                    {/* {applySuccess} */ }
+                                </CardContent>
+
                                 <CardMedia
                                     className={classes.myMedia}
                                     component="img"
-                                    image={PF + jobApply?.postId.image ?? null}
+                                    image={PF + event?.image ?? null}
                                     alt="Paella dish"
                                 >
                                 </CardMedia>
@@ -163,4 +186,4 @@ const FeedStoragePost: React.FC<Props> = ({ jobApply }): JSX.Element => {
     );
 };
 
-export default FeedStoragePost;
+export default FeedApplyJob;

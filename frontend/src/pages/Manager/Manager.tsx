@@ -10,36 +10,6 @@ import { TableSortLabel, Toolbar, OutlinedInput, InputAdornment, Card, Container
 import SearchIcon from '@mui/icons-material/Search';
 import { Box } from "@mui/system";
 import { visuallyHidden } from '@mui/utils';
-// const useStyles = makeStyles((theme) => ({
-//   root: {
-//     maxWidth: "60%",
-//     margin: "auto",
-//   },
-//   btnLogin: {
-//     marginTop: theme.spacing(1.5),
-//     marginRight: theme.spacing(1),
-//     padding: theme.spacing(1, 2),
-//   },
-//   accordion: {
-//     marginBottom: theme.spacing(3),
-//     padding: theme.spacing(1),
-//   },
-//   tableCell: {
-//     position: 'absolute',
-//     left: '50%',
-//     top: '100%',
-//     transform: 'translate(-50%, -50%)'
-//   },
-//   animatedItem: {
-//     animation: `$myEffect 3000ms ${theme.transitions.easing.easeInOut}`
-//   },
-//   animatedItemExiting: {
-//     animation: `$myEffectExit 3000ms ${theme.transitions.easing.easeInOut}`,
-//     opacity: 0,
-//     transform: "translateY(-200%)"
-
-//   },
-// }));
 
 const StyledRoot = styled(Toolbar)(({ theme }) => ({
   height: 96,

@@ -80,7 +80,7 @@ const CreateEvent: React.FC<Props> = ({ event }): JSX.Element => {
                     onSubmit={onHandleSubmit}
                 >
                     {({ isSubmitting, handleSubmit }) => (
-                        <form noValidate onSubmit={handleSubmit}>
+                        <form noValidate onSubmit={handleSubmit} encType="multipart/form-data">
                             <FormEvent />        
                             <Button
                                 type='submit'

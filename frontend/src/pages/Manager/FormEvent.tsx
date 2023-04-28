@@ -13,7 +13,6 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-
 interface IValues {
     nameEvent: string;
     location: string;
@@ -24,9 +23,7 @@ interface IValues {
 
 const FormEvent: React.FC = (): JSX.Element => {
     const classes = useStyles();
-    const { values, handleChange, handleBlur, errors, touched } =
-        useFormikContext<IValues>();
-
+    const { values, handleChange, handleBlur, errors, touched } = useFormikContext<IValues>();
     return (
         <>
             <FormControl fullWidth className={classes.formControl}>
@@ -108,16 +105,16 @@ const FormEvent: React.FC = (): JSX.Element => {
                     hidden
                 />
                 </Button> */}
-                {/* <input
+                <input
                     // fullWidth
                     // variant="outlined"
                     accept=".png,.jpg"
                     name='image'
                     type='file'
-                    value={values.image}
+                    // value={values.image}
                     onChange={handleChange}
                     onBlur={handleBlur}
-                /> */}
+                />
             </FormControl>
         </>
     );

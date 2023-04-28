@@ -1,12 +1,10 @@
 import * as React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getStorager } from "redux/actions/user";
+import { getEvents } from "redux/actions/user";
 import { RootState } from "redux/reducers";
 import { IEvent } from "redux/types/event";
-import FeedStorageEvent from "pages/User/FeedStorageEvent";
-import { Typography } from '@mui/material';
-
-const StoragePost: React.FC = (): JSX.Element => {
+import FeedGuest from "pages/guest/FeedGuest";
+const Content: React.FC = (): JSX.Element => {
 
     const dispatch = useDispatch();
 
@@ -14,13 +12,15 @@ const StoragePost: React.FC = (): JSX.Element => {
     const user = useSelector((state: RootState) => state.user);
 
     React.useEffect(() => {
-        dispatch(getStorager());
+        dispatch(getEvents());
     }, [dispatch]);
 
     React.useEffect(() => {
         setEvents(() =>
             user?.events?.filter((event: any) =>
-            event.nameEvent
+                event.nameEvent || event.poster || event.approver || event.comments || event.quantityUser
+                || event.job || event.location || event.departmentEvent || event.costs || event.dayStart
+                || event.dayEnd || event.image
             ));
     }, [user]);
 
@@ -30,13 +30,12 @@ const StoragePost: React.FC = (): JSX.Element => {
 
     return (
         <>
-            <Typography style={{ fontSize: "30px", fontWeight: "bold" }}>Sự Kiện Đã Lưu</Typography>
             {events.map((event: any) =>
-                <FeedStorageEvent event={event} key={event._id} />) ?? (
-                    <p>No FeedStoragePost Found.</p>
+                <FeedGuest event={event} key={event._id} />) ?? (
+                    <p>No FeedContent Found.</p>
                 )}
         </>
     );
 };
 
-export default StoragePost;
+export default Content;

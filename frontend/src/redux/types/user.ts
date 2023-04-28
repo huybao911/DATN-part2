@@ -2,8 +2,6 @@ import types from "redux/actions/types";
 import { IDepartment } from "./department";
 import { IRole } from "./role";
 import { IEvent } from "./event";
-import { IEventStorage } from "./eventStorage";
-import { IApplyJob } from "./applyJob";
 import { IJobEvent } from "./jobEvent";
 
 export interface IUser {
@@ -48,20 +46,38 @@ interface IGetEvents {
   payload: IEvent[];
 }
 
-interface IGetEventStorage {
-  type: typeof types.GET_EVENTSTORAGE;
-  payload: IEventStorage[];
+interface IGetEventStorager {
+  type: typeof types.GET_STORAGER;
+  payload: IEvent[];
 }
-interface storageEvent {
-  type: typeof types.STORAGE_EVENT;
+
+interface ICreateStorager {
+  type: typeof types.CREATE_STORAGER;
   payload: {
     event: IEvent;
     id: number;
   };
 }
-interface unstorageEvent {
-  type: typeof types.UNSTORAGE_EVENT;
+
+interface IDeleteStorager {
+  type: typeof types.DELETE_STORAGER;
+   payload: {
+    event: IEvent;
+    id: number;
+  };
+}
+
+interface IUserApplyJob {
+  type: typeof types.USER_APPLY_JOB;
   payload: {
+    event: IEvent;
+    id: number;
+  };
+}
+
+interface IUserUnApplyJob {
+  type: typeof types.USER_UNAPPLY_JOB;
+   payload: {
     event: IEvent;
     id: number;
   };
@@ -69,21 +85,7 @@ interface unstorageEvent {
 
 interface IGetJobUserApply {
   type: typeof types.GET_JOB_USER_APPLY;
-  payload: IApplyJob[];
-}
-interface applyJob {
-  type: typeof types.APPLY_JOB;
-  payload: {
-    job: IJobEvent;
-    id: number;
-  };
-}
-interface unapplyJob {
-  type: typeof types.UNAPPLY_JOB;
-  payload: {
-    job: IJobEvent;
-    id: number;
-  };
+  payload: IEvent[];
 }
 
 interface IGetProfile {
@@ -123,12 +125,12 @@ export type UserActions =
   | IUserAuthError
   | IGetDepartments
   | IGetEvents
-  | IGetEventStorage
-  | storageEvent
-  | unstorageEvent
+  | IGetEventStorager
+  | ICreateStorager
+  | IDeleteStorager
   | IGetJobUserApply
-  | applyJob
-  | unapplyJob
+  | IUserApplyJob
+  | IUserUnApplyJob
   | IGetProfile
   | IUpdateProfile
   | IUserLogout;
@@ -143,7 +145,5 @@ export interface IUserState {
   departments: IDepartment[];
   events: IEvent[];
   jobs: IJobEvent[];
-  eventStorages: IEventStorage[];
-  applyJobs: IApplyJob[];
   users: IUser[];
 }

@@ -7,13 +7,14 @@ import TabContext from '@mui/lab/TabContext';
 import TabPanel from '@mui/lab/TabPanel';
 import { green } from '@mui/material/colors';
 import { Box } from '@mui/material';
-import { storageEvent, unstorageEventInList } from "redux/actions/user";
+import { createStorager, deleteStoragerInList } from "redux/actions/user";
 import { formatDistance } from 'date-fns';
 
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "redux/reducers";
 
 type Props = {
-    eventStorage: any;
+    event: any;
 };
 
 const useStyles = makeStyles((theme) => ({
@@ -99,27 +100,36 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
-const FeedStorageEvent: React.FC<Props> = ({ eventStorage }): JSX.Element => {
+const FeedStorageEvent: React.FC<Props> = ({ event }): JSX.Element => {
 
     const dispatch = useDispatch();
+    const user = useSelector((state: RootState) => state.user);
     const [value, setValue] = React.useState('1');
 
-    const [clicked, setClicked] = React.useState(true);
-
     function handleClickStorage() {
-        dispatch(storageEvent(eventStorage?.eventId._id));
+        dispatch(createStorager(event._id));
     }
 
     function handleClickUnStorage() {
-        dispatch(unstorageEventInList(eventStorage?.eventId._id));
+        dispatch(deleteStoragerInList(event._id));
     }
 
     const PF = process.env.REACT_APP_PUBLIC_FOLDER;
 
-    const textAvatar = eventStorage?.eventId.poster.username ?? null;
+    const textAvatar = event.poster.username ?? null;
     const letterAvatar = textAvatar.charAt(0).toUpperCase();
 
-    const lettercreatedAt = (formatDistance(new Date(eventStorage?.eventId.created_at), Date.now(), { addSuffix: true })).split("about");
+    const lettercreatedAt = (formatDistance(new Date(event.created_at), Date.now(), { addSuffix: true })).split("about");
+
+    const storager = event.storagers.map((storager: any) => storager.storager.username);
+
+    const storagers = event.storagers.some((storager: any) => user.user.username.includes(storager.storager.username));
+
+    const compareUser = storagers ? (
+        <Favorite onClick={handleClickUnStorage} sx={{ fontSize: '24px', color: 'red' }} />
+    ) : storager !== user.user.username ? (
+        <FavoriteBorder onClick={handleClickStorage} sx={{ fontSize: '24px', color: 'red' }} />
+    ) : null
 
     const classes = useStyles();
 
@@ -142,7 +152,7 @@ const FeedStorageEvent: React.FC<Props> = ({ eventStorage }): JSX.Element => {
                                             <MoreVert />
                                         </IconButton>
                                     }
-                                    title={eventStorage?.eventId.poster.username ?? null}
+                                    title={event.poster.username ?? null}
                                     titleTypographyProps={{ align: 'left', fontSize: '16px', fontWeight: 'bold', paddingBottom: '2px' }}
                                     subheader={lettercreatedAt}
                                     subheaderTypographyProps={{ align: 'left', fontSize: '12px' }}
@@ -151,39 +161,31 @@ const FeedStorageEvent: React.FC<Props> = ({ eventStorage }): JSX.Element => {
 
                                 <CardContent>
                                     <Typography sx={{ textAlign: 'left', fontSize: '24px', fontWeight: "bold" }}>
-                                        {eventStorage?.eventId.nameEvent ?? null}
+                                        {event.nameEvent ?? null}
                                     </Typography>
                                     <Typography sx={{ textAlign: 'left', fontSize: '14px' }}>
-                                        {eventStorage?.eventId.quantityUser ?? null}
+                                        {event.quantityUser ?? null}
                                     </Typography>
                                     <Typography sx={{ textAlign: 'left', fontSize: '14px' }}>
-                                        {eventStorage?.eventId.location ?? null}
+                                        {event.location ?? null}
                                     </Typography>
                                     <Typography sx={{ textAlign: 'left', fontSize: '14px' }}>
-                                        {eventStorage?.eventId.dayStart ?? null}
+                                        {event.dayStart ?? null}
                                     </Typography>
                                     <Typography sx={{ textAlign: 'left', fontSize: '14px' }}>
-                                        {eventStorage?.eventId.dayEnd ?? null}
+                                        {event.dayEnd ?? null}
                                     </Typography>
                                 </CardContent >
                                 <CardMedia
                                     className={classes.myMedia}
                                     component="img"
-                                    image={PF + eventStorage?.eventId.image ?? null}
+                                    image={PF + event.image ?? null}
                                     alt="Paella dish"
                                 >
                                 </CardMedia>
 
                                 <CardActions disableSpacing >
-                                    <IconButton onClick={() => setClicked(!clicked)} sx={{ border: '0px solid black', backgroundColor: '#D9D9D9', borderRadius: '4px' }} >
-                                        {clicked ? <Favorite onClick={handleClickUnStorage} sx={{ fontSize: '24px', color: 'red' }} /> : <FavoriteBorder onClick={handleClickStorage} sx={{ fontSize: '24px', color: 'red' }} />}
-                                        {/* <button onClick={(e) => dispatch(storagePost(post._id))}>Like</button>:<button>Unlike</button> */}
-                                    </IconButton>
-
-                                    <IconButton>
-                                        <Rating />
-                                    </IconButton>
-
+                                    {compareUser}
                                     <IconButton sx={{ ml: 'auto' }}>
                                         <ArrowRight />
                                     </IconButton>

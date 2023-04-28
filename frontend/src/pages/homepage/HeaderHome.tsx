@@ -112,7 +112,7 @@ const Homepage: React.FC = (): JSX.Element => {
                 <Typography>Sự Kiện Đã Lưu</Typography>
               </StyledMenuItem>
 
-              <StyledMenuItem component={NavLink} to={'/applyPost'}>
+              <StyledMenuItem component={NavLink} to={'/applyJob'}>
                 <ListItemIcon>
                   <Approval style={{ color: "black" }} fontSize="small" />
                 </ListItemIcon>

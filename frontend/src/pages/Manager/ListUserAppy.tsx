@@ -1,9 +1,9 @@
 import * as React from "react";
 import { styled, alpha } from "@material-ui/core/styles";
 import { useDispatch, useSelector } from "react-redux";
-import { getListUserApply, approveUserApplyJob, unapproveUserApplyJob } from "redux/actions/Manager";
+import { getListUserApply, getEvents, approveUserApplyJob, unapproveUserApplyJob } from "redux/actions/Manager";
 import { RootState } from "redux/reducers";
-import { IApplyJob } from "redux/types/applyJob";
+import { IEvent } from "redux/types/event";
 import { TableSortLabel, IconButton, Toolbar, OutlinedInput, InputAdornment, Button, Card, Container, Popover, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography } from "@mui/material";
 // @mui
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
@@ -71,13 +71,13 @@ function stableSort<T>(array: T[], comparator: (a: T, b: T) => number) {
 }
 
 interface DataUser {
-  _id: keyof IApplyJob;
-  event: keyof IApplyJob;
-  jobId: keyof IApplyJob;
-  userId: keyof IApplyJob;
-  applyStatus: keyof IApplyJob;
-  approve: keyof IApplyJob;
-  unapprove: keyof IApplyJob;
+  _id: keyof IEvent;
+  nameEvent: keyof IEvent;
+  nameJob: keyof IEvent;
+  userApply: keyof IEvent;
+  applyStatus: keyof IEvent;
+  approve: keyof IEvent;
+  unapprove: keyof IEvent;
 }
 
 interface HeadCell {
@@ -88,17 +88,17 @@ interface HeadCell {
 
 const headCells: HeadCell[] = [
   {
-    _id: 'event',
+    _id: 'nameEvent',
     numeric: false,
     label: 'Tên sự kiện',
   },
   {
-    _id: 'jobId',
+    _id: 'nameJob',
     numeric: false,
     label: 'Tên công việc',
   },
   {
-    _id: 'userId',
+    _id: 'userApply',
     numeric: false,
     label: 'Người ứng tuyển',
   },
@@ -175,15 +175,17 @@ const Users: React.FC = (): JSX.Element => {
   const dispatch = useDispatch();
 
 
-  const [applyJobs, setApplyJobs] = React.useState<IApplyJob[]>([]);
+  const [events, setEvents] = React.useState<IEvent[]>([]);
   const manager = useSelector((state: RootState) => state.manager);
+
+  const [anchorEl, setAnchorEl] = React.useState([null]);
 
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [filterName, setFilterName] = React.useState('');
 
   const [order, setOrder] = React.useState<Order>('asc');
-  const [orderBy, setOrderBy] = React.useState<keyof DataUser>('event');
+  const [orderBy, setOrderBy] = React.useState<keyof DataUser>('nameEvent');
 
 
 
@@ -210,20 +212,40 @@ const Users: React.FC = (): JSX.Element => {
     const keyword = event.target.value;
 
     if (keyword !== '') {
-      const results = manager?.appyjobs?.filter((applyJob: any) => {
-        return applyJob.postId.event.nameEvent.toLowerCase().startsWith(keyword.toLowerCase());
+      const results = manager?.events?.filter((event: any) => {
+        return event.nameJob.toLowerCase().startsWith(keyword.toLowerCase());
         // Use the toLowerCase() method to make it case-insensitive
       });
-      setApplyJobs(results);
+      setEvents(results);
     } else {
-      setApplyJobs(() => manager?.appyjobs?.filter((applyJob: any) => applyJob.postId || applyJob.userId));
+      setEvents(() => manager?.events?.filter((event: any) => event.nameEvent));
       // If the text field is empty, show all users
     }
 
     setFilterName(keyword);
   };
 
-  const sortApplyJob = stableSort(applyJobs, getComparator(order, orderBy));
+  const handleOpenMenu = (jobApply: any, index: any) => {
+    const newAnchorEls = [
+      ...anchorEl.slice(0, index),
+      jobApply.currentTarget,
+      ...anchorEl.slice(index + 1)
+    ];
+    setAnchorEl(newAnchorEls);
+  };
+
+  const handleCloseMenu = (index: any) => {
+    const newAnchorEls = [
+      ...anchorEl.slice(0, index),
+      null,
+      ...anchorEl.slice(index + 1)
+    ];
+    setAnchorEl(newAnchorEls);
+  };
+
+  const sortApplyJob = stableSort(events, getComparator(order, orderBy));
+
+  const checkUserApply = manager?.events?.filter((event: any) => event.nameEvent);
 
   React.useEffect(() => {
     dispatch(getListUserApply());
@@ -231,7 +253,7 @@ const Users: React.FC = (): JSX.Element => {
 
   React.useEffect(() => {
 
-    setApplyJobs(() => manager?.appyjobs?.filter((applyJob: any) => applyJob.postId || applyJob.userId));
+    setEvents(() => checkUserApply);
   }, [manager]);
 
   React.useEffect(() => {
@@ -279,33 +301,104 @@ const Users: React.FC = (): JSX.Element => {
                 orderBy={orderBy}
                 onRequestSort={handleRequestSort}
               />
-              {applyJobs && applyJobs.length > 0 ? (
+              {events && events.length > 0 ? (
                 <TableBody>
-                  {sortApplyJob.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((applyJob: any, index) =>
-                    <TableRow key={applyJob._id}>
-                      <TableCell align="left" sx={{ fontSize: '12px' }}>
-                        {applyJob.jobId.event.nameEvent}
+                  {sortApplyJob.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((event: any, index) =>
+                    <TableRow key={event._id}>
+                      <TableCell align="left" sx={{ width: "200px", fontSize: '12px' }}>
+                        {event.usersApplyJob.filter((jobApply: any) => jobApply.applyStatus.includes("Chờ phê duyệt")).map((job: any) =>
+                          <Box style={{ display: "flex", flexDirection: "column", marginTop: "20px", paddingBottom: "20px" }}>
+                            {job.jobEvent.event.nameEvent}
+                          </Box>
+                        )}
                       </TableCell>
+                      <TableCell align="left" sx={{ width: "200px", fontSize: '12px' }}>
+                        {event.usersApplyJob.filter((jobApply: any) => jobApply.applyStatus.includes("Chờ phê duyệt")).map((job: any) =>
+                          <Box style={{ display: "flex", flexDirection: "column", marginTop: "20px", paddingBottom: "20px" }}>
+                            {job.jobEvent.nameJob}
+                          </Box>
+                        )}
+                      </TableCell>
+                      <TableCell align="left" sx={{ width: "150px" }}>
+                        {event.usersApplyJob.filter((jobApply: any) => jobApply.applyStatus.includes("Chờ phê duyệt")).map((job: any, index: number) =>
+                          <Box style={{ display: "flex", flexDirection: "column", marginTop: "20px", paddingBottom: "20px" }}>
+                            <Button style={{ fontSize: '12px', fontWeight:"normal" ,textTransform: "lowercase", width:"40px" }} size="small" color="inherit" onClick={(jobApply) => handleOpenMenu(jobApply, index)} >
+                              {job.userApply.username}
+                            </Button>
+                            <Popover
+                              open={!!anchorEl[index]}
+                              anchorEl={anchorEl[index]}
+                              onClose={() => handleCloseMenu(index)}
+                              anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
+                              transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                              PaperProps={{
+                                sx: {
 
-                      <TableCell align="left" sx={{ fontSize: '12px' }}>
-                        {applyJob.jobId.nameJob}
-                      </TableCell>
+                                  width: 340,
+                                  '& .MuiMenuItem-root': {
+                                    px: 1,
+                                    typography: 'body2',
+                                    borderRadius: 0.75,
+                                  },
+                                },
+                              }}
+                            >
+                              <Box style={{ display: "flex", flexDirection: "column" }}>
+                                <Box sx={{textAlign:"center", fontWeight:"bold", marginBottom:"10px"}}>
+                                  Thông tin của {job.userApply.username}
+                                </Box>
+                                <Box>
+                                  Tên: {job.userApply.fullName}
+                                </Box>
+                                <Box>
+                                  Khoa: {job.userApply.department.nameDepartment}
+                                </Box>
+                                <Box>
+                                  MSSV: {job.userApply.mssv}
+                                </Box>
+                                <Box>
+                                  Lớp: {job.userApply.classUser}
+                                </Box>
+                                <Box>
+                                  Sđt: {job.userApply.phone}
+                                </Box>
+                              </Box>
+                            </Popover>
+                          </Box>
 
-                      <TableCell align="left" sx={{ fontSize: '12px' }}>
-                        {applyJob.userId.username}
+                        )}
                       </TableCell>
-                      <TableCell align="left" sx={{ fontSize: '12px' }}>
-                        {applyJob.applyStatus}
+                      {/* <TableCell align="left" sx={{ width: "200px", fontSize: '12px' }}>
+                        {event.usersApplyJob.filter((jobApply: any) => jobApply.applyStatus.includes("Chờ phê duyệt")).map((job: any) =>
+                          <Box style={{ display: "flex", flexDirection: "column", marginTop: "20px", paddingBottom: "20px" }}>
+                            {job.userApply.username}
+                          </Box>
+                        )}
+                      </TableCell> */}
+                      <TableCell align="left" sx={{ width: "150px", fontSize: '12px' }}>
+                        {event.usersApplyJob.filter((jobApply: any) => jobApply.applyStatus.includes("Chờ phê duyệt")).map((job: any) =>
+                          <Box style={{ display: "flex", flexDirection: "column", marginTop: "20px", paddingBottom: "20px" }}>
+                            {job.applyStatus}
+                          </Box>
+                        )}
                       </TableCell>
-                      <TableCell align="left">
-                      <IconButton onClick={(e) => dispatch(approveUserApplyJob(applyJob._id))} style={{color:"green"}}>
-                        <CheckCircleOutlineIcon/>
-                      </IconButton>
+                      <TableCell align="left" sx={{ width: "50px", fontSize: '12px' }}>
+                        {event.usersApplyJob.filter((jobApply: any) => jobApply.applyStatus.includes("Chờ phê duyệt")).map((job: any) =>
+                          <Box style={{ display: "flex", flexDirection: "column", marginTop: "20px", marginBottom: "20px" }}>
+                            <IconButton onClick={(e) => dispatch(approveUserApplyJob(event._id, job._id))} style={{ color: "green" }}>
+                              <CheckCircleOutlineIcon />
+                            </IconButton>
+                          </Box>
+                        )}
                       </TableCell>
-                      <TableCell align="left">
-                      <IconButton onClick={(e) => dispatch(unapproveUserApplyJob(applyJob._id))} style={{color:"red"}}>
-                        <HighlightOffIcon/>
-                      </IconButton>
+                      <TableCell align="left" sx={{ width: "50px", fontSize: '12px' }}>
+                        {event.usersApplyJob.filter((jobApply: any) => jobApply.applyStatus.includes("Chờ phê duyệt")).map((job: any) =>
+                          <Box style={{ display: "flex", flexDirection: "column", marginTop: "20px", marginBottom: "20px" }}>
+                            <IconButton onClick={(e) => dispatch(unapproveUserApplyJob(event._id, job._id))} style={{ color: "red" }}>
+                              <HighlightOffIcon />
+                            </IconButton>
+                          </Box>
+                        )}
                       </TableCell>
                     </TableRow>
                   )}
@@ -329,7 +422,7 @@ const Users: React.FC = (): JSX.Element => {
                       }}
                       rowsPerPageOptions={[5, 10, 25]}
                       labelRowsPerPage={"Số lượng hàng:"}
-                      count={applyJobs.length}
+                      count={events.length}
                       rowsPerPage={rowsPerPage}
                       page={page}
                       onPageChange={handleChangePage}

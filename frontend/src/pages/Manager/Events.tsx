@@ -3,20 +3,36 @@ import { useDispatch, useSelector } from "react-redux";
 import { getEvents, deleteEvent } from "redux/actions/Manager";
 import { RootState } from "redux/reducers";
 import { IEvent } from "redux/types/event";
-
-import { Button, Container, Typography, Stack, Card, Popover, Box, Toolbar } from "@mui/material";
-import CardHeader from '@mui/material/CardHeader';
-import CardMedia from '@mui/material/CardMedia';
-import CardContent from '@mui/material/CardContent';
-import Avatar from '@mui/material/Avatar';
-import { red } from '@mui/material/colors';
-
+import UpdateEvent from "pages/Manager/UpdateEvent";
+import ClearIcon from '@mui/icons-material/Clear';
+import RefreshIcon from '@mui/icons-material/Refresh';
+import AddIcon from '@mui/icons-material/Add';
 
 import { Link } from 'react-router-dom';
-import UpdateEvent from "pages/Manager/UpdateEvent";
+import { Box as BoxButton } from '@mui/material';
+
+import { Button, Container, Typography, Card, CardContent, CardMedia, Box, Popover, Avatar, CardHeader, Grid, Divider } from "@material-ui/core";
+import { styled } from "@material-ui/core/styles";
+
 const Posts: React.FC = (): JSX.Element => {
 
     const dispatch = useDispatch();
+
+    const StyledRoot = styled(Card)(({ theme }) => ({
+        display: 'flex',
+        justifyContent: 'space-between',
+        backgroundColor: 'white',
+        padding: theme.spacing(3, 3, 0, 3),
+        flexDirection: "column",
+        color: 'black',
+        marginTop: "40px",
+        margin: '0px 100px',
+        paddingBottom: "40px",
+        paddingLeft: '50px',
+        paddingRight: '50px',
+        borderRadius: "22px",
+        boxShadow: "rgba(145, 158, 171, 0.2) 0px 0px 2px 0px, rgba(145, 158, 171, 0.12) 0px 12px 24px -4px"
+    }));
 
     const [events, setEvents] = React.useState<IEvent[]>([]);
     const [anchorEl, setAnchorEl] = React.useState([null]);
@@ -64,98 +80,180 @@ const Posts: React.FC = (): JSX.Element => {
     };
 
     React.useEffect(() => {
-        document.title = "EVENT";
+        document.title = "Event | Manager";
     }, []);
 
     return (
-        <>
 
-            <Box>
-                <Typography variant="h4" gutterBottom>
-                    Sự Kiện
-                </Typography>
-
-                <Box component={Link} to={'/event/newevent'}>Tạo Sự Kiện</Box>
-
+        <Container style={{ color: '#rgb(33, 43, 54)' }}>
+            <Box style={{ display: "flex", flexDirection: "row" }}>
+                <Box style={{ margin: '0px 100px', }}>
+                    <Typography gutterBottom style={{ color: "black", fontSize: "20px", fontWeight: 'bold' }}>
+                        Danh Sách Sự Kiện
+                    </Typography>
+                </Box>
+                <Box flexGrow={1}/>
+                <BoxButton component={Link} to='/event/newevent' style={{ fontSize: '14px', textDecoration: "none", color: "black", marginRight:"100px" }}>
+                    <Box style={{
+                        border: '1px solid rgba(158, 158, 158, 0.32)',
+                        borderRadius: '10px', textAlign: 'center',
+                        marginTop: '0.5px', padding: '11px', color: "white", backgroundColor: '#00ab55',
+                        width: 140, display: 'flex', flexDirection: 'row', justifyContent: 'center'
+                    }}>
+                        <AddIcon style={{ width: '16px',  color: "white", marginRight: "12px" }} />
+                        <Typography style={{ fontSize: '14px', paddingTop: "2.5px" }} >
+                            Tạo Sự Kiện
+                        </Typography>
+                    </Box>
+                </BoxButton>
             </Box>
+            <StyledRoot>
 
-            <Container>
-                <Toolbar style={{ display: "flex", flexDirection: "column" }}>
+                <Box>
                     {events.map((event: any, index) =>
                         <Box key={event._id}>
-                            <Box>
-                                <Card sx={{ maxWidth: 500, height: 493 }}>
+
+                            <Box style={{ fontSize: '34px', lineHeight: 3, fontWeight: '700', letterSpacing: 0.4 }}>
+                                {event?.nameEvent ?? null}
+                            </Box>
+
+                            <Box style={{ display: "flex", justifyContent: "center", alignItems: "center", marginBottom: "20px" }}>
+
+                                <Box
+                                    style={{
+                                        display: "flex", flexDirection: "row", alignItems: "center",
+                                        borderRadius: "40px",
+                                    }}>
+                                    <Avatar style={{ backgroundColor: "red", marginRight: "15px", width: '30px', height: '30px', fontSize: '13px' }}>
+                                        {event.poster.username.charAt(0).toUpperCase()}
+                                    </Avatar>
                                     <Box>
-                                        <Box>
-                                            <Avatar sx={{ bgcolor: red[500] }} style={{ marginRight: "15px", width: '28px', height: '28px', fontSize: '13px' }}>
-                                                {event?.poster.username.charAt(0).toUpperCase()}
-                                            </Avatar>
-                                            <Typography style={{ fontWeight: "bold", fontSize: '13px' }}>{event?.poster.username}</Typography>
-                                        </Box>
-                                        <Box flexGrow={1} />
-                                        <CardContent>
-                                            <Typography variant="body2" color="text.secondary">
-                                                {event?.nameEvent ?? null}
-                                            </Typography>
-                                            <Typography variant="body2" color="text.secondary">
-                                                {event?.quantityUser ?? null}
-                                            </Typography>
-                                            <Typography variant="body2" color="text.secondary">
-                                                {event?.costs ?? null}
-                                            </Typography>
-                                            <Typography variant="body2" color="text.secondary">
-                                                {event?.location ?? null}
-                                            </Typography>
-                                            <Typography variant="body2" color="text.secondary">
-                                                {event?.dayStart ?? null}
-                                            </Typography>
-                                            <Typography variant="body2" color="text.secondary">
-                                                {event?.dayEnd ?? null}
-                                            </Typography>
-                                        </CardContent>
+                                        <Typography style={{ fontWeight: "600", fontSize: '15px' }}>{event.poster.username}</Typography>
+                                        <Typography style={{ fontWeight: "400", fontSize: '13px', color: 'rgb(145, 158, 171)' }}>{event.poster.department.nameDepartment}</Typography>
                                     </Box>
+                                </Box>
+                                <Box flexGrow={1} />
 
-                                    {/* {formatDate(post?.createdAt.slice(0, 10))} */}
-
-                                    <CardMedia
-                                        component="img"
-                                        height="300"
-                                        image={PF + event?.image ?? null}
-                                        alt="Paella dish"
-                                    />
-                                </Card>
-                                <Button style={{ backgroundColor: "black", color: "white", marginTop: "10px", height: "43px", width: "100px" }} onClick={(event) => handleOpenMenu(event, index)} >
-                                    Cập Nhật
+                                <Button style={{ color: "white", backgroundColor: '#00ab55', marginRight: 20, textTransform: 'capitalize', borderRadius: '10px', padding: '4px 12px', fontSize: '12px' }} onClick={(event) => handleOpenMenu(event, index)}  >
+                                    <RefreshIcon style={{ width: "16px", marginRight: '4px', fontWeight: '600' }} />
+                                    Cập nhật
                                 </Button>
-                                <Popover
-                                    open={!!anchorEl[index]}
-                                    anchorEl={anchorEl[index]}
-                                    onClose={() => handleCloseMenu(index)}
-                                    anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
-                                    transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-                                    PaperProps={{
-                                        sx: {
-                                            p: 1,
-                                            width: 340,
-                                            '& .MuiMenuItem-root': {
-                                                px: 1,
-                                                typography: 'body2',
-                                                borderRadius: 0.75,
-                                            },
-                                        },
-                                    }}
-                                >
-                                    <Box>
-                                        <UpdateEvent event={event} key={event._id} />
-                                    </Box>
-                                </Popover>
-                                <Button style={{ backgroundColor: "red", color: "white", marginTop: "10px", marginLeft: "10px", height: "43px", width: "100px" }} onClick={(e) => dispatch(deleteEvent(event._id))} >
+                                <Button style={{ color: "white", backgroundColor: '#FF5630', textTransform: 'capitalize', borderRadius: '10px', fontSize: '12px', padding: '4px 12px' }} onClick={(e) => dispatch(deleteEvent(event._id))} >
+                                    <ClearIcon style={{ width: "16px", marginRight: '4px' }} />
                                     Xóa
                                 </Button>
                             </Box>
-                            <Box>
-                                <Typography style={{ fontWeight: "bold" }}>Bình luận của Quản Lý Cấp Cao</Typography>
+
+                            <Divider style={{ margin: '30px 0px' }} />
+                            <Typography gutterBottom style={{ color: "black", fontSize: "16px", fontWeight: '600' }}>
+                                Nội dung
+                            </Typography>
+                            <Box style={{ fontSize: '13px' }}>This is detail content</Box>
+                            {/* Picture */}
+                            <Box style={{ display: "flex", justifyContent: "center", alignItems: "center", marginTop: 40, }}>
+                                <CardMedia
+                                    component="img"
+                                    alt="Paella dish"
+                                    src={PF + event?.image ?? null}
+                                    style={{
+                                        width: '100%',
+                                        height: '100%',
+                                        borderRadius: '14px'
+                                    }}
+                                />
                             </Box>
+
+                            <Divider style={{ margin: '30px 0px' }} />
+
+                            <Typography gutterBottom style={{ color: "black", fontSize: "16px", fontWeight: '600' }}>
+                                Chi tiết sự kiện
+                            </Typography>
+
+                            {/* detail word */}
+                            <Box style={{ marginTop: 20, fontSize: '13px' }}>
+                                <Grid container item={true} justifyContent="center"
+                                    spacing={4}
+                                    xs={12}
+                                >
+
+                                    <Grid item xs={4}>
+                                        <Box style={{ color: 'rgb(145, 158, 171)', paddingBottom: '10px', textTransform: 'uppercase' }}>Công việc</Box>
+                                        {event.job.map((job: any) =>
+                                            <Box key={job._id} style={{ padding: '2px 0px' }}>
+                                                • {job.nameJob}
+                                            </Box>
+                                        )}
+                                    </Grid>
+
+                                    <Grid item xs={4} >
+                                        <Box style={{ color: 'rgb(145, 158, 171)', paddingBottom: '10px', textTransform: 'uppercase' }}>Số lượng</Box>
+                                        <Box>
+                                            {event?.quantityUser ?? null}
+                                        </Box>
+                                    </Grid>
+
+                                    <Grid item xs={4} >
+                                        <Box style={{ color: 'rgb(145, 158, 171)', paddingBottom: '10px', textTransform: 'uppercase' }}>Tổng tiền</Box>
+                                        <Box>
+                                            {new Intl.NumberFormat().format(event.costs)} VND
+                                        </Box>
+                                    </Grid>
+
+                                    <Grid item xs={4}>
+                                        <Box style={{ color: 'rgb(145, 158, 171)', paddingBottom: '10px', textTransform: 'uppercase' }}>Địa chỉ</Box>
+                                        <Box>
+                                            {event?.location ?? null}
+                                        </Box>
+                                    </Grid>
+
+                                    <Grid item xs={4} >
+                                        <Box style={{ color: 'rgb(145, 158, 171)', paddingBottom: '10px', textTransform: 'uppercase' }}>Ngày bắt đầu</Box>
+                                        <Box>
+                                            {event?.dayStart ?? null}
+                                        </Box>
+                                    </Grid>
+
+                                    <Grid item xs={4} >
+                                        <Box style={{ color: 'rgb(145, 158, 171)', paddingBottom: '10px', textTransform: 'uppercase' }}>Ngày kết thúc</Box>
+                                        <Box>
+                                            {event?.dayEnd ?? null}
+                                        </Box>
+                                    </Grid>
+
+                                    {/* <Grid item xs={4} style={{ textAlign: "center" }}>
+                                        <Box>Ngày kết thúc</Box>
+                                        <Box>
+                                            {event?.dayEnd ?? null}
+                                        </Box>
+                                    </Grid> */}
+                                </Grid>
+                            </Box>
+
+
+
+
+                            <Divider style={{ margin: '30px 0px' }} />
+
+
+                            {/* comment */}
+                            <Popover
+                                open={!!anchorEl[index]}
+                                anchorEl={anchorEl[index]}
+                                onClose={() => handleCloseMenu(index)}
+                                anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
+                                transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                                PaperProps={{
+                                }}
+                            >
+                                <Box>
+                                    <UpdateEvent event={event} key={event._id} />
+                                </Box>
+                            </Popover>
+
+                            <Typography gutterBottom style={{ color: "black", fontSize: "16px", fontWeight: '600' }}>
+                                Bình luận
+                            </Typography>
+
                             {event.comments.map((comment: any) =>
                                 <Box>
                                     <Card style={{ maxWidth: 400, height: 190, boxShadow: "none" }}>
@@ -176,13 +274,15 @@ const Posts: React.FC = (): JSX.Element => {
                                     </Card>
                                 </Box>
                             )}
+
+
                         </Box>
                     )}
-                </Toolbar>
+                </Box>
+            </StyledRoot>
 
-            </Container>
+        </Container>
 
-        </>
     );
 };
 

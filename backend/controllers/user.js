@@ -5,8 +5,6 @@ const User = require("../models/User");
 const Department = require("../models/Department");
 const Role = require("../models/Role");
 const Event = require("../models/Event");
-const EventStorage = require("../models/EventStorage");
-const ApplyJob = require("../models/ApplyJob");
 const JobEvent = require("../models/JobEvent");
 
 exports.register = async (req, res, next) => {
@@ -26,7 +24,7 @@ exports.register = async (req, res, next) => {
     const token = sign({ user, getRole, getDepartment }, process.env.JWT_SECRET, { expiresIn: 360000 });
     return res
       .status(200)
-      .json(getRole.keyRole === "user" ? { token, user: { ...user._doc, password: null, fullName: null, birthday: null, mssv: null, classUser: null, phone: null, address: null }, getRole } : getRole.keyRole === "admin" ? { token, admin: { ...user._doc, password: null }, getRole }: getRole.keyRole === "smanager" ? { token, smanager: { ...user._doc, password: null }, getRole } : { token, manager: { ...user._doc, password: null }, getRole }) //role: getRole, department: getDepartment
+      .json(getRole.keyRole === "user" ? { token, user: { ...user._doc, password: null, fullName: null, birthday: null, mssv: null, classUser: null, phone: null, address: null }, getRole } : getRole.keyRole === "admin" ? { token, admin: { ...user._doc, password: null }, getRole } : getRole.keyRole === "smanager" ? { token, smanager: { ...user._doc, password: null }, getRole } : { token, manager: { ...user._doc, password: null }, getRole }) //role: getRole, department: getDepartment
 
   } catch (error) {
     return res.status(500).send(error.message);
@@ -77,22 +75,9 @@ exports.resetPassword = async (req, res, next) => {
   }
 };
 
-exports.getAuthUser = async (req, res, next) => {
-  try {
-    const user = await User.findById(req?.user?._id).select("-password").lean();
-    let getRole = await Role.findById(user.role);
-    let getDepartment = await Department.findById(user.department);
-    if (!user)
-      return res.status(400).send("User not found, Authorization denied..");
-    return res.status(200).json({ user: { ...user }, getRole, getDepartment });
-  } catch (error) {
-    return res.status(500).send(error.message);
-  }
-};
-
 exports.getEvents = async (req, res) => {
   const smanagerRole = await User.find({ role: "640cc3c229937ffacc4359f8" });
-  const smanagerEvent = await Event.find({ approver: smanagerRole }).populate("poster").populate("approver");
+  const smanagerEvent = await Event.find({ approver: smanagerRole }).populate("poster").populate({ path: "storagers", populate: [{ path: "storager" }]}).populate({ path: "usersApplyJob", populate: [{ path: "userApply" }]}).populate({ path: "usersApplyJob", populate: [{ path: "jobEvent" }]});
   try {
     return res.status(200).json(smanagerEvent);
   } catch (error) {
@@ -100,116 +85,128 @@ exports.getEvents = async (req, res) => {
   }
 };
 
-exports.storageEvent = async (req, res) => {
+exports.getEventStorager = async (req, res) => {
   const userStorage = await User.findById(req?.user?._id).populate("role").populate("department");
-  const { id } = req.params;
-  const eventStorage = await Event.findById({ _id: id });
+  const findEvent = await Event.find({ storagers: { $elemMatch: { storager: userStorage._id } } }).populate("poster").populate({ path: "storagers", populate: [{ path: "storager" }]});
   try {
-    if (!eventStorage) {
-      throw new Error("Event does not exist");
-    }
-    const existingEventStorage = await EventStorage.findOne({ eventId: eventStorage, userId: userStorage, });
-
-    if (existingEventStorage) {
-      throw new Error("Event is already storage");
-    }
-
-    const newEventStorage = new EventStorage({
-      eventId: eventStorage,
-      userId: userStorage,
-    });
-    await newEventStorage.save();
-
-    res.status(200).json(newEventStorage);
-  } catch (err) {
-    res.status(404).json({ message: err.message });
+    return res.status(200).json(findEvent);
+  } catch (error) {
+    return res.status(500).json(error);
+  }
+};
+exports.createStorager = async (req, res) => {
+  const { id } = req.params;
+  const userStorage = await User.findById(req?.user?._id).populate("role").populate("department");
+  try {
+    if (!req.user) return res.status(400).send("You dont have permission");
+    const event = await Event.findById(id).lean();
+    if (!event) return res.status(400).send("Event does not exist");
+    const eventObj = {
+      storager: userStorage,
+    };
+    const newStorager = await Event.findByIdAndUpdate(
+      { _id: id },
+      {
+        $push: {
+          storagers: [{
+            storager: eventObj.storager,
+          }]
+        }
+      },
+      { new: true }
+    );
+    return res.status(200).json(newStorager);
+  } catch (error) {
+    console.log(error.message);
+    return res.status(500).json(error);
+  }
+};
+exports.deleteStorager = async (req, res) => {
+  const { id } = req.params;
+  const userStorage = await User.findById(req?.user?._id).populate("role").populate("department");
+  try {
+    if (!req.user) return res.status(400).send("You dont have permission");
+    const newStorager = await Event.findOneAndUpdate(
+      { _id: id },
+      {
+        $pull: {
+          storagers: {
+            storager: userStorage._id,
+          }
+        }
+      },
+      { new: true }
+    );
+    return res.status(200).json(newStorager);
+  } catch (error) {
+    console.log(error.message);
+    return res.status(500).json(error);
   }
 };
 
-exports.unstorageEvent = async (req, res) => {
-  const userStorage = await User.findById(req?.user?._id).populate("role").populate("department");
-  const { id } = req.params;
-  const eventStorage = await Event.findById({ _id: id });
+exports.getJobApply = async (req, res) => {
+  const userApplyJob = await User.findById(req?.user?._id).populate("role").populate("department");
+  const findEvent = await Event.find({ usersApplyJob: { $elemMatch: { userApply: userApplyJob._id }}}).populate("poster").populate({ path: "usersApplyJob", populate: [{ path: "userApply" }]}).populate({ path: "usersApplyJob", populate: [{ path: "jobEvent", populate: [{ path: "event" }] }] });
+  // const findJobUserApply = findEvent.map((userapply) => userapply.usersApplyJob.filter((userapply) => userapply.userApply.username === userApplyJob.username));
   try {
-    if (!eventStorage) {
-      throw new Error("Event does not exist");
-    }
-    const RemoveEventStorage = await EventStorage.findOne({ eventId: eventStorage, userId: userStorage });
-
-    if (!RemoveEventStorage) {
-      throw new Error("Event is already not storage");
-    }
-    await RemoveEventStorage.remove();
-
-    res.status(200).send("EventStorage has been deleted");
-  } catch (err) {
-    res.status(404).json({ message: err.message });
-  }
-};
-
-exports.getEventStorage = async (req, res) => {
-  const userStorage = await User.findById(req?.user?._id).populate("role").populate("department");
-  const findEventStorage = await EventStorage.find({ userId: userStorage }).populate("userId").populate({ path: "eventId", populate: [{ path: "poster" }] });
-  try {
-    return res.status(200).json(findEventStorage);
+    return res.status(200).json(findEvent);
   } catch (error) {
     return res.status(500).json(error);
   }
 };
 
-exports.applyJob = async (req, res) => {
+exports.createUserApplyJob = async (req, res) => {
+  const { eventId, jobId } = req.params;
   const userApplyJob = await User.findById(req?.user?._id).populate("role").populate("department");
-  const { id } = req.params;
-  const jobUserApply = await JobEvent.findById({ _id: id });
   try {
-    if (!jobUserApply) {
-      throw new Error("ApplyJob does not exist");
-    }
-    const existingJobUserApply = await ApplyJob.findOne({ jobId: jobUserApply, userId: userApplyJob, });
-
-    if (existingJobUserApply) {
-      throw new Error("ApplyJob is already apply");
-    }
-
-    const newJobUserApply = new ApplyJob({
-      jobId: jobUserApply,
-      userId: userApplyJob,
-    });
-    await newJobUserApply.save();
-
-    res.status(200).json(newJobUserApply);
-  } catch (err) {
-    res.status(404).json({ message: err.message });
-  }
-};
-
-exports.unapplyJob = async (req, res) => {
-  const userApplyJob = await User.findById(req?.user?._id).populate("role").populate("department");
-  const { id } = req.params;
-  const jobUserApply = await JobEvent.findById({ _id: id });
-  try {
-    if (!jobUserApply) {
-      throw new Error("ApplyJob does not exist");
-    }
-    const RemoveJobUserApply = await ApplyJob.findOne({ jobId: jobUserApply, userId: userApplyJob });
-
-    if (!RemoveJobUserApply) {
-      throw new Error("ApplyJob is already not apply");
-    }
-    await RemoveJobUserApply.remove();
-
-    res.status(200).send("ApplyJob has been deleted");
-  } catch (err) {
-    res.status(404).json({ message: err.message });
-  }
-};
-
-exports.getJobApplyJob = async (req, res) => {
-  const userApplyJob = await User.findById(req?.user?._id).populate("role").populate("department");
-  const findJobUserApply = await ApplyJob.find({ userId: userApplyJob }).populate("userId").populate({ path: "jobId", populate: [{ path: "event" }] });
-  try {
-    return res.status(200).json(findJobUserApply);
+    if (!req.user) return res.status(400).send("You dont have permission");
+    const event = await Event.findById(eventId).lean();
+    if (!event) return res.status(400).send("Event does not exist");
+    const job = await JobEvent.findById(jobId).populate("event");
+    if (!job) return res.status(400).send("Job does not exist");
+    const eventObj = {
+      userApply: userApplyJob,
+      jobEvent: job,
+    };
+    const newUserApply = await Event.findByIdAndUpdate(
+      { _id: eventId },
+      {
+        $push: {
+          usersApplyJob: [{
+            userApply: eventObj.userApply,
+            jobEvent: eventObj.jobEvent,
+          }]
+        },
+      },
+      { new: true }
+    );
+    return res.status(200).json(newUserApply);
   } catch (error) {
+    console.log(error.message);
+    return res.status(500).json(error);
+  }
+};
+
+exports.deleteUserApplyJob = async (req, res) => {
+  const { eventId, jobId } = req.params;
+  const userStorage = await User.findById(req?.user?._id).populate("role").populate("department");
+  try {
+    if (!req.user) return res.status(400).send("You dont have permission");
+    const newUserApply = await Event.findOneAndUpdate(
+      { _id: eventId },
+      {
+        $pull: {
+          usersApplyJob: {
+            userApply: userStorage._id,
+            jobEvent: jobId,
+          }
+        }
+      },
+      { new: true }
+    );
+    return res.status(200).json(newUserApply);
+  } catch (error) {
+    console.log(error.message);
     return res.status(500).json(error);
   }
 };
@@ -269,5 +266,18 @@ exports.getDepartments = async (req, res, next) => {
     return res.status(200).json(await Department.find().lean());
   } catch (error) {
     return res.status(500).json(error);
+  }
+};
+
+exports.getAuthUser = async (req, res, next) => {
+  try {
+    const user = await User.findById(req?.user?._id).select("-password").lean();
+    let getRole = await Role.findById(user.role);
+    let getDepartment = await Department.findById(user.department);
+    if (!user)
+      return res.status(400).send("User not found, Authorization denied..");
+    return res.status(200).json({ user: { ...user }, getRole, getDepartment });
+  } catch (error) {
+    return res.status(500).send(error.message);
   }
 };

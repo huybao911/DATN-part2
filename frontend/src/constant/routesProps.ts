@@ -12,19 +12,19 @@ type ROUTES = {
 const routesProps: ROUTES[] = [
   //GUEST
   {
-    name: "login",
-    path: "/login",
-    component: React.lazy(() => import("pages/auth/Login")),
+    name: "homePage",
+    path: "/",
+    component: React.lazy(() => import("pages/guest/Guest")),
     exact: true,
     keyRole: "guest",
     auth: false,
   },
   {
-    name: "homepage",
-    path: "/",
-    component: React.lazy(() => import("pages/contents/Content")),
+    name: "login",
+    path: "/login",
+    component: React.lazy(() => import("pages/auth/Login")),
     exact: true,
-    // keyRole: "guest",
+    keyRole: "guest",
     auth: false,
   },
   {
@@ -119,7 +119,7 @@ const routesProps: ROUTES[] = [
     keyRole: "smanager",
     auth: true,
   },
- 
+
 
   //MANAGER
   {
@@ -182,6 +182,14 @@ const routesProps: ROUTES[] = [
 
   //USER
   {
+    name: "contentUser",
+    path: "/user",
+    component: React.lazy(() => import("pages/contents/Content")),
+    exact: true,
+    keyRole: "user",
+    auth: true,
+  },
+  {
     name: "storageEvent",
     path: "/storageEvent",
     component: React.lazy(() => import("pages/User/StorageEvent")),
@@ -190,9 +198,9 @@ const routesProps: ROUTES[] = [
     auth: true,
   },
   {
-    name: "applyPost",
-    path: "/applyPost",
-    component: React.lazy(() => import("pages/User/ApplyPost")),
+    name: "applyJob",
+    path: "/applyJob",
+    component: React.lazy(() => import("pages/User/ApplyJob")),
     exact: true,
     keyRole: "user",
     auth: true,
