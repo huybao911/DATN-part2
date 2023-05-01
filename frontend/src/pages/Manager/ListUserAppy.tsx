@@ -1,10 +1,10 @@
 import * as React from "react";
 import { styled, alpha } from "@material-ui/core/styles";
 import { useDispatch, useSelector } from "react-redux";
-import { getListUserApply, getEvents, approveUserApplyJob, unapproveUserApplyJob } from "redux/actions/Manager";
+import { getListUserApply, approveUserApplyJob, unapproveUserApplyJob } from "redux/actions/Manager";
 import { RootState } from "redux/reducers";
 import { IEvent } from "redux/types/event";
-import { TableSortLabel, IconButton, Toolbar, OutlinedInput, InputAdornment, Button, Card, Container, Popover, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography } from "@mui/material";
+import { TableSortLabel, IconButton, Toolbar, OutlinedInput, InputAdornment, Button, Card, Container, Popover, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography } from "@mui/material";
 // @mui
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
@@ -213,7 +213,7 @@ const Users: React.FC = (): JSX.Element => {
 
     if (keyword !== '') {
       const results = manager?.events?.filter((event: any) => {
-        return event.nameJob.toLowerCase().startsWith(keyword.toLowerCase());
+        return event.nameEvent.toLowerCase().startsWith(keyword.toLowerCase());
         // Use the toLowerCase() method to make it case-insensitive
       });
       setEvents(results);
@@ -245,19 +245,20 @@ const Users: React.FC = (): JSX.Element => {
 
   const sortApplyJob = stableSort(events, getComparator(order, orderBy));
 
-  const checkUserApply = manager?.events?.filter((event: any) => event.nameEvent);
-
   React.useEffect(() => {
     dispatch(getListUserApply());
   }, [dispatch]);
+  // if (window.location.href.indexOf('reload') == -1) {
+  //   window.location.replace(window.location.href + '?reload');
+  // }
 
   React.useEffect(() => {
 
-    setEvents(() => checkUserApply);
+    setEvents(() => manager?.events?.filter((event: any) => event.nameEvent));
   }, [manager]);
 
   React.useEffect(() => {
-    document.title = "JOB EVENT";
+    document.title = "LIST USER APPLY";
   }, []);
 
   return (
@@ -307,21 +308,21 @@ const Users: React.FC = (): JSX.Element => {
                     <TableRow key={event._id}>
                       <TableCell align="left" sx={{ width: "200px", fontSize: '12px' }}>
                         {event.usersApplyJob.filter((jobApply: any) => jobApply.applyStatus.includes("Chờ phê duyệt")).map((job: any) =>
-                          <Box style={{ display: "flex", flexDirection: "column", marginTop: "20px", paddingBottom: "20px" }}>
+                          <Box key={job._id} style={{ display: "flex", flexDirection: "column", marginTop: "20px", paddingBottom: "20px" }}>
                             {job.jobEvent.event.nameEvent}
                           </Box>
                         )}
                       </TableCell>
                       <TableCell align="left" sx={{ width: "200px", fontSize: '12px' }}>
                         {event.usersApplyJob.filter((jobApply: any) => jobApply.applyStatus.includes("Chờ phê duyệt")).map((job: any) =>
-                          <Box style={{ display: "flex", flexDirection: "column", marginTop: "20px", paddingBottom: "20px" }}>
+                          <Box key={job._id} style={{ display: "flex", flexDirection: "column", marginTop: "20px", paddingBottom: "20px" }}>
                             {job.jobEvent.nameJob}
                           </Box>
                         )}
                       </TableCell>
                       <TableCell align="left" sx={{ width: "150px" }}>
                         {event.usersApplyJob.filter((jobApply: any) => jobApply.applyStatus.includes("Chờ phê duyệt")).map((job: any, index: number) =>
-                          <Box style={{ display: "flex", flexDirection: "column", marginTop: "20px", paddingBottom: "20px" }}>
+                          <Box key={job._id} style={{ display: "flex", flexDirection: "column", marginTop: "14px", paddingBottom: "14px" }}>
                             <Button style={{ fontSize: '12px', fontWeight:"normal" ,textTransform: "lowercase", width:"40px" }} size="small" color="inherit" onClick={(jobApply) => handleOpenMenu(jobApply, index)} >
                               {job.userApply.username}
                             </Button>
@@ -368,23 +369,16 @@ const Users: React.FC = (): JSX.Element => {
 
                         )}
                       </TableCell>
-                      {/* <TableCell align="left" sx={{ width: "200px", fontSize: '12px' }}>
-                        {event.usersApplyJob.filter((jobApply: any) => jobApply.applyStatus.includes("Chờ phê duyệt")).map((job: any) =>
-                          <Box style={{ display: "flex", flexDirection: "column", marginTop: "20px", paddingBottom: "20px" }}>
-                            {job.userApply.username}
-                          </Box>
-                        )}
-                      </TableCell> */}
                       <TableCell align="left" sx={{ width: "150px", fontSize: '12px' }}>
                         {event.usersApplyJob.filter((jobApply: any) => jobApply.applyStatus.includes("Chờ phê duyệt")).map((job: any) =>
-                          <Box style={{ display: "flex", flexDirection: "column", marginTop: "20px", paddingBottom: "20px" }}>
+                          <Box key={job._id} style={{ display: "flex", flexDirection: "column", marginTop: "20px", paddingBottom: "20px" }}>
                             {job.applyStatus}
                           </Box>
                         )}
                       </TableCell>
                       <TableCell align="left" sx={{ width: "50px", fontSize: '12px' }}>
                         {event.usersApplyJob.filter((jobApply: any) => jobApply.applyStatus.includes("Chờ phê duyệt")).map((job: any) =>
-                          <Box style={{ display: "flex", flexDirection: "column", marginTop: "20px", marginBottom: "20px" }}>
+                          <Box key={job._id} style={{ display: "flex", flexDirection: "column", marginTop: "10px", paddingBottom: "10px" }}>
                             <IconButton onClick={(e) => dispatch(approveUserApplyJob(event._id, job._id))} style={{ color: "green" }}>
                               <CheckCircleOutlineIcon />
                             </IconButton>
@@ -393,7 +387,7 @@ const Users: React.FC = (): JSX.Element => {
                       </TableCell>
                       <TableCell align="left" sx={{ width: "50px", fontSize: '12px' }}>
                         {event.usersApplyJob.filter((jobApply: any) => jobApply.applyStatus.includes("Chờ phê duyệt")).map((job: any) =>
-                          <Box style={{ display: "flex", flexDirection: "column", marginTop: "20px", marginBottom: "20px" }}>
+                          <Box key={job._id} style={{ display: "flex", flexDirection: "column", marginTop: "10px", paddingBottom: "10px" }}>
                             <IconButton onClick={(e) => dispatch(unapproveUserApplyJob(event._id, job._id))} style={{ color: "red" }}>
                               <HighlightOffIcon />
                             </IconButton>

@@ -3,8 +3,6 @@ import { styled, alpha } from "@material-ui/core/styles";
 import { useDispatch, useSelector } from "react-redux";
 import { getUsers } from "redux/actions/sManager";
 import { RootState } from "redux/reducers";
-import { ISManager } from "redux/types/sManager";
-import { IManager } from "redux/types/Manager";
 import { IUser } from "redux/types/user";
 import { TableSortLabel, Toolbar, OutlinedInput, InputAdornment, Card, Container, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography } from "@mui/material";
 // @mui
@@ -168,8 +166,6 @@ const Users: React.FC = (): JSX.Element => {
   const dispatch = useDispatch();
 
   const [users, setUsers] = React.useState<IUser[]>([]);
-  const [SManagers, setSManagers] = React.useState<ISManager[]>([]);
-  const [Managers, setManagers] = React.useState<IManager[]>([]);
   const smanager = useSelector((state: RootState) => state.smanager);
 
   const [page, setPage] = React.useState(0);
@@ -226,10 +222,6 @@ const Users: React.FC = (): JSX.Element => {
 
   React.useEffect(() => {
     setUsers(() => smanager?.users?.filter((user: any) => user.role.keyRole === "user" || user.role.keyRole === "manager" || user.role.keyRole === "smanager"));
-
-    setManagers(() => smanager?.users?.filter((user: any) => user.role.keyRole === "manager"));
-
-    setSManagers(() => smanager?.users?.filter((user: any) => user.role.keyRole === "smanager"));
   }, [smanager]);
 
   React.useEffect(() => {

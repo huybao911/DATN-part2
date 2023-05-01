@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { makeStyles } from "@material-ui/core/styles";
 
-import { Avatar, Card, CardActions, CardContent, CardHeader, CardMedia, Collapse, IconButton, Rating, Toolbar, Typography, ListItem } from '@mui/material';
+import { Avatar, Card, CardActions, CardContent, CardHeader, CardMedia, Collapse, IconButton, Toolbar, Typography } from '@mui/material';
 import { ArrowRight, Favorite, FavoriteBorder, MoreVert } from '@mui/icons-material';
 import TabContext from '@mui/lab/TabContext';
 import TabPanel from '@mui/lab/TabPanel';

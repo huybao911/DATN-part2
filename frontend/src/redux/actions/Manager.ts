@@ -230,7 +230,7 @@ export const getListCTV =
         })
       );
     }
-  };  
+  };
 
 // APPROVE USER APPLY JOB
 export const approveUserApplyJob =

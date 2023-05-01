@@ -5,7 +5,7 @@ import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from 'react-router-dom';
 import { getDepartments } from "redux/actions/user";
-import { Select, MenuItem, Button, CircularProgress, Typography, TextField, Container, FormControl } from "@material-ui/core";
+import { Select, MenuItem, Button, CircularProgress, Typography, TextField, Container } from "@material-ui/core";
 import { Drawer, Box } from "@mui/material";
 import { InputAdornment } from "@mui/material";
 

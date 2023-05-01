@@ -1,6 +1,6 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { FormControl, FormLabel, TextField, Button } from "@material-ui/core";
+import { FormControl, FormLabel, TextField } from "@material-ui/core";
 import { useFormikContext } from "formik";
 
 const useStyles = makeStyles((theme) => ({
@@ -19,6 +19,7 @@ interface IValues {
     quantity: number;
     unitPrice: number;
     jobDescription: string;
+    jobRequest: string;
 }
 
 
@@ -83,6 +84,20 @@ const FormEvent: React.FC = (): JSX.Element => {
                     placeholder='Nhập mô tả công việc'
                     helperText={touched.jobDescription ? errors.jobDescription : ""}
                     error={touched.jobDescription ? Boolean(errors.jobDescription) : false}
+                />
+            </FormControl>
+            <FormControl fullWidth className={classes.formControl}>
+                <FormLabel classes={{ root: classes.formLabel }}>Yêu cầu công việc</FormLabel>
+                <TextField
+                    fullWidth
+                    variant="outlined"
+                    name='jobRequest'
+                    value={values.jobRequest}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    placeholder='Nhập yêu cầu công việc'
+                    helperText={touched.jobRequest ? errors.jobRequest : ""}
+                    error={touched.jobRequest ? Boolean(errors.jobRequest) : false}
                 />
             </FormControl>
         </>

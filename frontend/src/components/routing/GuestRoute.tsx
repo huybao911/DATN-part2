@@ -2,7 +2,7 @@ import React from "react";
 import { Route, Redirect, RouteProps } from "react-router-dom";
 import { useSelector } from "react-redux";
 
-import AppLoader from "layouts/AppLoader";
+// import AppLoader from "layouts/AppLoader";
 import { RootState } from "redux/reducers";
 
 type Props = {

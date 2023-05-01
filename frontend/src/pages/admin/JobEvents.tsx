@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getJobEvents } from "redux/actions/admin";
 import { RootState } from "redux/reducers";
 import { IJobEvent } from "redux/types/jobEvent";
-import { TableSortLabel, Toolbar, OutlinedInput, InputAdornment, Button, Card, Container, Popover, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography } from "@mui/material";
+import { TableSortLabel, Toolbar, OutlinedInput, InputAdornment, Card, Container, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography } from "@mui/material";
 // @mui
 import SearchIcon from '@mui/icons-material/Search';
 import { Box } from "@mui/system";

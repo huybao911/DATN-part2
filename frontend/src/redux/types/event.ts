@@ -11,10 +11,12 @@ export interface IEvent {
     costs: string;
     dayStart:string;
     dayEnd:string;
+    contentEvent: string;
     update: string;
     delete: string;
     image: string;
     created_at:string;
+    
     usersApplyJob:any;
 
     nameJob: string;

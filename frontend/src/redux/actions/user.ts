@@ -5,7 +5,6 @@ import { setUserAuthToken } from "utils/headers";
 import { UserActions } from "redux/types/user";
 import { AlertActions } from "redux/types/alert";
 import { setAlert } from "./alert";
-import { NumberSchema } from "yup";
 
 const URI = "http://localhost:5000/api/v1/user";
 

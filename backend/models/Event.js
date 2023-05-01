@@ -65,6 +65,11 @@ const eventSchema = new mongoose.Schema(
             trim: true,
             required: [true, "DayEnd is required"],
         },
+        contentEvent: {
+            type: String,
+            required: true,
+            maxLength: [8000, "Must be no more than 8000 characters"],
+          },
         storagers: [
             {
                 storager: {

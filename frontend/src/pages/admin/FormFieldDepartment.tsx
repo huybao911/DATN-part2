@@ -21,7 +21,7 @@ interface IValues {
   keyDepartment: string;
 }
 
-const FormFieldDepartment: React.FC<Props> = ({ }): JSX.Element => {
+const FormFieldDepartment: React.FC<Props> = (): JSX.Element => {
 
   const classes = useStyles();
   const { values, handleChange, handleBlur, errors, touched } =
