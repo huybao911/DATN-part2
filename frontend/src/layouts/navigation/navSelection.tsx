@@ -1,6 +1,6 @@
 import * as React from "react";
 import { ListItemText, ListItemIcon } from '@mui/material';
-import { StyledListItemButton, StyledNavItemIcon } from './style';
+import { StyledListItemButton } from './style';
 import { Link } from 'react-router-dom';
 import { dataAdmin, dataSManager, dataManager } from './dataConfig'
 import { useSelector } from "react-redux";

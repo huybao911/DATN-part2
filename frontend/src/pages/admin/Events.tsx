@@ -1,11 +1,10 @@
 import * as React from "react";
-import { styled, alpha, makeStyles } from "@material-ui/core/styles";
+import { styled, alpha } from "@material-ui/core/styles";
 import { useDispatch, useSelector } from "react-redux";
 import { getEvents } from "redux/actions/admin";
 import { RootState } from "redux/reducers";
 import { IEvent } from "redux/types/event";
-import { Box,TableSortLabel, Toolbar, OutlinedInput, InputAdornment, Button, Card, Container, Popover, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography } from "@mui/material";
-import { Link } from 'react-router-dom';
+import { Box,TableSortLabel, Toolbar, OutlinedInput, InputAdornment, Card, Container, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography } from "@mui/material";
 // @mui
 import SearchIcon from '@mui/icons-material/Search';
 import { visuallyHidden } from '@mui/utils';
@@ -29,14 +28,6 @@ const StyledSearch = styled(OutlinedInput)(({ theme }) => ({
   '& fieldset': {
     borderWidth: `1px !important`,
     borderColor: `${alpha(theme.palette.grey[500], 0.32)} !important`,
-  },
-}));
-
-const useStyles = makeStyles((theme) => ({
-  btn: {
-    '&.MuiButton-root:hover': {
-      backgroundColor: "transparent",
-    }
   },
 }));
 
@@ -185,7 +176,6 @@ function EnhancedTableHead(props: EnhancedTableProps) {
 const Users: React.FC = (): JSX.Element => {
 
   const dispatch = useDispatch();
-  const classes = useStyles();
 
   const [events, setEvents] = React.useState<IEvent[]>([]);
   const admin = useSelector((state: RootState) => state.admin);

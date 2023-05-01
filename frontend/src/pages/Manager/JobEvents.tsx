@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getJobEvents, deleteJobEvent } from "redux/actions/Manager";
 import { RootState } from "redux/reducers";
 import { IJobEvent } from "redux/types/jobEvent";
-import { TableSortLabel, Toolbar, OutlinedInput, InputAdornment, Button, Card, Container, Popover, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography } from "@mui/material";
+import { TableSortLabel, Toolbar, OutlinedInput, InputAdornment, Button, Card, Container, Popover, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography } from "@mui/material";
 import { Link } from 'react-router-dom';
 import UpdateJobEvent from "pages/Manager/UpdateJobEvent";
 // @mui

@@ -3,9 +3,6 @@ import { styled, alpha } from "@material-ui/core/styles";
 import { useDispatch, useSelector } from "react-redux";
 import { getUsers, deleteUser } from "redux/actions/admin";
 import { RootState } from "redux/reducers";
-import { IAdmin } from "redux/types/admin";
-import { ISManager } from "redux/types/sManager";
-import { IManager } from "redux/types/Manager";
 import { IUser } from "redux/types/user";
 import { Box,TableSortLabel, Toolbar, OutlinedInput, InputAdornment, Button, Card, Container, Popover, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography } from "@mui/material";
 import { Link } from 'react-router-dom';
@@ -181,9 +178,6 @@ const Users: React.FC = (): JSX.Element => {
 
 
   const [users, setUsers] = React.useState<IUser[]>([]);
-  const [SManagers, setSManagers] = React.useState<ISManager[]>([]);
-  const [Managers, setManagers] = React.useState<IManager[]>([]);
-  const [admins, setAdmins] = React.useState<IAdmin[]>([]);
   const admin = useSelector((state: RootState) => state.admin);
 
   const [anchorEl, setAnchorEl] = React.useState([null]);
@@ -257,13 +251,7 @@ const Users: React.FC = (): JSX.Element => {
   }, [dispatch]);
 
   React.useEffect(() => {
-    setUsers(() => admin?.users?.filter((user: any) => user.role.keyRole === "user" || user.role.keyRole === "manager" || user.role.keyRole === "smanager"));
-
-    setManagers(() => admin?.users?.filter((user: any) => user.role.keyRole === "manager"));
-
-    setSManagers(() => admin?.users?.filter((user: any) => user.role.keyRole === "smanager"));
-
-    setAdmins(() => admin?.users?.filter((user: any) => user.role.keyRole === "admin"));
+    setUsers(() => admin?.users?.filter((user: any) => user.role.keyRole === "user" || user.role.keyRole === "manager" || user.role.keyRole === "smanager"))
   }, [admin]);
 
   React.useEffect(() => {

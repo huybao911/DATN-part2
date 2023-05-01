@@ -119,6 +119,14 @@ const routesProps: ROUTES[] = [
     keyRole: "smanager",
     auth: true,
   },
+  {
+    name: "comment",
+    path: "/comment",
+    component: React.lazy(() => import("pages/SManager/NewComment")),
+    exact: true,
+    keyRole: "smanager",
+    auth: true,
+  },
 
 
   //MANAGER

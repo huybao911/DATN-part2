@@ -1,6 +1,6 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { FormControl, FormLabel, TextField, Button } from "@material-ui/core";
+import { FormControl, FormLabel, TextField } from "@material-ui/core";
 import { useFormikContext } from "formik";
 
 const useStyles = makeStyles((theme) => ({
@@ -19,10 +19,12 @@ interface IValues {
     dayStart: string;
     dayEnd: string;
     image: string;
+    contentEvent: string;
 }
 
 const FormEvent: React.FC = (): JSX.Element => {
     const classes = useStyles();
+
     const { values, handleChange, handleBlur, errors, touched } = useFormikContext<IValues>();
     return (
         <>
@@ -57,7 +59,7 @@ const FormEvent: React.FC = (): JSX.Element => {
                 />
             </FormControl>
             <FormControl fullWidth className={classes.formControl}>
-                <FormLabel classes={{ root: classes.formLabel }}>Ngày bắt đầu</FormLabel>
+                <FormLabel classes={{ root: classes.formLabel }}>Ngày giờ bắt đầu</FormLabel>
                 <TextField
                     fullWidth
                     maxRows={10}
@@ -67,13 +69,13 @@ const FormEvent: React.FC = (): JSX.Element => {
                     value={values.dayStart}
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    placeholder='Nhập ngày bắt đầu'
+                    placeholder='Nhập ngày giờ bắt đầu'
                     helperText={touched.dayStart ? errors.dayStart : ""}
                     error={touched.dayStart ? Boolean(errors.dayStart) : false}
                 />
             </FormControl>
             <FormControl fullWidth className={classes.formControl}>
-                <FormLabel classes={{ root: classes.formLabel }}>Ngày kết thúc</FormLabel>
+                <FormLabel classes={{ root: classes.formLabel }}>Ngày giờ kết thúc</FormLabel>
                 <TextField
                     fullWidth
                     maxRows={10}
@@ -83,9 +85,25 @@ const FormEvent: React.FC = (): JSX.Element => {
                     value={values.dayEnd}
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    placeholder='Nhập ngày kết thúc'
+                    placeholder='Nhập ngày giờ kết thúc'
                     helperText={touched.dayEnd ? errors.dayEnd : ""}
                     error={touched.dayEnd ? Boolean(errors.dayEnd) : false}
+                />
+            </FormControl>
+            <FormControl fullWidth className={classes.formControl}>
+                <FormLabel classes={{ root: classes.formLabel }}>Nội dung sự kiện</FormLabel>
+                <TextField
+                    fullWidth
+                    maxRows={10}
+                    multiline
+                    variant="outlined"
+                    name='contentEvent'
+                    value={values.contentEvent}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    placeholder='Nhập nội dung sự kiện'
+                    helperText={touched.contentEvent ? errors.contentEvent : ""}
+                    error={touched.contentEvent ? Boolean(errors.contentEvent) : false}
                 />
             </FormControl>
             <FormControl fullWidth className={classes.formControl}>
@@ -113,6 +131,15 @@ const FormEvent: React.FC = (): JSX.Element => {
                     type='file'
                     // value={values.image}
                     onChange={handleChange}
+                    // onChange={(e:any)=>{
+                    //     let reader = new FileReader();
+                    //     reader.onload = () => {
+                    //         if (reader.readyState === 2) {
+                    //             setFieldValue('image', reader.result);
+                    //         }
+                    //     }
+                    //     reader.readAsDataURL(e.target.files[0])
+                    // }}
                     onBlur={handleBlur}
                 />
             </FormControl>

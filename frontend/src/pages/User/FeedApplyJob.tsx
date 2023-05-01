@@ -9,7 +9,7 @@ import { green } from '@mui/material/colors';
 import { Box } from '@mui/material';
 import { formatDistance } from 'date-fns';
 
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { RootState } from "redux/reducers";
 
 type Props = {

@@ -34,6 +34,7 @@ interface IInitialValues {
     dayStart: string;
     dayEnd: string;
     image: string;
+    contentEvent: string;
 }
 
 const CreateEvent: React.FC<Props> = ({ event }): JSX.Element => {
@@ -46,6 +47,7 @@ const CreateEvent: React.FC<Props> = ({ event }): JSX.Element => {
         dayStart: event?.dayStart ?? "",
         dayEnd: event?.dayEnd ?? "",
         image: event?.image ?? "",
+        contentEvent: event?.contentEvent ?? "",
     };
 
 
@@ -61,6 +63,7 @@ const CreateEvent: React.FC<Props> = ({ event }): JSX.Element => {
         dayStart: Yup.string().required("required!"),
         dayEnd: Yup.string().required("required!"),
         image: Yup.string().required("required!"),
+        contentEvent: Yup.string().required("required!"),
     });
 
     return (

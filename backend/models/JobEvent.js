@@ -31,6 +31,11 @@ const JobEvent = new mongoose.Schema(
       required: true,
       maxLength: [8000, "Must be no more than 8000 characters"],
     },
+    jobRequest : {
+      type: String,
+      required: true,
+      maxLength: [8000, "Must be no more than 8000 characters"],
+    },
   },
   { timestamps: true }
 );

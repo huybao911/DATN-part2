@@ -34,6 +34,7 @@ interface IInitialValues {
     quantity: number;
     unitPrice: number;
     jobDescription: string;
+    jobRequest: string;
     event: any;
 }
 
@@ -46,6 +47,7 @@ const UpdateJobEvent: React.FC<Props> = ({ jobEvent }): JSX.Element => {
         quantity: jobEvent?.quantity ?? "",
         unitPrice: jobEvent?.unitPrice ?? "",
         jobDescription: jobEvent?.jobDescription ?? "",
+        jobRequest: jobEvent?.jobRequest ?? "",
         event: jobEvent?.event ?? "",
     };
 
@@ -61,6 +63,7 @@ const UpdateJobEvent: React.FC<Props> = ({ jobEvent }): JSX.Element => {
         quantity: Yup.string().required("required!"),
         unitPrice: Yup.string().required("required!"),
         jobDescription: Yup.string().required("required!"),
+        jobRequest: Yup.string().required("required!"),
     });
 
     return (

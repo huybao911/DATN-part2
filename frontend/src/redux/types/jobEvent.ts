@@ -7,6 +7,7 @@ export interface IJobEvent {
     unitPrice: number;
     total: number;
     jobDescription: string;
+    jobRequest: string;
     update: string;
     delete: string;
   }

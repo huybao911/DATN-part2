@@ -1,8 +1,5 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-
-import { makeStyles } from "@material-ui/core/styles";
 
 import { logOutUser } from "redux/actions/user";
 import { logOutSManager } from "redux/actions/sManager";
@@ -13,29 +10,10 @@ import { Box, Drawer, Avatar, Typography, Divider } from "@mui/material";
 import LogoutIcon from '@mui/icons-material/Logout';
 
 import NavSection from "./navSelection";
-import { width } from "@mui/system";
-
-const useStyles = makeStyles((theme) => ({
-  toolbar: {
-    justifyContent: "space-between",
-    backgroundColor: "#222",
-    zIndex: 2
-  },
-  title: {
-    color: "#fff"
-  },
-  navLink: {
-    textDecoration: 'none',
-    color: 'black',
-    fontFamily: "Roboto",
-    padding: theme.spacing(1, 2),
-  }
-}));
 
 const NAV_WIDTH = 270;
 
 const SideBar: React.FC = (): JSX.Element => {
-  const classes = useStyles();
   const dispatch = useDispatch();
 
   const user = useSelector((state: RootState) => state.user);

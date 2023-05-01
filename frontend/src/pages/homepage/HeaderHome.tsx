@@ -6,7 +6,7 @@ import { RootState } from "redux/reducers";
 import { logOutUser } from "redux/actions/user";
 import { StyledMenuItem } from '../../layouts/navigation/style'
 
-import { PersonAdd, Favorite, Logout, Person, Approval, Notifications } from '@mui/icons-material';
+import {  Favorite, Logout, Person, Approval, Notifications } from '@mui/icons-material';
 
 import { purple } from '@mui/material/colors';
 
@@ -33,9 +33,6 @@ const Homepage: React.FC = (): JSX.Element => {
   };
 
   const user = useSelector((state: RootState) => state.user);
-  const manager = useSelector((state: RootState) => state.manager);
-  const smanager = useSelector((state: RootState) => state.smanager);
-  const admin = useSelector((state: RootState) => state.admin);
 
   const userHeader = user.isAuthenticated ? (
     <StyledRoot style={{ boxShadow: "none" }}>

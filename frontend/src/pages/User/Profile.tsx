@@ -1,5 +1,5 @@
 import * as React from "react";
-import { styled, makeStyles } from "@material-ui/core/styles";
+import { styled } from "@material-ui/core/styles";
 import { useDispatch, useSelector } from "react-redux";
 import { logOutUser, getProfile } from "redux/actions/user";
 import { RootState } from "redux/reducers";
@@ -24,20 +24,10 @@ const Item = styled(Paper)(({ theme }) => ({
     boxShadow: 'none',
 
 }));
-const useStyles = makeStyles((theme) => ({
-    formLabel: {
-        fontWeight: 600,
-        marginBottom: theme.spacing(1.5),
-    },
-    formControl: {
-        margin: theme.spacing(2, 0),
-    },
-}));
 
 const StoragePost: React.FC = (): JSX.Element => {
 
     const dispatch = useDispatch();
-    const classes = useStyles();
 
     const [users, setUsers] = React.useState<IUser[]>([]);
     const user = useSelector((state: RootState) => state.user);

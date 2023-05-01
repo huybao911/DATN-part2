@@ -36,14 +36,14 @@ const ApproveEvents: React.FC = (): JSX.Element => {
     const [events, setEvents] = React.useState<IEvent[]>([]);
     const smanager = useSelector((state: RootState) => state.smanager);
 
-    function formatDate(input: any) {
-        var datePart = input.match(/\d+/g),
-            year = datePart[0].substring(0),
-            month = datePart[1], day = datePart[2], hour = datePart[3], minute = datePart[4];
-        var ampm = hour >= 12 ? 'PM' : 'AM';
+    // function formatDate(input: any) {
+    //     var datePart = input.match(/\d+/g),
+    //         year = datePart[0].substring(0),
+    //         month = datePart[1], day = datePart[2], hour = datePart[3], minute = datePart[4];
+    //     var ampm = hour >= 12 ? 'PM' : 'AM';
 
-        return hour + ':' + minute + ' ' + ampm + ' ' + ' ' + day + '/' + month + '/' + year;
-    }
+    //     return hour + ':' + minute + ' ' + ampm + ' ' + ' ' + day + '/' + month + '/' + year;
+    // }
 
     function convertTZ(date: any, tzString: any) {
         return new Date(date).toLocaleString("en-TT", { timeZone: tzString });
@@ -157,6 +157,19 @@ const ApproveEvents: React.FC = (): JSX.Element => {
                                 <UpdateComment event={event} />
                             </Card>
                         </Box>
+                        {/* <BoxButton component={Link} to='/comment' style={{ fontSize: '14px', textDecoration: "none", color: "black", marginRight: "100px" }}>
+                            <Box style={{
+                                border: '1px solid rgba(158, 158, 158, 0.32)',
+                                borderRadius: '10px', textAlign: 'center',
+                                marginTop: '0.5px', padding: '11px', color: "white", backgroundColor: '#00ab55',
+                                width: 140, display: 'flex', flexDirection: 'row', justifyContent: 'center'
+                            }}>
+                                <AddIcon style={{ width: '16px', color: "white", marginRight: "12px" }} />
+                                <Typography style={{ fontSize: '14px', paddingTop: "2.5px" }} >
+                                    Tạo CMT
+                                </Typography>
+                            </Box>
+                        </BoxButton> */}
                     </Box>
                 )}
             </StyledRoot>

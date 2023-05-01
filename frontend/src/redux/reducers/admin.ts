@@ -114,14 +114,6 @@ const adminReducer = (
         users: state.users.filter((user) => user._id !== action.payload),
       };
 
-    case types.UPDATE_USER:
-      return {
-        ...state,
-        users: state.users.map((user) =>
-          user._id === action.payload.id ? { ...action.payload.user } : user
-        ),
-      };
-
     case types.ADMIN_ADDDEPARTMENT_FAIL:
     case types.ADMIN_LOGIN_FAIL:
     case types.ADMIN_REGISTER_FAIL:

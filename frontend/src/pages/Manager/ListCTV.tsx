@@ -1,13 +1,11 @@
 import * as React from "react";
 import { styled, alpha } from "@material-ui/core/styles";
 import { useDispatch, useSelector } from "react-redux";
-import { getListCTV, approveUserApplyJob, unapproveUserApplyJob } from "redux/actions/Manager";
+import { getListCTV } from "redux/actions/Manager";
 import { RootState } from "redux/reducers";
 import { IEvent } from "redux/types/event";
-import { TableSortLabel, IconButton, Toolbar, OutlinedInput, InputAdornment, Button, Card, Container, Popover, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography } from "@mui/material";
+import { TableSortLabel, Toolbar, OutlinedInput, InputAdornment, Card, Container, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography } from "@mui/material";
 // @mui
-import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
-import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import SearchIcon from '@mui/icons-material/Search';
 import { Box } from "@mui/system";
 import { visuallyHidden } from '@mui/utils';
