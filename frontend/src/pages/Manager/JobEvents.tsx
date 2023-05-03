@@ -227,7 +227,7 @@ const Users: React.FC = (): JSX.Element => {
       });
       setJobEvents(results);
     } else {
-      setJobEvents(() => manager?.jobevents?.filter((jobEvent: any) => jobEvent.nameJob || jobEvent.eventId));
+      setJobEvents(() => manager?.jobevents?.filter((jobEvent: any) => jobEvent.nameJob || jobEvent.event));
       // If the text field is empty, show all users
     }
 
@@ -261,7 +261,7 @@ const Users: React.FC = (): JSX.Element => {
 
   React.useEffect(() => {
 
-    setJobEvents(() => manager?.jobevents?.filter((jobEvent: any) => jobEvent.nameJob || jobEvent.eventId));
+    setJobEvents(() => manager?.jobevents?.filter((jobEvent: any) => jobEvent.nameJob || jobEvent.event));
   }, [manager]);
 
   React.useEffect(() => {

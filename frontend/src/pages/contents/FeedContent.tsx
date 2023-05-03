@@ -2,7 +2,7 @@ import * as React from 'react';
 import { makeStyles } from "@material-ui/core/styles";
 
 import { Avatar, Card, CardActions, CardContent, CardHeader, CardMedia, Collapse, IconButton, Toolbar, Typography } from '@mui/material';
-import { Favorite, FavoriteBorder, MoreVert } from '@mui/icons-material';
+import {  Bookmark, BookmarkBorder } from '@mui/icons-material';
 import TabContext from '@mui/lab/TabContext';
 import TabPanel from '@mui/lab/TabPanel';
 import { green } from '@mui/material/colors';
@@ -132,15 +132,15 @@ const FeedContent: React.FC<Props> = ({ event }): JSX.Element => {
     const userJob = event.usersApplyJob.map((userjob: any) => userjob.jobEvent._id);
 
     const compareUser = storagers ? (
-        <Favorite onClick={handleClickUnStorage} sx={{ fontSize: '24px', color: 'red' }} />
+        <Bookmark onClick={handleClickUnStorage} style={{ width:"30px", height:"30px", color: 'black' }} />
     ) : storager !== user.user.username ? (
-        <FavoriteBorder onClick={handleClickStorage} sx={{ fontSize: '24px', color: 'red' }} />
+        <BookmarkBorder onClick={handleClickStorage} style={{ width:"30px", height:"30px", color: 'black' }} />
     ) : null
 
     const compareUserApply = userApplys ? (
         event.job.map((job: any) =>
             event.usersApplyJob.some((userjob: any) => job._id.includes(userjob.jobEvent._id) && user.user.username.includes(userjob.userApply.username)) ? (
-                <Box>
+                <Box key={job._id}>
                     <Box>
                         <Typography sx={{ width: "200px", fontSize: '12px' }}>
                             - {job.nameJob} {job.quantityRemaining}  {job.jobRequest}
@@ -151,7 +151,7 @@ const FeedContent: React.FC<Props> = ({ event }): JSX.Element => {
                     </Box>
                 </Box>
             ) : (
-                <Box>
+                <Box key={job._id}>
                     <Box>
                         <Typography key={job._id} sx={{ width: "200px", fontSize: '12px' }}>
                             - {job.nameJob} {job.quantityRemaining}  {job.jobRequest}
@@ -166,7 +166,7 @@ const FeedContent: React.FC<Props> = ({ event }): JSX.Element => {
     ) : userApply !== user.user.username ? (
         event.job.map((job: any) =>
             job._id !== userJob ? (
-                <Box>
+                <Box key={job._id}>
                     <Box>
                         <Typography key={job._id} sx={{ width: "200px", fontSize: '12px' }}>
                             - {job.nameJob} {job.quantityRemaining} {job.jobRequest}
@@ -198,7 +198,7 @@ const FeedContent: React.FC<Props> = ({ event }): JSX.Element => {
                                     }
                                     action={
                                         <IconButton aria-label='settings'>
-                                            <MoreVert />
+                                            {compareUser}
                                         </IconButton>
                                     }
                                     title={event?.poster.username ?? null}
@@ -237,7 +237,6 @@ const FeedContent: React.FC<Props> = ({ event }): JSX.Element => {
                                 >
                                 </CardMedia>
                                 <CardActions disableSpacing >
-                                    {compareUser}
 
                                 </CardActions>
 

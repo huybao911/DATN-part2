@@ -307,12 +307,17 @@ const Users: React.FC = (): JSX.Element => {
                   {sortApplyJob.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((event: any, index) =>
                     <TableRow key={event._id}>
                       <TableCell align="left" sx={{ width: "200px", fontSize: '12px' }}>
+                        <Box >
+                          {event?.nameEvent ?? null}
+                        </Box>
+                      </TableCell>
+                      {/* <TableCell align="left" sx={{ width: "200px", fontSize: '12px' }}>
                         {event.usersApplyJob.filter((jobApply: any) => jobApply.applyStatus.includes("Chờ phê duyệt")).map((job: any) =>
                           <Box key={job._id} style={{ display: "flex", flexDirection: "column", marginTop: "20px", paddingBottom: "20px" }}>
                             {job.jobEvent.event.nameEvent}
                           </Box>
                         )}
-                      </TableCell>
+                      </TableCell> */}
                       <TableCell align="left" sx={{ width: "200px", fontSize: '12px' }}>
                         {event.usersApplyJob.filter((jobApply: any) => jobApply.applyStatus.includes("Chờ phê duyệt")).map((job: any) =>
                           <Box key={job._id} style={{ display: "flex", flexDirection: "column", marginTop: "20px", paddingBottom: "20px" }}>
@@ -323,7 +328,7 @@ const Users: React.FC = (): JSX.Element => {
                       <TableCell align="left" sx={{ width: "150px" }}>
                         {event.usersApplyJob.filter((jobApply: any) => jobApply.applyStatus.includes("Chờ phê duyệt")).map((job: any, index: number) =>
                           <Box key={job._id} style={{ display: "flex", flexDirection: "column", marginTop: "14px", paddingBottom: "14px" }}>
-                            <Button style={{ fontSize: '12px', fontWeight:"normal" ,textTransform: "lowercase", width:"40px" }} size="small" color="inherit" onClick={(jobApply) => handleOpenMenu(jobApply, index)} >
+                            <Button style={{ fontSize: '12px', fontWeight: "normal", textTransform: "lowercase", width: "40px" }} size="small" color="inherit" onClick={(jobApply) => handleOpenMenu(jobApply, index)} >
                               {job.userApply.username}
                             </Button>
                             <Popover
@@ -345,7 +350,7 @@ const Users: React.FC = (): JSX.Element => {
                               }}
                             >
                               <Box style={{ display: "flex", flexDirection: "column" }}>
-                                <Box sx={{textAlign:"center", fontWeight:"bold", marginBottom:"10px"}}>
+                                <Box sx={{ textAlign: "center", fontWeight: "bold", marginBottom: "10px" }}>
                                   Thông tin của {job.userApply.username}
                                 </Box>
                                 <Box>

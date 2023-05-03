@@ -288,44 +288,39 @@ const Users: React.FC = (): JSX.Element => {
                 <TableBody>
                   {sortApplyJob.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((event: any, index) =>
                     <TableRow key={event._id}>
-                      <TableCell align="left" sx={{ width: "200px", fontSize: '12px' }}>
+                      <TableCell key={event._id} align="left" sx={{ width: "200px", fontSize: '12px' }}>
+                        <Box >
+                          {event?.nameEvent ?? null}
+                        </Box>
+                      </TableCell>
+                      {/* <TableCell align="left" sx={{ width: "200px", fontSize: '12px' }}>
                         {event.usersApplyJob.filter((jobApply: any) => jobApply.notiApplyJob.includes("Bạn đã ứng tuyển thành công")).map((job: any) =>
                           <Box style={{ display: "flex", flexDirection: "column", marginTop: "20px", paddingBottom: "20px" }}>
                             {job.jobEvent.event.nameEvent}
                           </Box>
                         )}
-                      </TableCell>
+                      </TableCell> */}
                       <TableCell align="left" sx={{ width: "200px", fontSize: '12px' }}>
                         {event.usersApplyJob.filter((jobApply: any) => jobApply.notiApplyJob.includes("Bạn đã ứng tuyển thành công")).map((job: any) =>
-                          <Box style={{ display: "flex", flexDirection: "column", marginTop:"20px", paddingBottom:"20px" }}>
+                          <Box key={job._id} style={{ display: "flex", flexDirection: "column", marginTop:"20px", paddingBottom:"20px" }}>
                             {job.jobEvent.nameJob}
                           </Box>
                         )}
                       </TableCell>
                       <TableCell align="left" sx={{ width: "200px", fontSize: '12px' }}>
                         {event.usersApplyJob.filter((jobApply: any) => jobApply.notiApplyJob.includes("Bạn đã ứng tuyển thành công")).map((job: any) =>
-                          <Box style={{ display: "flex", flexDirection: "column", marginTop:"20px", paddingBottom:"20px" }}>
+                          <Box key={job._id} style={{ display: "flex", flexDirection: "column", marginTop:"20px", paddingBottom:"20px" }}>
                             {job.userApply.username}
                           </Box>
                         )}
                       </TableCell>
                       <TableCell align="left" sx={{ width: "300px", fontSize: '12px' }}>
                         {event.usersApplyJob.filter((jobApply: any) => jobApply.notiApplyJob.includes("Bạn đã ứng tuyển thành công")).map((job: any) =>
-                          <Box style={{ display: "flex", flexDirection: "column", marginTop:"20px", paddingBottom:"20px" }}>
+                          <Box key={job._id} style={{ display: "flex", flexDirection: "column", marginTop:"20px", paddingBottom:"20px" }}>
                             {new Intl.NumberFormat().format(job.jobEvent.unitPrice)} VND
                           </Box>
                         )}
                       </TableCell>
-                      {/* <TableCell align="left">
-                      <IconButton onClick={(e) => dispatch(approveUserApplyJob(applyJob._id))} style={{color:"green"}}>
-                        <CheckCircleOutlineIcon/>
-                      </IconButton>
-                      </TableCell>
-                      <TableCell align="left">
-                      <IconButton onClick={(e) => dispatch(unapproveUserApplyJob(applyJob._id))} style={{color:"red"}}>
-                        <HighlightOffIcon/>
-                      </IconButton>
-                      </TableCell> */}
                     </TableRow>
                   )}
 

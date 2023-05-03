@@ -1,7 +1,6 @@
 import * as React from "react";
 import { ListItemText, ListItemIcon } from '@mui/material';
 import { StyledListItemButton } from './style';
-import { Link } from 'react-router-dom';
 import { dataAdmin, dataSManager, dataManager } from './dataConfig'
 import { useSelector } from "react-redux";
 import { RootState } from "redux/reducers";
@@ -22,45 +21,15 @@ export default function NavSection() {
 
     const topAM = admin.isAuthenticated && admin.getRole.keyRole === "admin" ? (
         <Stack spacing={2} style={{ padding: "10px 14px" }}>
-        {dataAdmin.map((item, index) => (
-            <StyledListItemButton disableRipple selected={selectedIndex === index} onClick={(event) => handleListItemClick(event, index)}
-                component={Link} to={item.path} key={item.name} style={{ padding: "8px 3px" }} sx={{
-                    "&.Mui-selected": {
-                        backgroundColor: "#f4f5f5",
-                        fontWeight: "500",
-                        borderRadius: "14px",
-                        color: 'black'
-                        
-                    },
-                    "&.Mui-selected:hover": {
-                        backgroundColor: "#f4f5f5"
-                    },
-                    "&.Mui-focusVisible": {
-                        backgroundColor: "none"
-                    },
-                    ":hover": {
-                        backgroundColor: "white"
-                    }
-                }}>
-                <ListItemIcon  style={{paddingLeft: '16px'}}>
-                    {item.icon}
-                </ListItemIcon>
-                <ListItemText style={{ fontSize: "12px" }} disableTypography primary={item.name} />
-            </StyledListItemButton>
-        ))}
-    </Stack>
-
-    ) : smanager.isAuthenticated && smanager.getRole.keyRole === "smanager" ? (
-        <Stack spacing={2} style={{ padding: "10px 14px" }}>
-            {dataSManager.map((item, index) => (
+            {dataAdmin.map((item, index) => (
                 <StyledListItemButton disableRipple selected={selectedIndex === index} onClick={(event) => handleListItemClick(event, index)}
-                    component={Link} to={item.path} key={item.name} style={{ padding: "8px 3px" }} sx={{
+                    component={RtLink} to={item.path} key={item.name} style={{ padding: "8px 3px" }} sx={{
                         "&.Mui-selected": {
                             backgroundColor: "#f4f5f5",
                             fontWeight: "500",
                             borderRadius: "14px",
                             color: 'black'
-                            
+
                         },
                         "&.Mui-selected:hover": {
                             backgroundColor: "#f4f5f5"
@@ -72,7 +41,37 @@ export default function NavSection() {
                             backgroundColor: "white"
                         }
                     }}>
-                    <ListItemIcon  style={{paddingLeft: '16px'}}>
+                    <ListItemIcon style={{ paddingLeft: '16px' }}>
+                        {item.icon}
+                    </ListItemIcon>
+                    <ListItemText style={{ fontSize: "12px" }} disableTypography primary={item.name} />
+                </StyledListItemButton>
+            ))}
+        </Stack>
+
+    ) : smanager.isAuthenticated && smanager.getRole.keyRole === "smanager" ? (
+        <Stack spacing={2} style={{ padding: "10px 14px" }}>
+            {dataSManager.map((item, index) => (
+                <StyledListItemButton disableRipple selected={selectedIndex === index} onClick={(event) => handleListItemClick(event, index)}
+                    component={RtLink} to={item.path} key={item.name} style={{ padding: "8px 3px" }} sx={{
+                        "&.Mui-selected": {
+                            backgroundColor: "#f4f5f5",
+                            fontWeight: "500",
+                            borderRadius: "14px",
+                            color: 'black'
+
+                        },
+                        "&.Mui-selected:hover": {
+                            backgroundColor: "#f4f5f5"
+                        },
+                        "&.Mui-focusVisible": {
+                            backgroundColor: "none"
+                        },
+                        ":hover": {
+                            backgroundColor: "white"
+                        }
+                    }}>
+                    <ListItemIcon style={{ paddingLeft: '16px' }}>
                         {item.icon}
                     </ListItemIcon>
                     <ListItemText style={{ fontSize: "12px" }} disableTypography primary={item.name} />
@@ -83,21 +82,25 @@ export default function NavSection() {
     ) : manager.isAuthenticated && manager.getRole.keyRole === "manager" ? (
         <Stack spacing={2} style={{ padding: "10px 14px" }}>
             {dataManager.map((item, index) => (
-                <StyledListItemButton disableRipple 
-                component={RtLink} to={item.path} key={item.name} style={{ padding: "8px 3px" }} 
-                sx={{
-                    '&.active': {
-                      color: 'white',
-                      bgcolor: 'black',
-                      fontWeight: '1000',
-                    },
-                  }}
+                <StyledListItemButton disableRipple
+                    component={RtLink} to={item.path} key={item.name} style={{ padding: "8px 3px" }}
+                    sx={{
+                        '&.active': {
+                            backgroundColor: "#f4f5f5",
+                            fontWeight: "500",
+                            borderRadius: "14px",
+                            color: 'black'
+                        },
+                        ":hover": {
+                            backgroundColor: "#f4f5f5"
+                        }
+                    }}
                 >
-                <ListItemIcon  style={{paddingLeft: '16px'}}>
-                    {item.icon}
-                </ListItemIcon>
-                <ListItemText style={{ fontSize: "12px" }} disableTypography primary={item.name} />
-            </StyledListItemButton>
+                    <ListItemIcon style={{ paddingLeft: '16px' }}>
+                        {item.icon}
+                    </ListItemIcon>
+                    <ListItemText style={{ fontSize: "12px" }} disableTypography primary={item.name} />
+                </StyledListItemButton>
             ))}
         </Stack>
     ) : null;

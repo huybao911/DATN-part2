@@ -77,7 +77,7 @@ exports.resetPassword = async (req, res, next) => {
 
 exports.getEvents = async (req, res) => {
   const smanagerRole = await User.find({ role: "640cc3c229937ffacc4359f8" });
-  const smanagerEvent = await Event.find({ approver: smanagerRole }).populate("poster").populate({ path: "storagers", populate: [{ path: "storager" }]}).populate({ path: "usersApplyJob", populate: [{ path: "userApply" }]}).populate({ path: "usersApplyJob", populate: [{ path: "jobEvent" }]});
+  const smanagerEvent = await Event.find({ approver: smanagerRole }).populate("poster").populate("departmentEvent").populate({ path: "storagers", populate: [{ path: "storager" }]}).populate({ path: "usersApplyJob", populate: [{ path: "userApply" }]}).populate({ path: "usersApplyJob", populate: [{ path: "jobEvent" }]});
   try {
     return res.status(200).json(smanagerEvent);
   } catch (error) {
