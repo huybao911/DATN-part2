@@ -6,7 +6,7 @@ import { RootState } from "redux/reducers";
 import { logOutUser } from "redux/actions/user";
 import { StyledMenuItem } from '../../layouts/navigation/style'
 
-import {  Favorite, Logout, Person, Approval, Notifications } from '@mui/icons-material';
+import {  Bookmark, Logout, Person, Approval, Notifications } from '@mui/icons-material';
 
 import { purple } from '@mui/material/colors';
 
@@ -34,8 +34,8 @@ const Homepage: React.FC = (): JSX.Element => {
 
   const user = useSelector((state: RootState) => state.user);
 
-  const userHeader = user.isAuthenticated ? (
-    <StyledRoot style={{ boxShadow: "none" }}>
+  const userHeader = user.isAuthenticated && window.location.pathname.includes('/storageEvent') || user.isAuthenticated && window.location.pathname.includes('/applyJob') || user.isAuthenticated && window.location.pathname.includes('/profile') ? (
+    <StyledRoot style={{ boxShadow: "none", overflowX:"hidden"}}>
       <Toolbar>
         <Link style={{ textDecoration: 'none' }} to={'/loginuser'}>
           <img src="/hutech-logo.ico" style={{ height: "56px", width: "50px" }}></img>
@@ -104,7 +104,7 @@ const Homepage: React.FC = (): JSX.Element => {
 
               <StyledMenuItem component={NavLink} to={'/storageEvent'}>
                 <ListItemIcon>
-                  <Favorite style={{ color: "red" }} fontSize="small" />
+                  <Bookmark style={{ color: "black" }} fontSize="small" />
                 </ListItemIcon>
                 <Typography>Sự Kiện Đã Lưu</Typography>
               </StyledMenuItem>

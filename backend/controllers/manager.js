@@ -62,7 +62,7 @@ exports.getAuthManager = async (req, res, next) => {
 
 exports.getEvent = async (req, res) => {
   const managerUser = await User.findById(req?.manager?._id);
-  const managerEvent = await Event.find({ poster: managerUser._id }).populate("poster").populate({ path: "poster", populate: [{ path: "department" }] }).populate("approver").populate("departmentEvent").populate({ path: "comments", populate: [{ path: "commenter" }] });
+  const managerEvent = await Event.find({ poster: managerUser._id }).populate("poster").populate({ path: "poster", populate: [{ path: "department" }] }).populate("approver").populate("departmentEvent").populate({ path: "comments", populate: [{ path: "commenter" }] }).populate("approver").populate("departmentEvent").populate({ path: "usersApplyJob", populate: [{ path: "userApply", populate: [{ path: "department" }] }] }).populate({ path: "usersApplyJob", populate: [{ path: "jobEvent", populate: [{ path: "event" }] }] });;
   try {
     if (!req.manager) return res.status(400).send("You dont have permission");
     return res.status(200).json(managerEvent);
@@ -278,7 +278,7 @@ exports.getJobUserApply = async (req, res) => {
 
 exports.getCTV = async (req, res) => {
   const managerUser = await User.findById(req?.manager?._id);
-  const findEvent = await Event.find({ poster: managerUser._id }).populate("poster").populate({ path: "poster", populate: [{ path: "department" }] }).populate("approver").populate("departmentEvent").populate({ path: "usersApplyJob", populate: [{ path: "userApply" }] }).populate({ path: "usersApplyJob", populate: [{ path: "jobEvent", populate: [{ path: "event" }] }] });
+  const findEvent = await Event.find({ poster: managerUser._id }).populate("poster").populate({ path: "poster", populate: [{ path: "department" }] }).populate("approver").populate("departmentEvent").populate({ path: "usersApplyJob", populate: [{ path: "userApply", populate: [{ path: "department" }] }] }).populate({ path: "usersApplyJob", populate: [{ path: "jobEvent", populate: [{ path: "event" }] }] });
   // const findCTV = findEvent.map((userapply) => userapply.usersApplyJob.filter((userapply) => userapply.applyStatus == "Duyệt"));
   // const findCTV = await Event.find({ poster: managerUser._id, usersApplyJob: { $elemMatch: { applyStatus: "Duyệt" } } }).populate("poster").populate({ path: "usersApplyJob", populate: [{ path: "userApply" }] }).populate({ path: "usersApplyJob", populate: [{ path: "jobEvent" }] });
   try {

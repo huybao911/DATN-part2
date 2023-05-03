@@ -150,7 +150,7 @@ const FeedApplyJob: React.FC<Props> = ({ event }): JSX.Element => {
                                 <CardContent>
 
                                     {findJobUserApply.map((job: any) =>
-                                        <Box>
+                                        <Box key={job._id}>
                                             <Box>
                                                 <Typography sx={{ textAlign: 'left', fontSize: '14px' }}>
                                                     {job?.jobEvent.nameJob ?? null}

@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { makeStyles } from "@material-ui/core/styles";
 
-import { Avatar, Card, CardActions, CardContent, CardHeader, CardMedia, Collapse, IconButton, Toolbar, Typography } from '@mui/material';
-import { ArrowRight, Favorite, FavoriteBorder, MoreVert } from '@mui/icons-material';
+import { Avatar, Card, CardContent, CardHeader, CardMedia, IconButton, Toolbar, Typography } from '@mui/material';
+import {  Bookmark, BookmarkBorder } from '@mui/icons-material';
 import TabContext from '@mui/lab/TabContext';
 import TabPanel from '@mui/lab/TabPanel';
 import { green } from '@mui/material/colors';
@@ -126,9 +126,9 @@ const FeedStorageEvent: React.FC<Props> = ({ event }): JSX.Element => {
     const storagers = event.storagers.some((storager: any) => user.user.username.includes(storager.storager.username));
 
     const compareUser = storagers ? (
-        <Favorite onClick={handleClickUnStorage} sx={{ fontSize: '24px', color: 'red' }} />
+        <Bookmark onClick={handleClickUnStorage} style={{ width:"30px", height:"30px", color: 'black' }} />
     ) : storager !== user.user.username ? (
-        <FavoriteBorder onClick={handleClickStorage} sx={{ fontSize: '24px', color: 'red' }} />
+        <BookmarkBorder onClick={handleClickStorage} style={{ width:"30px", height:"30px", color: 'black' }} />
     ) : null
 
     const classes = useStyles();
@@ -149,7 +149,7 @@ const FeedStorageEvent: React.FC<Props> = ({ event }): JSX.Element => {
                                     }
                                     action={
                                         <IconButton aria-label='settings'>
-                                            <MoreVert />
+                                             {compareUser}
                                         </IconButton>
                                     }
                                     title={event.poster.username ?? null}
@@ -183,18 +183,6 @@ const FeedStorageEvent: React.FC<Props> = ({ event }): JSX.Element => {
                                     alt="Paella dish"
                                 >
                                 </CardMedia>
-
-                                <CardActions disableSpacing >
-                                    {compareUser}
-                                    <IconButton sx={{ ml: 'auto' }}>
-                                        <ArrowRight />
-                                    </IconButton>
-
-                                </CardActions>
-
-                                <Collapse>
-                                </Collapse>
-
                             </Card>
                         </TabPanel>
                     </TabContext>
