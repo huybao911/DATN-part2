@@ -4,6 +4,7 @@ import { getEvents, deleteEvent } from "redux/actions/Manager";
 import { RootState } from "redux/reducers";
 import { IEvent } from "redux/types/event";
 import UpdateEvent from "pages/Manager/UpdateEvent";
+
 import ClearIcon from '@mui/icons-material/Clear';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import AddIcon from '@mui/icons-material/Add';
@@ -38,8 +39,6 @@ const Posts: React.FC = (): JSX.Element => {
     const [anchorEl, setAnchorEl] = React.useState([null]);
     const manager = useSelector((state: RootState) => state.manager);
 
-    const PF = process.env.REACT_APP_PUBLIC_FOLDER;
-
     // function formatDate(input: any) {
     //     var datePart = input.match(/\d+/g),
     //         year = datePart[0].substring(0),
@@ -55,9 +54,7 @@ const Posts: React.FC = (): JSX.Element => {
     React.useEffect(() => {
         setEvents(() =>
             manager?.events?.filter((event: any) =>
-                event.nameEvent || event.poster || event.approver || event.comments || event.quantityUser
-                || event.job || event.location || event.departmentEvent || event.costs || event.dayStart
-                || event.dayEnd || event.image
+                event.nameEvent
             ));
     }, [manager]);
 
@@ -106,11 +103,59 @@ const Posts: React.FC = (): JSX.Element => {
                         </Typography>
                     </Box>
                 </BoxButton>
-            </Box>
-            <StyledRoot style={{ display: "flex", flexDirection: "column" }}>
-                {events.map((event: any, index) =>
-                    <Box key={event._id}>
 
+            </Box>
+            <Box style={{ display: "flex", flexDirection: "column" }}>
+                {events.map((event: any, index) =>
+                    <StyledRoot key={event._id}>
+                        <BoxButton component={Link} to={`/listUserApply/${event._id}`} style={{ fontSize: '14px', textDecoration: "none", color: "black", marginRight: "100px" }}>
+                            <Box style={{
+                                border: '1px solid rgba(158, 158, 158, 0.32)',
+                                borderRadius: '10px', textAlign: 'center',
+                                marginTop: '0.5px', padding: '11px', color: "white", backgroundColor: '#00ab55',
+                                width: 140, display: 'flex', flexDirection: 'row', justifyContent: 'center'
+                            }}>
+                                <Typography style={{ fontSize: '14px', paddingTop: "2.5px" }} >
+                                    Danh sách ứng tuyển
+                                </Typography>   
+                            </Box>
+                        </BoxButton>
+                        <BoxButton component={Link} to={`/listCTVEvent/${event._id}`} style={{ fontSize: '14px', textDecoration: "none", color: "black", marginRight: "100px" }}>
+                            <Box style={{
+                                border: '1px solid rgba(158, 158, 158, 0.32)',
+                                borderRadius: '10px', textAlign: 'center',
+                                marginTop: '0.5px', padding: '11px', color: "white", backgroundColor: '#00ab55',
+                                width: 140, display: 'flex', flexDirection: 'row', justifyContent: 'center'
+                            }}>
+                                <Typography style={{ fontSize: '14px', paddingTop: "2.5px" }} >
+                                    Danh sách ctv
+                                </Typography>   
+                            </Box>
+                        </BoxButton>
+                        <BoxButton component={Link} to={`/listCTVExcel/${event._id}`} style={{ fontSize: '14px', textDecoration: "none", color: "black", marginRight: "100px" }}>
+                            <Box style={{
+                                border: '1px solid rgba(158, 158, 158, 0.32)',
+                                borderRadius: '10px', textAlign: 'center',
+                                marginTop: '0.5px', padding: '11px', color: "white", backgroundColor: '#00ab55',
+                                width: 140, display: 'flex', flexDirection: 'row', justifyContent: 'center'
+                            }}>
+                                <Typography style={{ fontSize: '14px', paddingTop: "2.5px" }} >
+                                    Danh sách ctv excel
+                                </Typography>   
+                            </Box>
+                        </BoxButton>
+                        <BoxButton component={Link} to={`/jobEvents/${event._id}`} style={{ fontSize: '14px', textDecoration: "none", color: "black", marginRight: "100px" }}>
+                            <Box style={{
+                                border: '1px solid rgba(158, 158, 158, 0.32)',
+                                borderRadius: '10px', textAlign: 'center',
+                                marginTop: '0.5px', padding: '11px', color: "white", backgroundColor: '#00ab55',
+                                width: 140, display: 'flex', flexDirection: 'row', justifyContent: 'center'
+                            }}>
+                                <Typography style={{ fontSize: '14px', paddingTop: "2.5px" }} >
+                                    Danh sách công việc
+                                </Typography>   
+                            </Box>
+                        </BoxButton>
                         <Box style={{ fontSize: '34px', lineHeight: 3, fontWeight: '700', letterSpacing: 0.4 }}>
                             {event?.nameEvent ?? null}
                         </Box>
@@ -166,7 +211,7 @@ const Posts: React.FC = (): JSX.Element => {
                             <CardMedia
                                 component="img"
                                 alt="Paella dish"
-                                src={PF + event?.image ?? null}
+                                src={event?.image}
                                 style={{
                                     width: '100%',
                                     height: '100%',
@@ -189,7 +234,7 @@ const Posts: React.FC = (): JSX.Element => {
                             >
 
                                 <Grid item xs={4}>
-                                    <Box style={{ color: 'rgb(145, 158, 171)', paddingBottom: '10px', textTransform: 'uppercase' }}>Công việc</Box>
+                                    <Box style={{ color: 'rgb(145, 158, 171)', fontSize: "12px", paddingBottom: '10px', textTransform: 'uppercase' }}>Công việc</Box>
                                     {event.job.map((job: any) =>
                                         <Box key={job._id} style={{ padding: '2px 0px' }}>
                                             • {job.nameJob}
@@ -198,35 +243,35 @@ const Posts: React.FC = (): JSX.Element => {
                                 </Grid>
 
                                 <Grid item xs={4} >
-                                    <Box style={{ color: 'rgb(145, 158, 171)', paddingBottom: '10px', textTransform: 'uppercase' }}>Số lượng</Box>
+                                    <Box style={{ color: 'rgb(145, 158, 171)', fontSize: "12px", paddingBottom: '10px', textTransform: 'uppercase' }}>Số lượng</Box>
                                     <Box>
                                         {event?.quantityUser ?? null}
                                     </Box>
                                 </Grid>
 
                                 <Grid item xs={4} >
-                                    <Box style={{ color: 'rgb(145, 158, 171)', paddingBottom: '10px', textTransform: 'uppercase' }}>Tổng tiền</Box>
+                                    <Box style={{ color: 'rgb(145, 158, 171)', fontSize: "12px", paddingBottom: '10px', textTransform: 'uppercase' }}>Tổng tiền</Box>
                                     <Box>
                                         {new Intl.NumberFormat().format(event.costs)} VND
                                     </Box>
                                 </Grid>
 
                                 <Grid item xs={4}>
-                                    <Box style={{ color: 'rgb(145, 158, 171)', paddingBottom: '10px', textTransform: 'uppercase' }}>Địa chỉ</Box>
+                                    <Box style={{ color: 'rgb(145, 158, 171)', fontSize: "12px", paddingBottom: '10px', textTransform: 'uppercase' }}>Địa chỉ</Box>
                                     <Box>
                                         {event?.location ?? null}
                                     </Box>
                                 </Grid>
 
                                 <Grid item xs={4} >
-                                    <Box style={{ color: 'rgb(145, 158, 171)', paddingBottom: '10px', textTransform: 'uppercase' }}>Ngày bắt đầu</Box>
+                                    <Box style={{ color: 'rgb(145, 158, 171)', fontSize: "12px", paddingBottom: '10px', textTransform: 'uppercase' }}>Ngày bắt đầu</Box>
                                     <Box>
                                         {event?.dayStart ?? null}
                                     </Box>
                                 </Grid>
 
                                 <Grid item xs={4} >
-                                    <Box style={{ color: 'rgb(145, 158, 171)', paddingBottom: '10px', textTransform: 'uppercase' }}>Ngày kết thúc</Box>
+                                    <Box style={{ color: 'rgb(145, 158, 171)', fontSize: "12px", paddingBottom: '10px', textTransform: 'uppercase' }}>Ngày kết thúc</Box>
                                     <Box>
                                         {event?.dayEnd ?? null}
                                     </Box>
@@ -268,9 +313,9 @@ const Posts: React.FC = (): JSX.Element => {
                                 </Card>
                             </Box>
                         )}
-                    </Box>
+                    </StyledRoot>
                 )}
-            </StyledRoot>
+            </Box>
 
         </Container>
 

@@ -6,7 +6,6 @@ const Role = require("../models/Role");
 const Department = require("../models/Department");
 const Event = require("../models/Event");
 const JobEvent = require("../models/JobEvent");
-const fs = require('fs');
 paginate = require("../util/paginate");
 
 exports.login = async (req, res, next) => {
@@ -74,11 +73,6 @@ exports.getEvent = async (req, res) => {
 
 exports.createEvent = async (req, res) => {
   const { nameEvent, comments, job, location, dayStart, dayEnd, storagers, usersApplyJob, image, contentEvent } = req.body;
-  // const image = fs.readFileSync(req.file.path);
-  // var encode_image = img.toString("base64");
-  // if (!req.file.path) {
-  //   return res.status(400).send('No files were uploaded.');
-  // }
   const managerUser = await User.findById(req?.manager?._id);
   const managerDepartment = await Department.findOne({ _id: managerUser.department });
   const imagePath = image.replace(/^.*\\/, "");
@@ -99,7 +93,6 @@ exports.createEvent = async (req, res) => {
       contentEvent,
       storagers,
       usersApplyJob,
-      // image:Buffer.from(encode_image, "base64"),
       image:imagePath,
     });
     await newEvent.save();
@@ -285,6 +278,40 @@ exports.getCTV = async (req, res) => {
     if (!req.manager) return res.status(400).send("You dont have permission");
     return res.status(200).json(findEvent);
   } catch (error) {
+    return res.status(500).json(error);
+  }
+};
+
+exports.updateCoefficient = async (req, res, next) => {
+  const { eventId, userApplyId } = req.params;
+  const { coefficient } = req.body;
+  const event = await Event.find({_id:eventId});
+  const userApply = event.map((applyUser) => applyUser.usersApplyJob.filter(((applyUser) => applyUser._id == userApplyId)))
+  const userApplys = userApply.map((applyUser) => applyUser.map((applyUser) => applyUser.jobEvent));
+  const jobEvent  = await JobEvent.findById(userApplys.toString());
+
+  try {
+    if (!req.manager) return res.status(400).send("You dont have permission");
+    const newCoefficient = await Event.findOneAndUpdate(
+      {
+        _id: eventId,
+      },
+      {
+        $set: {
+          'usersApplyJob.$[el].coefficient': coefficient,
+          'usersApplyJob.$[el].total': jobEvent.unitPrice * coefficient,
+        }
+      },
+      { 
+        arrayFilters:[{
+          "el._id":userApplyId
+        }],
+        'new': true, 'safe': true, 'upsert': true
+      }
+    );
+    return res.status(200).json(newCoefficient);
+  } catch (error) {
+    console.log(error.message);
     return res.status(500).json(error);
   }
 };

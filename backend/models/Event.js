@@ -76,6 +76,7 @@ const eventSchema = new mongoose.Schema(
                     type: mongoose.Types.ObjectId,
                     ref: "User",
                 },
+                created: { type: Date, default: Date.now }
             },
         ],
         usersApplyJob: [
@@ -96,6 +97,13 @@ const eventSchema = new mongoose.Schema(
                     type: String,
                     default: "Chờ phê duyệt",
                 },
+                coefficient : {
+                    type: Number,
+                    default: 1,
+                },
+                total : {
+                    type: Number,
+                }
             },
         ],
     },

@@ -1,24 +1,26 @@
 import * as React from "react";
-import { styled, makeStyles } from "@material-ui/core/styles";
+import { styled, alpha, makeStyles } from "@material-ui/core/styles";
 import { useDispatch, useSelector } from "react-redux";
 import { getEvents, getDepartments } from "redux/actions/user";
 import { RootState } from "redux/reducers";
-import { Button, AppBar, Box, Toolbar, Typography, InputAdornment, OutlinedInput, IconButton, TextField } from '@mui/material';
+import { logOutUser } from "redux/actions/user";
+import { Box, OutlinedInput, InputAdornment, TextField, Toolbar, AppBar, Typography, Avatar, ListItemIcon, Divider, MenuItem as MenuItemDepartment, IconButton, Stack, Popover, MenuItem } from '@mui/material';
 
-import { MenuItem as MenuItemDepartment } from "@material-ui/core"
 import { StyledMenuItem } from '../../layouts/navigation/style'
 import { BoxSpan } from '../../layouts/navigation/style'
 
 import { IEvent } from "redux/types/event";
 import { IDepartment } from "redux/types/department";
 
-import FeedGuest from "pages/guest/FeedGuest";
-import FeedDetailGuest from "pages/guest/FeedDetailGuest";
+import FeedContent from "pages/contents/FeedContent";
+import FeedDetailContent from "pages/contents/FeedDetailContent";
+
+import { purple } from '@mui/material/colors';
 
 import SearchIcon from '@mui/icons-material/Search';
-import { Person, PersonAdd } from '@mui/icons-material';
+import {  Person, Notifications } from '@mui/icons-material';
 
-import { Link } from "react-router-dom";
+import { Link, NavLink, useParams } from "react-router-dom";
 
 const StyledSearch = styled(OutlinedInput)(({ theme }) => ({
     width: 240,
@@ -66,10 +68,13 @@ const StyledRoot = styled(AppBar)(() => ({
     backgroundColor: 'white',
     fontWeight: 'bold',
 }));
-
-const Content: React.FC = (): JSX.Element => {
+interface RouteParams {
+    id: string
+}
+const DetailContent: React.FC = (): JSX.Element => {
 
     const dispatch = useDispatch();
+    const params = useParams<RouteParams>();
     const [anchorElUser, setAnchorElUser] = React.useState(null);
 
     const openUser = Boolean(anchorElUser);
@@ -103,11 +108,10 @@ const Content: React.FC = (): JSX.Element => {
                 event.nameEvent
             ));
     }, [user]);
-    const findIndexEvent = user.events.map((event: any) => event.nameEvent)
     React.useEffect(() => {
         setEventDetails(() =>
             user?.events?.filter((event: any) =>
-                event.nameEvent == findIndexEvent[0]
+                event._id == params.id
             ));
     }, [user]);
     React.useEffect(() => {
@@ -115,7 +119,7 @@ const Content: React.FC = (): JSX.Element => {
     }, [user]);
 
     const myInputProps_TenKhoa = {
-        startAdornment: <Box style={{ fontSize: '12px' }}
+        startAdornment: <Box sx={{ fontSize: '12px', position: "start" }}
         > Khoa</Box>,
         style: {
             height: '48px',
@@ -155,7 +159,7 @@ const Content: React.FC = (): JSX.Element => {
     };
 
     React.useEffect(() => {
-        document.title = "Trang Chủ";
+        document.title = "Trang Chủ | CTV";
     }, []);
 
     return (
@@ -163,7 +167,7 @@ const Content: React.FC = (): JSX.Element => {
             <Box>
                 <StyledRoot style={{ boxShadow: "none", overflowX: "hidden" }}>
                     <Toolbar>
-                        <Link style={{ textDecoration: 'none' }} to={'/'}>
+                        <Link style={{ textDecoration: 'none' }} to={'/user'}>
                             <img src="/hutech-logo.ico" style={{ height: "56px", width: "50px" }}></img>
                         </Link>
                         <Box textAlign={"center"} sx={{ flexGrow: 1 }}>
@@ -201,18 +205,95 @@ const Content: React.FC = (): JSX.Element => {
                         {/* <Box>
                             <Notifications style={{ color: 'black' }} />
                         </Box> */}
-                        <Box
-                            style={{ textDecoration:"none", color:"#212B36", marginRight:14, fontSize: 14 }}
-                            component={Link} to={"/loginuser"}
+                        <Stack
+                            direction="row"
+                            alignItems="center"
+                            spacing={{
+                                xs: 0.5,
+                                sm: 1,
+                            }}
+                            sx={{ margin: 3, color: 'black' }}
                         >
-                           Đăng nhập
-                        </Box>
-                        <Box
-                            style={{ backgroundColor: 'rgb(33, 43, 54)', color: "white" , fontSize: 13, fontWeight:"400", borderRadius: 4, textDecoration:"none", padding:6.5 }}
-                            component={Link} to={"/register"}
-                        >
-                           Đăng ký
-                        </Box>
+                            <Box sx={{
+                                display: 'flex', alignItems: 'center', textAlign: 'center'
+                            }}>
+                                <IconButton onClick={(event) => handleClickUser(event)}
+                                    sx={{
+                                        p: 0,
+
+                                    }}>
+                                    <Person style={{ color: "black" }} />
+                                </IconButton>
+
+                                <Popover
+                                    open={openUser}
+                                    anchorEl={anchorElUser}
+                                    onClose={handleCloseUser}
+                                    anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                                    transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                                    sx={{ marginLeft: 1 }}
+                                    PaperProps={{
+                                        style: {
+                                            borderRadius: 20,
+                                            boxShadow: 'rgba(145, 158, 171, 0.24) 0px 0px 2px 0px, rgba(145, 158, 171, 0.24) -20px 20px 40px -4px',
+                                        },
+                                        sx: {
+                                            p: 1,
+                                            width: 220,
+                                            overflowX: 'unset',
+                                            overflowY: 'unset',
+                                            '& .MuiMenuItem-root': {
+                                                px: 1,
+                                                py: 1,
+                                                typography: 'body2',
+                                                borderRadius: 1,
+                                                justifyContent: 'left'
+                                            },
+                                            '& .MuiAvatar-root': {
+                                                width: 32,
+                                                height: 32,
+                                                ml: -0.5,
+                                                mt: 1,
+                                                mr: 1,
+                                            },
+                                        },
+                                    }}
+                                >
+
+                                    <BoxSpan />
+                                    <Stack sx={{ p: 0.5 }} >
+                                        <StyledMenuItem component={NavLink} to={'/profile'} >
+                                            <Box display={"flex"}>
+                                                <Box>
+                                                    <Avatar src={user.user.avatar}/>
+                                                </Box>
+                                                <Box flexDirection={'column'}>
+                                                    <Typography style={{ fontWeight: 500, fontSize: '14px' }}>{user.user.username}</Typography>
+                                                    <Typography style={{ color: "#637381", fontSize: '13.5px' }} >{user.user.email}</Typography>
+                                                </Box>
+                                            </Box>
+                                        </StyledMenuItem>
+
+                                        <Divider sx={{ borderStyle: 'dashed' }} />
+
+                                        <StyledMenuItem component={NavLink} to={'/storageEvent'}>
+                                            <Typography style={{ fontSize: '14px' }}>Sự Kiện Đã Lưu</Typography>
+                                        </StyledMenuItem>
+
+                                        <StyledMenuItem component={NavLink} to={'/applyJob'}>
+                                            <Typography style={{ fontSize: '14px', float: 'left' }}>Sự Kiện Đã Ứng Tuyển</Typography>
+                                        </StyledMenuItem>
+
+                                        <Divider sx={{ borderStyle: 'dashed' }} />
+
+                                        <MenuItem className="navbar-logout" onClick={(e) => dispatch(logOutUser())}>
+                                            <Typography style={{ fontSize: '14px' }}> Đăng Xuất</Typography>
+                                        </MenuItem>
+                                    </Stack>
+
+                                </Popover>
+                            </Box>
+                        </Stack>
                     </Toolbar>
                 </StyledRoot>
             </Box>
@@ -227,15 +308,15 @@ const Content: React.FC = (): JSX.Element => {
                             <Box style={{ paddingLeft: '20px', top: 100, zIndex: 10, }}>
                                 {events.map((event: any) =>
                                     <Box>
-                                        <Link style={{ textDecoration: "none" }} to={`/guestEvent1/${event._id}`}>
-                                            <FeedGuest event={event} key={event._id} />
+                                        <Link style={{ textDecoration: "none" }} to={`/event1/${event._id}`}>
+                                            <FeedContent event={event} key={event._id} />
                                         </Link>
                                     </Box>
                                 )}
                             </Box>
                             <Box style={{ display: 'flex', paddingLeft: '20px', }}>
                                 {eventDetails.map((event: any) =>
-                                    <Box key={event._id} style={{
+                                    <Box style={{
                                         width: 500,
                                         height: 500,
                                         borderRadius: '12px',
@@ -244,7 +325,7 @@ const Content: React.FC = (): JSX.Element => {
                                         top: "100px",
                                     }}
                                     >
-                                        <FeedDetailGuest event={event} key={event._id} />
+                                        <FeedDetailContent event={event} key={event._id} />
                                     </Box>
                                 )}
                             </Box>
@@ -252,7 +333,7 @@ const Content: React.FC = (): JSX.Element => {
                     ) : (
                         <Box style={{ margin: "70px 0px" }}>
                             <Box>
-                                <img style={{ width: "400px", display: "flex", margin: "auto" }} src="/not-found.png" />
+                                <img style={{ width: "400px", height: "410px", display: "flex", margin: "auto" }} src="/not-found.png" />
                             </Box>
                             <Box>
                                 <Typography style={{ fontSize: "45px", fontWeight: "bold" }}>
@@ -268,4 +349,4 @@ const Content: React.FC = (): JSX.Element => {
     );
 };
 
-export default Content;
+export default DetailContent;

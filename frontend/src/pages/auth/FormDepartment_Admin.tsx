@@ -15,11 +15,19 @@ const useStyles = makeStyles((theme) => ({
         marginBottom: theme.spacing(1.5),
     },
     formControl: {
-        margin: theme.spacing(2, 0),
+        margin: theme.spacing(0, 0),
     },
     placeholder: {
         color: "#aaa"
-    }
+    },
+    selectStyle: {
+        fontSize: '13px',
+        marginBottom: '28px',
+        marginTop: 10,
+        "& fieldset": {
+            borderRadius: "10px",
+        },
+    },
 }));
 
 type Props = {
@@ -59,19 +67,24 @@ const FormField: React.FC<Props> = ({ isDepartmentCbb = false }): JSX.Element =>
 
             {isDepartmentCbb ? (
                 <FormControl fullWidth className={classes.formControl}>
-                    <FormLabel classes={{ root: classes.formLabel }}>Khoa</FormLabel>
+                    <FormLabel style={{ fontWeight: "bold", fontSize: "14px", marginTop: "5px" }}>Khoa</FormLabel>
                     <Select
                         name="department._id"
                         labelId="demo-simple-select-label"
                         id="handle-department"
                         value={values.department._id}
+                        className={classes.selectStyle}
                         onChange={handleChange}
                         onBlur={handleBlur}
                         error={touched.department ? Boolean(errors.department) : false}
-
-                    // renderValue={
-                    //     role !== "" ? undefined : () => <Placeholder>Role</Placeholder>
-                    // }
+                        variant={'outlined'}
+                        MenuProps={{
+                            PaperProps: {
+                                style: {
+                                    fontSize: 10,
+                                },
+                            },
+                        }}
                     >
                         {departments?.map((department: any) => (
                             <MenuItem value={department._id} key={department._id}>

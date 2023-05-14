@@ -1,17 +1,14 @@
 import React from "react";
 import { styled } from "@material-ui/core/styles";
-import { Button } from "@material-ui/core";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "redux/reducers";
 import { logOutUser } from "redux/actions/user";
 import { StyledMenuItem } from '../../layouts/navigation/style'
+import { BoxSpan } from '../../layouts/navigation/style'
+import { Person, Notifications } from '@mui/icons-material';
 
-import {  Bookmark, Logout, Person, Approval, Notifications } from '@mui/icons-material';
-
-import { purple } from '@mui/material/colors';
-
-import { Stack, AppBar, Box, Toolbar, Typography, Popover, MenuItem, Avatar, ListItemIcon, Divider } from '@mui/material';
-import { Link, NavLink } from "react-router-dom";
+import { AppBar, Box, Toolbar, Typography, Stack, Popover, MenuItem, Avatar, IconButton, Divider } from "@mui/material"
+import { NavLink } from "react-router-dom";
 const StyledRoot = styled(AppBar)(() => ({
   boxShadow: 'none',
   width: '100%',
@@ -35,18 +32,18 @@ const Homepage: React.FC = (): JSX.Element => {
   const user = useSelector((state: RootState) => state.user);
 
   const userHeader = user.isAuthenticated && window.location.pathname.includes('/storageEvent') || user.isAuthenticated && window.location.pathname.includes('/applyJob') || user.isAuthenticated && window.location.pathname.includes('/profile') ? (
-    <StyledRoot style={{ boxShadow: "none", overflowX:"hidden"}}>
+    <StyledRoot style={{ boxShadow: "none", overflowX: "hidden" }}>
       <Toolbar>
-        <Link style={{ textDecoration: 'none' }} to={'/loginuser'}>
+        <NavLink style={{ textDecoration: 'none' }} to={'/user'}>
           <img src="/hutech-logo.ico" style={{ height: "56px", width: "50px" }}></img>
-        </Link>
-        <Typography align='left' sx={{ flexGrow: 1 }}></Typography>
+        </NavLink>
+        <Typography align='left' style={{ flexGrow: 1 }}></Typography>
         <div className="verticalLine">
         </div>
         <Box>
-          <Button type='submit' href='' style={{ color: "white" }}>
+          <IconButton href='' style={{ color: "white" }}>
             <Notifications />
-          </Button>
+          </IconButton>
         </Box>
         <Stack
           direction="row"
@@ -57,71 +54,82 @@ const Homepage: React.FC = (): JSX.Element => {
           }}
           sx={{ margin: 3, color: 'black' }}
         >
-          <Box sx={{
-            display: 'flex', alignItems: 'center', textAlign: 'center',
-            '&.MuiButtonBase-root': {
-              color: 'black'
-            }
+          <Box style={{
+            display: 'flex', alignItems: 'center', textAlign: 'center'
           }}>
-            <Button size="large" onClick={(event) => handleClickUser(event)} >
-              <Person />
-            </Button>
+            <IconButton onClick={(event) => handleClickUser(event)}
+              sx={{
+                p: 0,
+
+              }}>
+              <Person style={{ color: "black" }} />
+            </IconButton>
+
             <Popover
               open={openUser}
               anchorEl={anchorElUser}
               onClose={handleCloseUser}
-              anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
+              anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
               transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+              sx={{ marginLeft: 1 }}
               PaperProps={{
+                style: {
+                  borderRadius: 20,
+                  boxShadow: 'rgba(145, 158, 171, 0.24) 0px 0px 2px 0px, rgba(145, 158, 171, 0.24) -20px 20px 40px -4px',
+                },
                 sx: {
                   p: 1,
                   width: 220,
+                  overflowX: 'unset',
+                  overflowY: 'unset',
                   '& .MuiMenuItem-root': {
                     px: 1,
                     py: 1,
                     typography: 'body2',
-                    borderRadius: 0.75,
+                    borderRadius: 1,
+                    justifyContent: 'left'
                   },
                   '& .MuiAvatar-root': {
                     width: 32,
                     height: 32,
                     ml: -0.5,
+                    mt: 1,
                     mr: 1,
-                  },
-                  '& .MuiTypography-root': {
-                    fontSize: "15px",
-                    color: "black"
                   },
                 },
               }}
             >
-              <StyledMenuItem component={NavLink} to={'/profile'} >
-                <Avatar sx={{ bgcolor: purple[500] }}>{user.user.username.charAt(0).toUpperCase()}</Avatar>
-                <Typography style={{ color: "black" }}>{user.user.username}</Typography>
-              </StyledMenuItem>
 
-              <Divider />
+              <BoxSpan />
+              <Stack sx={{ p: 0.5 }} >
+                <StyledMenuItem component={NavLink} to={'/profile'} >
+                  <Box display={"flex"}>
+                    <Box>
+                      <Avatar src={user.user.avatar}/>
+                    </Box>
+                    <Box flexDirection={'column'}>
+                      <Typography style={{ fontWeight: 500, fontSize: '14px' }}>{user.user.username}</Typography>
+                      <Typography style={{ color: "#637381", fontSize: '13.5px' }} >{user.user.email}</Typography>
+                    </Box>
+                  </Box>
+                </StyledMenuItem>
 
-              <StyledMenuItem component={NavLink} to={'/storageEvent'}>
-                <ListItemIcon>
-                  <Bookmark style={{ color: "black" }} fontSize="small" />
-                </ListItemIcon>
-                <Typography>Sự Kiện Đã Lưu</Typography>
-              </StyledMenuItem>
+                <Divider sx={{ borderStyle: 'dashed' }} />
 
-              <StyledMenuItem component={NavLink} to={'/applyJob'}>
-                <ListItemIcon>
-                  <Approval style={{ color: "black" }} fontSize="small" />
-                </ListItemIcon>
-                <Typography>Sự Kiện Đã Ứng Tuyển</Typography>
-              </StyledMenuItem>
+                <StyledMenuItem component={NavLink} to={'/storageEvent'}>
+                  <Typography style={{ fontSize: '14px' }}>Sự Kiện Đã Lưu</Typography>
+                </StyledMenuItem>
 
-              <MenuItem className="navbar-logout" onClick={(e) => dispatch(logOutUser())}>
-                <ListItemIcon>
-                  <Logout style={{ color: "red" }} fontSize="small" />
-                </ListItemIcon >
-                <Typography> Đăng Xuất</Typography>
-              </MenuItem>
+                <StyledMenuItem component={NavLink} to={'/applyJob'}>
+                  <Typography style={{ fontSize: '14px', float: 'left' }}>Sự Kiện Đã Ứng Tuyển</Typography>
+                </StyledMenuItem>
+
+                <Divider sx={{ borderStyle: 'dashed' }} />
+
+                <MenuItem className="navbar-logout" onClick={(e) => dispatch(logOutUser())}>
+                  <Typography style={{ fontSize: '14px' }}> Đăng Xuất</Typography>
+                </MenuItem>
+              </Stack>
 
             </Popover>
           </Box>

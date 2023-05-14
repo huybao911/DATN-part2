@@ -1,12 +1,11 @@
 import * as React from 'react';
 import { makeStyles } from "@material-ui/core/styles";
 
-import { Avatar, Card, CardContent, CardHeader, CardMedia, IconButton, Toolbar, Typography } from '@mui/material';
-import {  Bookmark, BookmarkBorder } from '@mui/icons-material';
+import { Avatar, Card, CardContent, CardHeader, CardMedia, Toolbar, Typography, Divider, Grid, Box } from '@mui/material';
+import { Bookmark, BookmarkBorder } from '@mui/icons-material';
 import TabContext from '@mui/lab/TabContext';
 import TabPanel from '@mui/lab/TabPanel';
 import { green } from '@mui/material/colors';
-import { Box } from '@mui/material';
 import { createStorager, deleteStoragerInList } from "redux/actions/user";
 import { formatDistance } from 'date-fns';
 
@@ -35,13 +34,11 @@ const useStyles = makeStyles((theme) => ({
         justifyContent: 'center',
         maxWidth: '100%',
         maxHeight: '100%',
-        width: '500px',
-        height: '500px',
+        width:"1400px"
     },
     myMedia: {
-        height: "250px",
-        // paddingTop: '56.25%', // 16:9,
-        marginTop: '30'
+        width: "320px",
+        borderRadius: "24px"
     },
     cardHold: {
         justifyContent: 'center',
@@ -114,7 +111,9 @@ const FeedStorageEvent: React.FC<Props> = ({ event }): JSX.Element => {
         dispatch(deleteStoragerInList(event._id));
     }
 
-    const PF = process.env.REACT_APP_PUBLIC_FOLDER;
+    function convertTZ(date: any, tzString: any) {
+        return new Date(date).toLocaleString("en-TT", { timeZone: tzString });
+    }
 
     const textAvatar = event.poster.username ?? null;
     const letterAvatar = textAvatar.charAt(0).toUpperCase();
@@ -126,9 +125,9 @@ const FeedStorageEvent: React.FC<Props> = ({ event }): JSX.Element => {
     const storagers = event.storagers.some((storager: any) => user.user.username.includes(storager.storager.username));
 
     const compareUser = storagers ? (
-        <Bookmark onClick={handleClickUnStorage} style={{ width:"30px", height:"30px", color: 'black' }} />
+        <Bookmark onClick={handleClickUnStorage} style={{ width: "30px", height: "30px", color: 'black', marginTop: "15px", marginRight: "15px" }} />
     ) : storager !== user.user.username ? (
-        <BookmarkBorder onClick={handleClickStorage} style={{ width:"30px", height:"30px", color: 'black' }} />
+        <BookmarkBorder onClick={handleClickStorage} style={{ width: "30px", height: "30px", color: 'black', marginTop: "15px", marginRight: "15px" }} />
     ) : null
 
     const classes = useStyles();
@@ -141,48 +140,81 @@ const FeedStorageEvent: React.FC<Props> = ({ event }): JSX.Element => {
                         <TabPanel value="1" >
                             {/* de rieng ra 1 component */}
                             <Card className={classes.card}>
-                                <CardHeader
-                                    avatar={
-                                        <Avatar sx={{ bgcolor: green[500] }} aria-label="recipe">
-                                            {letterAvatar}
-                                        </Avatar>
-                                    }
-                                    action={
-                                        <IconButton aria-label='settings'>
-                                             {compareUser}
-                                        </IconButton>
-                                    }
-                                    title={event.poster.username ?? null}
-                                    titleTypographyProps={{ align: 'left', fontSize: '16px', fontWeight: 'bold', paddingBottom: '2px' }}
-                                    subheader={lettercreatedAt}
-                                    subheaderTypographyProps={{ align: 'left', fontSize: '12px' }}
-                                >
-                                </CardHeader>
+                                <Box display={'flex'} flexDirection={'row'}>
+                                    <Box sx={{ marginTop: "50px", marginLeft: "20px", fontSize: "20px", fontWeight: "bold", width: "850px" }}>
+                                        <Box sx={{ marginLeft: "15px" }}>
+                                            {event.nameEvent}
+                                        </Box>
+                                        <Typography style={{ textAlign: 'left', fontSize: '14px', margin: '0px 14px', marginTop: "6px" }}>
+                                            {event?.dayStart ?? null} - {event?.dayEnd ?? null}
+                                        </Typography>
+                                        <Box>
+                                            <CardHeader
+                                                avatar={
+                                                    <Avatar style={{ backgroundColor: green[500] }} aria-label="recipe">
+                                                        {letterAvatar}
+                                                    </Avatar>
+                                                }
+                                                title={event.poster.username ?? null}
+                                                titleTypographyProps={{ align: 'left', fontSize: '16px', fontWeight: 'bold' }}
+                                                subheader={lettercreatedAt}
+                                                subheaderTypographyProps={{ align: 'left', fontSize: '12px' }}
+                                            >
+                                            </CardHeader>
 
-                                <CardContent>
-                                    <Typography sx={{ textAlign: 'left', fontSize: '24px', fontWeight: "bold" }}>
-                                        {event.nameEvent ?? null}
-                                    </Typography>
-                                    <Typography sx={{ textAlign: 'left', fontSize: '14px' }}>
-                                        {event.quantityUser ?? null}
-                                    </Typography>
-                                    <Typography sx={{ textAlign: 'left', fontSize: '14px' }}>
-                                        {event.location ?? null}
-                                    </Typography>
-                                    <Typography sx={{ textAlign: 'left', fontSize: '14px' }}>
-                                        {event.dayStart ?? null}
-                                    </Typography>
-                                    <Typography sx={{ textAlign: 'left', fontSize: '14px' }}>
-                                        {event.dayEnd ?? null}
-                                    </Typography>
-                                </CardContent >
-                                <CardMedia
-                                    className={classes.myMedia}
-                                    component="img"
-                                    image={PF + event.image ?? null}
-                                    alt="Paella dish"
-                                >
-                                </CardMedia>
+                                            <CardContent>
+                                                <Box>
+                                                    <Box>
+                                                        <Typography style={{ textAlign: 'left', fontSize: '15px', marginTop: "-10px", marginBottom: '14px' }}>
+                                                            Công việc:
+                                                        </Typography>
+                                                        <Grid container spacing={2} columns={16} style={{ marginLeft: "20px", marginBottom: "25px" }}>
+                                                            {event.job.map((job: any) =>
+                                                                <Grid item xs={4} style={{ fontWeight: "initial", fontSize: "14px" }}>
+                                                                    {job.nameJob}
+                                                                </Grid>
+                                                            )}
+                                                        </Grid>
+                                                    </Box>
+                                                    <Box>
+                                                        <Typography style={{ textAlign: 'left', fontSize: '14px' }}>
+                                                            Địa điểm: {event.location ?? null}
+                                                        </Typography>
+                                                    </Box>
+                                                    <Box sx={{ marginTop: "30px" }}>
+                                                        {event.storagers.filter((storager:any) => storager.storager.username == user.user.username).map((storager: any) =>
+                                                            <Typography style={{ textAlign: 'left', fontSize: '14px' }}>
+                                                                Ngày lưu: {convertTZ((storager.created), "Asia/Bangkok")}
+                                                            </Typography>
+                                                        )}
+                                                    </Box>
+                                                </Box>
+                                            </CardContent >
+                                        </Box>
+                                    </Box>
+                                    <Box >
+                                        <Divider orientation="vertical" style={{ margin: '55px 0px', height: "250px", backgroundColor: "rgba(0,0,0,0.5)" }} />
+                                    </Box>
+                                    <Box sx={{ width: "730px" }}>
+                                        <Box display={'flex'} flexDirection={'column'}>
+                                            <Box textAlign={'right'}>
+                                                {compareUser}
+                                            </Box>
+                                            <Box sx={{ marginTop: "30px", fontSize: "20px", fontWeight: "bold", textAlign: "center" }}>
+                                                Khoa {event.departmentEvent.nameDepartment.toLowerCase()}
+                                            </Box>
+                                            <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", marginTop: "25px" }}>
+                                                <CardMedia
+                                                    className={classes.myMedia}
+                                                    component="img"
+                                                    image={event?.image}
+                                                    alt="Paella dish"
+                                                >
+                                                </CardMedia>
+                                            </Box>
+                                        </Box>
+                                    </Box>
+                                </Box>
                             </Card>
                         </TabPanel>
                     </TabContext>

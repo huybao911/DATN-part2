@@ -180,7 +180,7 @@ function EnhancedTableHead(props: EnhancedTableProps) {
   );
 }
 
-const Users: React.FC = (): JSX.Element => {
+const JobEvent: React.FC = (): JSX.Element => {
 
   const dispatch = useDispatch();
 
@@ -441,4 +441,4 @@ const Users: React.FC = (): JSX.Element => {
   );
 };
 
-export default Users;
+export default JobEvent;

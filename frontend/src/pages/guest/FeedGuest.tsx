@@ -1,25 +1,17 @@
 import * as React from 'react';
-import { makeStyles, styled } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 
-import { AppBar, Avatar, Card, CardContent, CardHeader, CardMedia, IconButton, Toolbar, Stack, Typography, Popover, ListItemIcon, Divider } from '@mui/material';
-import { MoreVert, PersonAdd, Person } from '@mui/icons-material';
-import { Button } from "@material-ui/core";
+import { Avatar, Card, Box, CardMedia, Typography } from '@mui/material';
+import { Divider } from '@mui/material';
+
 import TabContext from '@mui/lab/TabContext';
-import TabPanel from '@mui/lab/TabPanel';
-import { green } from '@mui/material/colors';
-import { Box } from '@mui/material';
-
-import { StyledMenuItem } from '../../layouts/navigation/style'
-import { Link } from "react-router-dom";
+import { createStorager, deleteStorager } from "redux/actions/user";
 
 import { formatDistance } from 'date-fns';
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "redux/reducers";
 
-const StyledRoot = styled(AppBar)(() => ({
-    boxShadow: 'none',
-    width: '100%',
-    backgroundColor: 'white',
-    fontWeight: 'bold',
-}));
+
 type Props = {
     event: any;
 };
@@ -34,7 +26,8 @@ const useStyles = makeStyles((theme) => ({
         justifyContent: 'center',
         backgroundColor: 'none',
         flexDirection: 'column',
-        marginBottom: 'auto'
+        marginBottom: 'auto',
+        letterSpacing: 0.6
     },
     card: {
         borderRadius: '12px',
@@ -43,19 +36,20 @@ const useStyles = makeStyles((theme) => ({
         maxWidth: '100%',
         maxHeight: '100%',
         width: '500px',
-        height: '500px',
+        marginBottom: 30,
+        boxShadow: 'rgba(145, 158, 171, 0.2) 0px 0px 2px 0px, rgba(145, 158, 171, 0.12) 0px 12px 24px -4px'
     },
     myMedia: {
-        height: "250px",
-        // paddingTop: '56.25%', // 16:9,
+        width: "450px",
+        borderRadius: "16px"
     },
     cardHold: {
         justifyContent: 'center',
         maxWidth: '100%',
         maxHeight: '100%',
         width: '500px',
-        height: '800px',
         borderRadius: '12px',
+
     },
     button: {
         backgroundColor: '#CBB7F5',
@@ -106,21 +100,19 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
-const FeedContent: React.FC<Props> = ({ event }): JSX.Element => {
+const FeedGuest: React.FC<Props> = ({ event }): JSX.Element => {
 
+    const dispatch = useDispatch();
+    const user = useSelector((state: RootState) => state.user);
     const [value, setValue] = React.useState('1');
 
-    const [anchorEl, setAnchorEl] = React.useState(null);
-    const open = Boolean(anchorEl);
-    const handleClick = (event: any) => {
-        setAnchorEl(event.currentTarget);
-    };
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
+    function handleClickStorage() {
+        dispatch(createStorager(event._id));
+    }
 
-    const PF = process.env.REACT_APP_PUBLIC_FOLDER;
-
+    function handleClickUnStorage() {
+        dispatch(deleteStorager(event._id));
+    }
     const textAvatar = event?.poster.username ?? null;
     const letterAvatar = textAvatar.charAt(0).toUpperCase();
 
@@ -129,129 +121,95 @@ const FeedContent: React.FC<Props> = ({ event }): JSX.Element => {
     const classes = useStyles();
 
     return (
-        <Box>
-            <Box>
-                <StyledRoot style={{ boxShadow: "none" }} >
-                    <Toolbar>
-                        <img src="/hutech-logo.ico" style={{ height: "56px", width: "50px" }}></img>
-                        <Typography align='left' sx={{ flexGrow: 1 }}></Typography>
-                        <Stack
-                            direction="row"
-                            alignItems="center"
-                            spacing={{
-                                xs: 0.5,
-                                sm: 1,
-                            }}
-                            sx={{ margin: 3 }}
-                        >
-                            <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
-                                <Button size="large" onClick={(event) => handleClick(event)} >
-                                    <Person />
-                                </Button>
-                                <Popover
-                                    open={open}
-                                    anchorEl={anchorEl}
-                                    onClose={handleClose}
-                                    anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
-                                    transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-                                    PaperProps={{
-                                        sx: {
-                                            p: 1,
-                                            width: 180,
-                                            '& .MuiMenuItem-root': {
-                                                px: 1,
-                                                py: 1,
-                                                typography: 'body2',
-                                                borderRadius: 0.75,
-                                            },
-                                            '& .MuiAvatar-root': {
-                                                width: 32,
-                                                height: 32,
-                                                ml: -0.5,
-                                                mr: 1,
-                                            },
-                                            '& .MuiTypography-root': {
-                                                fontSize: "15px",
-                                            },
-                                        },
-                                    }}
-                                >
-                                    <StyledMenuItem component={Link} to={'/loginuser'} >
-                                        <Avatar>G</Avatar>
-                                        <Typography style={{ color: "black" }}>Tài Khoản</Typography>
-                                    </StyledMenuItem>
+        <Box className={classes.toolbarContent}>
+            <TabContext value={value}>
 
-                                    <Divider />
-
-                                    <StyledMenuItem component={Link} to={'/register'} >
-                                        <ListItemIcon>
-                                            <PersonAdd fontSize="small" />
-                                        </ListItemIcon>
-                                        <Typography style={{ color: "black" }}>Đăng Ký</Typography>
-                                    </StyledMenuItem>
-                                </Popover>
-                            </Box>
-                        </Stack>
-                    </Toolbar>
-                </StyledRoot>
-            </Box>
-            <Box>
-                <Toolbar className={classes.toolBar}>
-                    <Box className={classes.toolbarContent}>
-                        <TabContext value={value}>
-                            <TabPanel value="1" >
-                                {/* de rieng ra 1 component */}
-                                <Card className={classes.card}>
-                                    <CardHeader
-                                        avatar={
-                                            <Avatar sx={{ bgcolor: green[500] }} aria-label="recipe">
-                                                {letterAvatar}
-                                            </Avatar>
-                                        }
-                                        action={
-                                            <IconButton aria-label='settings'>
-                                                <MoreVert />
-                                            </IconButton>
-                                        }
-                                        title={event?.poster.username ?? null}
-                                        titleTypographyProps={{ align: 'left', fontSize: '16px', fontWeight: 'bold', paddingBottom: '2px' }}
-                                        subheader={lettercreatedAt}
-                                        subheaderTypographyProps={{ align: 'left', fontSize: '12px' }}
-                                    >
-                                    </CardHeader>
-
-                                    <CardContent>
-                                        <Typography sx={{ textAlign: 'left', fontSize: '24px', fontWeight: "bold" }}>
-                                            {event?.nameEvent ?? null}
-                                        </Typography>
-                                        <Typography sx={{ textAlign: 'left', fontSize: '14px' }}>
-                                            {event?.quantityUser ?? null}
-                                        </Typography>
-                                        <Typography sx={{ textAlign: 'left', fontSize: '14px' }}>
-                                            {event?.location ?? null}
-                                        </Typography>
-                                        <Typography sx={{ textAlign: 'left', fontSize: '14px' }}>
-                                            {event?.dayStart ?? null}
-                                        </Typography>
-                                        <Typography sx={{ textAlign: 'left', fontSize: '14px' }}>
-                                            {event?.dayEnd ?? null}
-                                        </Typography>
-                                    </CardContent >
-                                    <CardMedia
-                                        className={classes.myMedia}
-                                        component="img"
-                                        image={PF + event?.image ?? null}
-                                        alt="Paella dish"
-                                    >
-                                    </CardMedia>
-                                </Card>
-                            </TabPanel>
-                        </TabContext>
+                {/* de rieng ra 1 component */}
+                <Card className={classes.card}>
+                    <Box margin={'0px 26px'}>
+                        <Box style={{ marginTop: "30px", fontSize: "20px", fontWeight: "bold" }}>
+                            Khoa {event.departmentEvent.nameDepartment.toLowerCase()}
+                        </Box>
                     </Box>
-                </Toolbar >
-            </Box>
+
+                    <Divider sx={{ margin: '20px 0px' }} />
+                    <Box margin={'0px 26px'}>
+                        <Box display={'flex'} flexDirection={'row'} margin={'10px 0px'}>
+                            <Avatar style={{
+                                backgroundColor: 'white',
+                                marginRight: '12px',
+                                border: '1px dashed #b7b7b4',
+                                color: '#454545'
+                            }}
+                                aria-label="recipe">
+                                {letterAvatar}
+                            </Avatar>
+
+                            <Box>
+                                <Box fontWeight={1000} >{event?.poster.username ?? null}</Box>
+                                <Box sx={{ color: '#757575', fontSize: '14px' }}>{lettercreatedAt}</Box>
+                            </Box>
+                        </Box>
+                    </Box>
+
+                    <Box margin={'0px 26px'}>
+                        <Box style={{ marginBottom: '30px', paddingTop: '10px' }}>
+
+                            <Typography style={{ textAlign: 'left', fontSize: '17px', fontWeight: "600", paddingBottom: 6 }}>
+                                {event?.nameEvent ?? null}
+                            </Typography>
+
+                            <Box display={'flex'} flexDirection={'row'} marginBottom={4} letterSpacing={0.6}>
+                                <Box sx={{
+                                    textAlign: 'left',
+                                    fontSize: '14px',
+                                    color: '#757575',
+                                    paddingRight: 1,
+                                    fontWeight: 500
+                                }}>
+                                    Thời gian:
+                                </Box>
+                                <Box style={{ textAlign: 'left', fontSize: '14px', fontWeight: '1000' }}>
+                                    {event?.dayStart ?? null} - {event?.dayEnd ?? null}
+                                </Box>
+
+                            </Box>
+                        </Box >
+                    </Box>
+                    <Divider sx={{ marginBottom: '50px' }} />
+                    <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", marginTop: "-20px" }}>
+                        <CardMedia
+                            className={classes.myMedia}
+                            component="img"
+                            image={event?.image}
+                            alt="Paella dish"
+                        >
+                        </CardMedia>
+                    </Box>
+
+                    <Divider sx={{ margin: '20px 0px' }} />
+                    <Box margin={'0px 26px'}>
+                        <Box display={'flex'} flexDirection={'row'} marginBottom={4}>
+                            <Box sx={{
+                                textAlign: 'left',
+                                fontSize: '14px',
+                                color: '#757575',
+                                paddingRight: 1,
+                                fontWeight: 500
+                            }}>
+                                Địa điểm:
+                            </Box>
+                            <Box style={{ textAlign: 'left', fontSize: '14px', fontWeight: '1000' }}>
+                                {event?.location ?? null}
+                            </Box>
+
+                        </Box>
+                    </Box>
+
+                </Card>
+            </TabContext>
         </Box>
     );
 };
 
-export default FeedContent;
+export default FeedGuest;

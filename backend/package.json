@@ -15,8 +15,11 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "babelrc": "^0.0.7",
     "bad-words": "^3.0.4",
     "bcryptjs": "^2.4.3",
+    "body-parser": "^1.20.2",
+    "cloudinary": "^1.36.4",
     "colors": "^1.4.0",
     "cors": "^2.8.5",
     "dotenv": "^16.0.0",
@@ -28,6 +31,7 @@
     "mongoose": "^6.3.0",
     "morgan": "^1.10.0",
     "multer": "^1.4.5-lts.1",
+    "multer-storage-cloudinary": "^4.0.0",
     "path": "^0.12.7",
     "sharp": "^0.32.0",
     "uuidv4": "^6.2.13"

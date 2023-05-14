@@ -77,6 +77,14 @@ const ManagerReducer = (
         events: action.payload,
       };
 
+    case types.UPDATE_COEFFICIENT:
+      return {
+        ...state,
+        events: state.events.map((event) =>
+          event._id === action.payload.id ? { ...action.payload.event } : event
+        ),
+      };
+
     case types.APPROVE_USER_APPLY_JOB:
       return {
         ...state,

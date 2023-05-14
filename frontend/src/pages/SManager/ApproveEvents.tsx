@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getEventApprove, deleteComment } from "redux/actions/sManager";
 import { RootState } from "redux/reducers";
 import { IEvent } from "redux/types/event";
-import { Card, CardMedia, CardContent, Avatar, Toolbar, Typography, Button, Box, Container } from "@material-ui/core";
+import { Card, CardMedia, CardContent, Avatar, Toolbar, Typography, Button, Box, Container, FormControl, Divider } from '@mui/material';
 
 import { approveEvent } from "redux/actions/sManager";
 import UpdateComment from "pages/SManager/UpdateComment";
@@ -31,7 +31,6 @@ const ApproveEvents: React.FC = (): JSX.Element => {
 
     const dispatch = useDispatch();
     const classes = useStyles();
-    const PF = process.env.REACT_APP_PUBLIC_FOLDER;
 
     const [events, setEvents] = React.useState<IEvent[]>([]);
     const smanager = useSelector((state: RootState) => state.smanager);
@@ -62,15 +61,15 @@ const ApproveEvents: React.FC = (): JSX.Element => {
     }, [smanager]);
 
     React.useEffect(() => {
-        document.title = "APPROVE EVENT";
+        document.title = "Duyệt bài | CTV";
     }, []);
 
     return (
         <Container >
             <StyledRoot style={{ display: "flex", flexDirection: "column" }}>
                 {events.map((event: any) =>
-                    <Box key={event._id} >
-                        <Box style={{ padding: "20px" }}>
+                    <Box key={event._id} width={720} >
+                        <Box >
                             <Card style={{ boxShadow: "none", padding: "30px", borderRadius: "24px" }}>
                                 <Box style={{ display: "flex", justifyContent: "center", alignItems: "center", marginBottom: "20px" }}>
                                     <Box boxShadow={2}
@@ -94,38 +93,89 @@ const ApproveEvents: React.FC = (): JSX.Element => {
                                         onClick={(e) => dispatch(approveEvent(event._id))}><CheckIcon style={{ width: '18px' }} />
                                     </Button>
                                 </Box>
-                                <CardMedia
-                                    component="img"
-                                    image={PF + event.image}
-                                    alt="Không có ảnh"
-                                    style={{ width: "440px" }}
-                                />
-                                <CardContent style={{ width: "400px" }} >
-                                    <Typography style={{ fontWeight: "bold", fontSize: "13px", width: "470px" }}>
-                                        {event?.nameEvent}
-                                    </Typography>
-                                    <Typography style={{ width: "200px", fontSize: "12px" }}>
-                                        Số lượng: {event.quantityUser}
-                                    </Typography>
-                                    <Typography style={{ width: "200px", fontSize: "12px" }}>
-                                        Tổng chi phí: {new Intl.NumberFormat().format(event.costs)} VND
-                                    </Typography>
-                                    <Typography style={{ width: "200px", fontSize: "12px" }}>
-                                        {event.location}
-                                    </Typography>
-                                    {event.job.map((job: any) =>
-                                        <Typography key={job._id} style={{ width: "100px", fontSize: '12px' }}>
-                                            - {job.nameJob}
-                                        </Typography>
-                                    )}
-                                    <Typography style={{ width: "200px", fontSize: "12px" }}>
-                                        {event.dayStart}
-                                    </Typography>
-                                    <Typography style={{ width: "200px", fontSize: "12px" }}>
-                                        {event.dayEnd}
-                                    </Typography>
-                                    <Typography style={{ fontSize: "12px", color: "#6a7b78", padding: "12px 0px" }}>{convertTZ((event.created_at), "Asia/Bangkok")}</Typography>
-                                </CardContent>
+                                {/* name event */}
+                                <Box display={"flex"}
+                                    flexDirection={'column'}
+                                    justifyContent={'center'}
+                                    alignItems={'center'}>
+                                    {event?.nameEvent}
+                                    {/* Image event */}
+                                    <CardMedia
+                                        component="img"
+                                        image={event.image}
+                                        alt="Không có ảnh"
+                                        style={{ width: 600, borderRadius: 10, marginBottom: 30 }}
+                                    />
+                                </Box>
+
+                                <Divider style={{ borderStyle: 'dashed', }} />
+                                <Box display={"flex"}
+                                    flexDirection={'column'}
+                                    justifyContent={'center'}
+                                    alignItems={'center'}
+                                    style={{ backgroundColor: 'white', padding: '40px 0px', borderRadius: '20px' }}>
+
+                                    <Box sx={{
+                                        display: 'grid',
+                                        gap: 8,
+                                        gridTemplateColumns: 'repeat(3, 1fr)',
+                                        color: "rgb(33, 43, 54)",
+
+                                    }} >
+
+                                        <FormControl sx={{ alignItems: 'center', gap: 1 }} >
+                                            <Box>Số lượng</Box>
+                                            <Box>
+                                                {event.quantityUser}
+                                            </Box>
+                                        </FormControl>
+
+                                        <FormControl sx={{ alignItems: 'center', gap: 1 }} >
+                                            <Box>Địa điểm</Box>
+                                            <Box>{event.location}</Box>
+                                        </FormControl>
+
+                                        <FormControl sx={{ alignItems: 'center', gap: 1 }} >
+                                            <Box>Tổng chi phí </Box>
+                                            <Box>{new Intl.NumberFormat().format(event.costs)}</Box>
+                                        </FormControl>
+
+                                        <FormControl sx={{ alignItems: 'center', gap: 1 }} >
+                                            <Box>Công việc </Box>
+                                            {event.job.map((job: any) =>
+                                                <Typography key={job._id} style={{ width: "100px", fontSize: '12px' }}>
+                                                    - {job.nameJob}
+                                                </Typography>
+                                            )}
+                                        </FormControl>
+                                        <FormControl sx={{ alignItems: 'center', gap: 1 }} >
+                                            <Box>Ngày bắt đầu </Box>
+                                            <Box >
+                                                {event.dayStart}
+                                            </Box>
+                                        </FormControl>
+
+                                        <FormControl sx={{ alignItems: 'center', gap: 1 }} >
+                                            <Box>Ngày kết thúc </Box>
+                                            <Box >
+                                                {event.dayEnd}
+                                            </Box>
+                                        </FormControl>
+
+                                        <FormControl sx={{ alignItems: 'center', gap: 1 }} >
+                                            <Box>Ngày tạo </Box>
+                                            <Box style={{
+                                                fontSize: "12px",
+                                                color: "#6a7b78",
+                                                padding: "12px 0px"
+                                            }}>
+                                                {convertTZ((event.created_at), "Asia/Bangkok")}
+                                            </Box>
+                                        </FormControl>
+
+                                    </Box>
+                                </Box>
+
                                 {event.comments.map((comment: any) =>
                                     <Box style={{ marginTop: "6px" }}>
                                         <Card style={{ boxShadow: "none", }}>
@@ -157,19 +207,6 @@ const ApproveEvents: React.FC = (): JSX.Element => {
                                 <UpdateComment event={event} />
                             </Card>
                         </Box>
-                        {/* <BoxButton component={Link} to='/comment' style={{ fontSize: '14px', textDecoration: "none", color: "black", marginRight: "100px" }}>
-                            <Box style={{
-                                border: '1px solid rgba(158, 158, 158, 0.32)',
-                                borderRadius: '10px', textAlign: 'center',
-                                marginTop: '0.5px', padding: '11px', color: "white", backgroundColor: '#00ab55',
-                                width: 140, display: 'flex', flexDirection: 'row', justifyContent: 'center'
-                            }}>
-                                <AddIcon style={{ width: '16px', color: "white", marginRight: "12px" }} />
-                                <Typography style={{ fontSize: '14px', paddingTop: "2.5px" }} >
-                                    Tạo CMT
-                                </Typography>
-                            </Box>
-                        </BoxButton> */}
                     </Box>
                 )}
             </StyledRoot>
