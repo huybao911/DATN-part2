@@ -8,12 +8,12 @@ const Event = require("../models/Event");
 const JobEvent = require("../models/JobEvent");
 
 exports.register = async (req, res, next) => {
-  const { username, email, password, role, department, fullName, birthday, mssv, classUser, phone, address } = req.body;
+  const { username, email, password, role, department, fullName, birthday, mssv, classUser, phone, address, avatar } = req.body;
 
   if (!username || !email || !password || !role)
     return res.status(400).send("Please fill in all the required fields!")
   try {
-    const userObj = { username, email, role, department, fullName, birthday, mssv, classUser, phone, address };
+    const userObj = { username, email, role, department, fullName, birthday, mssv, classUser, phone, address, };
     const hashedPwd = await hash(password, 12);
     userObj.password = hashedPwd;
     const user = await new User(userObj).save();
@@ -24,7 +24,7 @@ exports.register = async (req, res, next) => {
     const token = sign({ user, getRole, getDepartment }, process.env.JWT_SECRET, { expiresIn: 360000 });
     return res
       .status(200)
-      .json(getRole.keyRole === "user" ? { token, user: { ...user._doc, password: null, fullName: null, birthday: null, mssv: null, classUser: null, phone: null, address: null }, getRole } : getRole.keyRole === "admin" ? { token, admin: { ...user._doc, password: null }, getRole } : getRole.keyRole === "smanager" ? { token, smanager: { ...user._doc, password: null }, getRole } : { token, manager: { ...user._doc, password: null }, getRole }) //role: getRole, department: getDepartment
+      .json(getRole.keyRole === "user" ? { token, user: { ...user._doc, password: null, fullName: null, birthday: null, mssv: null, classUser: null, phone: null, address: null, avatar: null }, getRole } : getRole.keyRole === "admin" ? { token, admin: { ...user._doc, password: null }, getRole } : getRole.keyRole === "smanager" ? { token, smanager: { ...user._doc, password: null }, getRole } : { token, manager: { ...user._doc, password: null }, getRole }) //role: getRole, department: getDepartment
 
   } catch (error) {
     return res.status(500).send(error.message);
@@ -51,20 +51,22 @@ exports.login = async (req, res, next) => {
 };
 
 exports.resetPassword = async (req, res, next) => {
-  const { email, password, resetPass } = req.body;
-  if (!email || !password || !resetPass)
+  const { password, resetPass, confirmPass } = req.body;
+  const user = await User.findById(req?.user?._id).populate("role").populate("department");
+  if ( !password || !resetPass)
     return res.status(400).send("Please fill in all the required fields!")
   try {
-    const user = await User.findOne({ email }).lean();
-    if (!user) return res.status(400).send("Gmail does not exist");
+    if (!req.user) return res.status(400).send("You dont have permission");
+    const isMatchPass = await compare(confirmPass, user.password);
+    if (!isMatchPass) return res.status(400).send("Mật khẩu cũ không trùng khớp");
     const hashedPwd = await hash(password, 12);
     const passwordObj = {
       password: hashedPwd,
     };
     const isMatch = await compare(resetPass, passwordObj.password);
     if (!isMatch) return res.status(400).send("Mật khẩu không trùng khớp");
-    const newPass = await User.findOneAndUpdate(
-      { email: user.email },
+    const newPass = await User.findByIdAndUpdate(
+      { _id: user._id },
       { password: passwordObj.password },
       { new: true }
     );
@@ -77,7 +79,7 @@ exports.resetPassword = async (req, res, next) => {
 
 exports.getEvents = async (req, res) => {
   const smanagerRole = await User.find({ role: "640cc3c229937ffacc4359f8" });
-  const smanagerEvent = await Event.find({ approver: smanagerRole }).populate("poster").populate("departmentEvent").populate({ path: "storagers", populate: [{ path: "storager" }]}).populate({ path: "usersApplyJob", populate: [{ path: "userApply" }]}).populate({ path: "usersApplyJob", populate: [{ path: "jobEvent" }]});
+  const smanagerEvent = await Event.find({ approver: smanagerRole }).populate("poster").populate("departmentEvent").populate({ path: "storagers", populate: [{ path: "storager" }]}).populate({ path: "usersApplyJob", populate: [{ path: "userApply" }]}).populate({ path: "usersApplyJob", populate: [{ path: "userApply" }]}).populate({ path: "usersApplyJob", populate: [{ path: "jobEvent", populate: [{ path: "event" }] }] });
   try {
     return res.status(200).json(smanagerEvent);
   } catch (error) {
@@ -87,7 +89,7 @@ exports.getEvents = async (req, res) => {
 
 exports.getEventStorager = async (req, res) => {
   const userStorage = await User.findById(req?.user?._id).populate("role").populate("department");
-  const findEvent = await Event.find({ storagers: { $elemMatch: { storager: userStorage._id } } }).populate("poster").populate({ path: "storagers", populate: [{ path: "storager" }]});
+  const findEvent = await Event.find({ storagers: { $elemMatch: { storager: userStorage._id } } }).populate("poster").populate("departmentEvent").populate({ path: "storagers", populate: [{ path: "storager" }]}).populate({ path: "usersApplyJob", populate: [{ path: "userApply" }]}).populate({ path: "usersApplyJob", populate: [{ path: "userApply" }]}).populate({ path: "usersApplyJob", populate: [{ path: "jobEvent", populate: [{ path: "event" }] }] });
   try {
     return res.status(200).json(findEvent);
   } catch (error) {
@@ -97,12 +99,14 @@ exports.getEventStorager = async (req, res) => {
 exports.createStorager = async (req, res) => {
   const { id } = req.params;
   const userStorage = await User.findById(req?.user?._id).populate("role").populate("department");
+  const { created } = req.body;
   try {
     if (!req.user) return res.status(400).send("You dont have permission");
     const event = await Event.findById(id).lean();
     if (!event) return res.status(400).send("Event does not exist");
     const eventObj = {
       storager: userStorage,
+      created:created,
     };
     const newStorager = await Event.findByIdAndUpdate(
       { _id: id },
@@ -110,6 +114,7 @@ exports.createStorager = async (req, res) => {
         $push: {
           storagers: [{
             storager: eventObj.storager,
+            created: eventObj.created,
           }]
         }
       },
@@ -146,7 +151,7 @@ exports.deleteStorager = async (req, res) => {
 
 exports.getJobApply = async (req, res) => {
   const userApplyJob = await User.findById(req?.user?._id).populate("role").populate("department");
-  const findEvent = await Event.find({ usersApplyJob: { $elemMatch: { userApply: userApplyJob._id }}}).populate("poster").populate({ path: "usersApplyJob", populate: [{ path: "userApply" }]}).populate({ path: "usersApplyJob", populate: [{ path: "jobEvent", populate: [{ path: "event" }] }] });
+  const findEvent = await Event.find({ usersApplyJob: { $elemMatch: { userApply: userApplyJob._id }}}).populate("poster").populate("departmentEvent").populate({ path: "storagers", populate: [{ path: "storager" }]}).populate({ path: "usersApplyJob", populate: [{ path: "userApply" }]}).populate({ path: "usersApplyJob", populate: [{ path: "userApply" }]}).populate({ path: "usersApplyJob", populate: [{ path: "jobEvent", populate: [{ path: "event" }] }] });
   // const findJobUserApply = findEvent.map((userapply) => userapply.usersApplyJob.filter((userapply) => userapply.userApply.username === userApplyJob.username));
   try {
     return res.status(200).json(findEvent);
@@ -167,6 +172,7 @@ exports.createUserApplyJob = async (req, res) => {
     const eventObj = {
       userApply: userApplyJob,
       jobEvent: job,
+      total: job.unitPrice,
     };
     const newUserApply = await Event.findByIdAndUpdate(
       { _id: eventId },
@@ -175,6 +181,7 @@ exports.createUserApplyJob = async (req, res) => {
           usersApplyJob: [{
             userApply: eventObj.userApply,
             jobEvent: eventObj.jobEvent,
+            total: eventObj.total,
           }]
         },
       },

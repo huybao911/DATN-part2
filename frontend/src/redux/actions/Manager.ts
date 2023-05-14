@@ -232,6 +232,43 @@ export const getListCTV =
     }
   };
 
+// UPDATE COEFFICIENT
+export const updateCoefficient =
+  (body: any,eventId: number, userApplyId: number, setSubmitting: any) =>
+    async (dispatch: Dispatch<ManagerActions | AlertActions>) => {
+      const config: any = {
+        header: {
+          "Content-Type": "application/json",
+        },
+      };
+
+      try {
+        const { data } = await axios.put(`${URI}/coefficient/${eventId}/${userApplyId}`, body, config);
+        dispatch({
+          type: types.UPDATE_COEFFICIENT,
+          payload: data,
+        });
+        dispatch<any>(getListCTV());
+        // dispatch<any>(
+        //   setAlert({
+        //     msg: "Duyệt người dùng thành công!",
+        //     status: 200,
+        //     alertType: "success",
+        //   })
+        // );
+      } catch (error: any) {
+        dispatch<any>(
+          setAlert({
+            msg: "Duyệt người dùng thất bại!",
+            status: error.response.status,
+            alertType: "error",
+          })
+        );
+      }finally {
+        setSubmitting(false);
+      }
+    };  
+
 // APPROVE USER APPLY JOB
 export const approveUserApplyJob =
   (eventId: number, userApplyId: number) =>
@@ -325,18 +362,19 @@ export const getEvents =
     }
   };
 
-// CREATE JOBEVENT
+// CREATE EVENT
+type formdata = FormData;
 export const createEvent =
-  (body: any, setSubmitting: any) =>
+  (formData: formdata, setSubmitting: any) =>
     async (dispatch: Dispatch<ManagerActions | AlertActions>) => {
       const config: any = {
         header: {
-          "Content-Type": "application/json",
+          "Content-type": "multipart/form-data",
         },
       };
 
       try {
-        const { data } = await axios.post(`${URI}/createEvent`, body, config);
+        const { data } = await axios.post(`${URI}/createEvent`, formData, config);
         dispatch({
           type: types.CREATE_EVENT_SUCCESS,
           payload: data,
@@ -368,16 +406,16 @@ export const createEvent =
 
 // UPDATE EVENT
 export const updateEvent =
-  (body: any, id: number, setSubmitting: any) =>
+  (formData: formdata, id: number, setSubmitting: any) =>
     async (dispatch: Dispatch<ManagerActions | AlertActions>) => {
       const config: any = {
         header: {
-          "Content-Type": "application/json",
+          "Content-Type": "multipart/form-data",
         },
       };
 
       try {
-        const { data } = await axios.patch(`${URI}/event/${id}`, body, config);
+        const { data } = await axios.put(`${URI}/event/${id}`, formData, config);
         dispatch({
           type: types.UPDATE_EVENT,
           payload: data,

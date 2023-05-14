@@ -92,7 +92,7 @@ const headCells: HeadCell[] = [
   {
     _id: 'username',
     numeric: false,
-    label: 'Username',
+    label: 'Tên người dùng',
   },
   {
     _id: 'email',
@@ -102,12 +102,12 @@ const headCells: HeadCell[] = [
   {
     _id: 'role',
     numeric: false,
-    label: 'Role',
+    label: 'Chức vụ',
   },
   {
     _id: 'department',
     numeric: false,
-    label: 'Department',
+    label: 'Khoa',
   },
   {
     _id: 'update',
@@ -272,7 +272,7 @@ const Users: React.FC = (): JSX.Element => {
           >
             <Box>
               <Typography gutterBottom style={{ color: "black", fontSize: "22px" }}>
-                User
+                Danh sách người dùng
               </Typography>
             </Box>
             <Box style={{ display: "flex", flexDirection: "row" }} >

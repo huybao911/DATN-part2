@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getApplyJob } from "redux/actions/user";
 import { RootState } from "redux/reducers";
 import FeedApplyJob from "pages/User/FeedApplyJob";
-import { Typography } from '@mui/material';
+import { Typography, Container } from '@mui/material';
 import { IEvent } from "redux/types/event";
 
 const ApplyJob: React.FC = (): JSX.Element => {
@@ -30,13 +30,13 @@ const ApplyJob: React.FC = (): JSX.Element => {
 
     return (
 
-        <>
-            <Typography style={{ fontSize: "30px", fontWeight: "bold" }}>Công Việc Đã Ứng Tuyển</Typography>
+        <Container>
+            <Typography style={{ fontSize: "30px", fontWeight: "bold", margin: "20px 0px 10px 15px" }}>Công Việc Đã Ứng Tuyển</Typography>
             {events.map((event: any) =>
                 <FeedApplyJob event={event} key={event._id} />) ?? (
                     <p>No FeedApplyJob Found.</p>
                 )}
-        </>
+        </Container>
     );
 };
 

@@ -89,7 +89,7 @@ const Login: React.FC = (): JSX.Element => {
   });
 
   React.useEffect(() => {
-    document.title = "ĐĂNG NHẬP QUYỀN CẤP CAO";
+    document.title = "Đăng nhập | Admin";
   }, []);
 
   return (

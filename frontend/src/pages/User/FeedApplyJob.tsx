@@ -1,15 +1,14 @@
 import * as React from 'react';
 import { makeStyles } from "@material-ui/core/styles";
 
-import { Avatar, Card, CardContent, CardHeader, CardMedia, Collapse, IconButton, Toolbar, Typography } from '@mui/material';
-import { MoreVert } from '@mui/icons-material';
+import { Button, Card, CardContent, Toolbar, Box } from '@mui/material';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import TabContext from '@mui/lab/TabContext';
 import TabPanel from '@mui/lab/TabPanel';
-import { green } from '@mui/material/colors';
-import { Box } from '@mui/material';
-import { formatDistance } from 'date-fns';
 
-import { useSelector } from "react-redux";
+import { userApplyJob, userUnApplyJob } from "redux/actions/user";
+
+import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "redux/reducers";
 
 type Props = {
@@ -29,13 +28,13 @@ const useStyles = makeStyles((theme) => ({
         marginBottom: 'auto'
     },
     card: {
-        borderRadius: '12px',
+        borderRadius: '22px',
         margin: 'auto',
         justifyContent: 'center',
         maxWidth: '100%',
         maxHeight: '100%',
-        width: '500px',
-        height: '500px',
+        width: '1200px',
+        height: '300px',
     },
     myMedia: {
         height: "250px",
@@ -100,88 +99,108 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const FeedApplyJob: React.FC<Props> = ({ event }): JSX.Element => {
-    
+
+    const dispatch = useDispatch();
     const [value, setValue] = React.useState('1');
 
     const user = useSelector((state: RootState) => state.user);
-
-    const PF = process.env.REACT_APP_PUBLIC_FOLDER;
-
-    const textAvatar = event?.poster.username ?? null;
-    const letterAvatar = textAvatar.charAt(0).toUpperCase();
-
-    const lettercreatedAt = (formatDistance(new Date(event?.created_at), Date.now(), { addSuffix: true })).split("about");
 
     const classes = useStyles();
 
     const findJobUserApply = event.usersApplyJob.filter((userapply: any) => userapply.userApply.username === user.user.username);
 
-    // const applySuccess = jobApply.notiApplyJob == "Bạn đã ứng tuyển thành công" ? (
-    //     <Typography sx={{ textAlign: 'left', fontSize: '14px' }}>
-    //         {jobApply?.jobId.jobDescription}
-    //     </Typography>
-    // ) : null
+    const userApply = event.usersApplyJob.map((userapply: any) => userapply.userApply.username);
+
+    const userApplys = event.usersApplyJob.some((userapply: any) => user.user.username.includes(userapply.userApply.username));
+
+    const userJob = event.usersApplyJob.map((userjob: any) => userjob.jobEvent._id);
     return (
         <>
-            <Toolbar className={classes.toolBar}>
-                <Box className={classes.toolbarContent}>
-                    <TabContext value={value}>
-                        <TabPanel value="1" >
-                            {/* de rieng ra 1 component */}
-                            <Card className={classes.card}>
-                                <CardHeader
-                                    avatar={
-                                        <Avatar sx={{ bgcolor: green[500] }} aria-label="recipe">
-                                            {letterAvatar}
-                                        </Avatar>
-                                    }
-                                    action={
-                                        <IconButton aria-label='settings'>
-                                            <MoreVert />
-                                        </IconButton>
-                                    }
-                                    title={event?.poster.username ?? null}
-                                    titleTypographyProps={{ align: 'left', fontSize: '16px', fontWeight: 'bold', paddingBottom: '2px' }}
-                                    subheader={lettercreatedAt}
-                                    subheaderTypographyProps={{ align: 'left', fontSize: '12px' }}
-                                >
-                                </CardHeader>
-
-                                <CardContent>
-
-                                    {findJobUserApply.map((job: any) =>
-                                        <Box key={job._id}>
-                                            <Box>
-                                                <Typography sx={{ textAlign: 'left', fontSize: '14px' }}>
-                                                    {job?.jobEvent.nameJob ?? null}
-                                                </Typography>
+            {findJobUserApply.map((job: any) =>
+                <Toolbar key={job._id} className={classes.toolBar}>
+                    <Box className={classes.toolbarContent}>
+                        <TabContext value={value}>
+                            <TabPanel value="1" >
+                                {/* de rieng ra 1 component */}
+                                <Card className={classes.card}>
+                                    <CardContent>
+                                        <Box sx={{ display: "flex", flexDirection: "row", marginTop: "35px", marginLeft: "35px" }}>
+                                            <Box sx={{ fontWeight: "bold", fontSize: "21px" }}>
+                                                {event.nameEvent}
                                             </Box>
+                                            <PlayArrowIcon style={{ fontSize: "35px", margin: "-5px 10px 0px 10px", color: "#c6c9c9" }} />
+                                            <Box sx={{ fontWeight: "bold", fontSize: "21px" }}>
+                                                {job.jobEvent.nameJob}
+                                            </Box>
+                                            <Box flexGrow={1} />
+                                            {job.notiApplyJob == "Chờ phê duyệt" ? (
+                                                <Box sx={{ marginRight: "40px", fontWeight: "500" }}>
+                                                    {job.notiApplyJob}
+                                                </Box>
+                                            ) : job.notiApplyJob == "Bạn đã ứng tuyển thành công" ? (
+                                                <Box sx={{ marginRight: "40px", fontWeight: "500", color: "#00B14F" }}>
+                                                    {job.notiApplyJob}
+                                                </Box>
+                                            ) : job.notiApplyJob == "Bạn đã ứng tuyển thất bại" ? (
+                                                <Box sx={{ marginRight: "40px", fontWeight: "500", color: "red" }}>
+                                                    {job.notiApplyJob}
+                                                </Box>
+                                            ) : null
+                                            }
+                                        </Box>
+
+                                        <Box sx={{ fontSize: "16px", marginTop: "7px", marginLeft: "35px" }}>
+                                            {event.poster.username}
+                                        </Box>
+
+                                        <Box sx={{ fontSize: "16px", marginTop: "30px", marginLeft: "35px" }}>
+                                            Địa điểm: {event.location}
+                                        </Box>
+
+                                        <Box sx={{ fontSize: "15px", marginTop: "10px", marginLeft: "35px" }}>
+                                            {event?.dayStart ?? null} - {event?.dayEnd ?? null}
+                                        </Box>
+                                        <Box sx={{ display: "flex", flexDirection: "row" }} >
                                             <Box>
-                                                <Typography sx={{ textAlign: 'left', fontSize: '14px' }}>
-                                                    {job?.notiApplyJob ?? null}
-                                                </Typography>
+                                                <Box sx={{ fontSize: "15px", marginTop: "20px", marginLeft: "35px" }}>
+                                                    Mô tả: {job.jobEvent.jobDescription}
+                                                </Box>
+
+                                                <Box sx={{ fontSize: "15px", marginTop: "10px", marginLeft: "35px" }}>
+                                                    Yêu cầu: {job.jobEvent.jobRequest}
+                                                </Box>
+                                            </Box>
+                                            <Box flexGrow={1} />
+                                            <Box>
+                                                {userApplys ? (
+                                                    user.user.username == job.userApply.username ? (
+                                                        <Box sx={{ margin: "30px 30px 0px 0px" }} >
+                                                            <Button style={{ backgroundColor: "red", color: "white", height: "30px", width: "120px", fontSize: "12px", fontWeight: "bold", borderRadius: "6px", textTransform: "capitalize" }} onClick={(e) => dispatch(userUnApplyJob(event._id, job.jobEvent._id))}>Hủy Ứng Tuyển</Button>
+                                                        </Box>
+                                                    ) : (
+                                                        <Box sx={{ margin: "30px 30px 0px 0px" }}>
+                                                            <Button style={{ backgroundColor: "#00B14F", color: "white", height: "30px", width: "120px", fontSize: "12px", fontWeight: "bold", borderRadius: "6px", textTransform: "capitalize" }} onClick={(e) => dispatch(userApplyJob(event._id, job.jobEvent._id))}>Ứng Tuyển</Button>
+                                                        </Box>
+                                                    )
+                                                ) : userApply !== user.user.username ? (
+                                                    job.jobEvent._id !== userJob ? (
+                                                        <Box sx={{ margin: "30px 30px 0px 0px" }}>
+                                                            <Button style={{ backgroundColor: "#00B14F", color: "white", height: "30px", width: "120px", fontSize: "12px", fontWeight: "bold", borderRadius: "6px", textTransform: "capitalize" }} onClick={(e) => dispatch(userApplyJob(event._id, job.jobEvent._id))}>Ứng Tuyển</Button>
+                                                        </Box>
+                                                    ) : null
+                                                ) : null
+                                                }
                                             </Box>
                                         </Box>
-                                    )}
-                                    {/* {applySuccess} */ }
-                                </CardContent>
+                                    </CardContent>
 
-                                <CardMedia
-                                    className={classes.myMedia}
-                                    component="img"
-                                    image={PF + event?.image ?? null}
-                                    alt="Paella dish"
-                                >
-                                </CardMedia>
-                                <Collapse>
-                                </Collapse>
+                                </Card>
+                            </TabPanel>
+                        </TabContext>
 
-                            </Card>
-                        </TabPanel>
-                    </TabContext>
-
-                </Box>
-            </Toolbar >
+                    </Box>
+                </Toolbar >
+            )}
         </>
     );
 };

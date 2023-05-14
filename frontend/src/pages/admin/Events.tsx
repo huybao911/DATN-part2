@@ -295,9 +295,9 @@ const Users: React.FC = (): JSX.Element => {
 
                       <TableCell align="left">
                         {event.job.map((job: any) =>
-                          <Typography key={job._id} sx={{ width: "100px", fontSize: '12px' }}>
+                          <Box key={job._id} sx={{ width: "100px", fontSize: '12px' }}>
                             - {job.nameJob}
-                          </Typography>
+                          </Box>
                         )}
                       </TableCell>
 

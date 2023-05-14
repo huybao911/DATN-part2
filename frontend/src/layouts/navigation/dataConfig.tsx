@@ -65,19 +65,4 @@ export const dataManager = [
         name: 'Sự Kiện',
         path: '/event'
     },
-    {
-        icon: <WorkOutlineIcon style={{width: '18px'}}/>,
-        name: 'Công Việc Sự Kiện',
-        path: '/jobEvent'
-    },
-    {
-        icon: <ListAltIcon style={{width: '18px'}}/>,
-        name: 'Danh Sách Ứng Tuyển',
-        path: '/listUserApply'
-    },
-    {
-        icon: <RecentActorsIcon style={{width: '18px'}}/>,
-        name: 'Danh Sách Cộng Tác Viên',
-        path: '/listCTV'
-    },
 ];

@@ -19,13 +19,16 @@ interface IValues {
     dayStart: string;
     dayEnd: string;
     image: string;
+    testImage: File;
     contentEvent: string;
 }
 
 const FormEvent: React.FC = (): JSX.Element => {
     const classes = useStyles();
+    const [file, setFile] = React.useState('null');
 
-    const { values, handleChange, handleBlur, errors, touched } = useFormikContext<IValues>();
+
+    const { values, handleChange, handleBlur, errors, touched, setFieldValue } = useFormikContext<IValues>();
     return (
         <>
             <FormControl fullWidth className={classes.formControl}>
@@ -127,18 +130,45 @@ const FormEvent: React.FC = (): JSX.Element => {
                     // fullWidth
                     // variant="outlined"
                     accept=".png,.jpg"
+                    name='testImage'
+                    type='file'
+                    // value={values.image}
+                    // onChange={handleChange}
+                    // onChange={(e:any)=>{
+                    //     setFieldValue('image', e.currentTarget.files[0]);
+                    // }}
+                    onChange={(e: any) => {
+                        let reader = new FileReader();
+                        reader.onload = () => {
+                            if (reader.readyState === 2) {
+                                setFieldValue("testImage", reader.result);
+                            }
+                        }
+                        reader.readAsDataURL(e.target.files[0])
+                        console.log(e.target.files[0]);
+                    }}
+                    onBlur={handleBlur}
+                />
+                <input
+                    // fullWidth
+                    // variant="outlined"
+                    accept=".png,.jpg"
                     name='image'
                     type='file'
                     // value={values.image}
                     onChange={handleChange}
                     // onChange={(e:any)=>{
+                    //     setFieldValue('image', e.currentTarget.files[0]);
+                    // }}
+                    // onChange={(e: any) => {
                     //     let reader = new FileReader();
                     //     reader.onload = () => {
                     //         if (reader.readyState === 2) {
-                    //             setFieldValue('image', reader.result);
+                    //             setFieldValue("testImage", reader.result);
                     //         }
                     //     }
                     //     reader.readAsDataURL(e.target.files[0])
+                    //     console.log(e.target.files[0]);
                     // }}
                     onBlur={handleBlur}
                 />

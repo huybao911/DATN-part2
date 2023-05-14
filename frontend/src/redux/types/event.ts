@@ -15,6 +15,7 @@ export interface IEvent {
     update: string;
     delete: string;
     image: string;
+    testImage: File;
     created_at:string;
     
     usersApplyJob:any;
@@ -24,6 +25,8 @@ export interface IEvent {
     
     userApply: any;
     applyStatus: string;
+    coefficient: number;
+    total: number;
     approve: string;
     unapprove: string;
   }

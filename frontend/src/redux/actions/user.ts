@@ -371,29 +371,30 @@ export const getProfile =
   };
 
 // UPDATE PROFILE
+type formdata = FormData;
 export const updateProfile =
-  (body: any, id: number, setSubmitting: any) =>
+  (formData: formdata, id: number, setSubmitting: any) =>
     async (dispatch: Dispatch<UserActions | AlertActions>) => {
       const config: any = {
         header: {
-          "Content-Type": "application/json",
+          "Content-Type": "multipart/form-data",
         },
       };
 
       try {
-        const { data } = await axios.put(`${URI}/profile/${id}`, body, config);
+        const { data } = await axios.put(`${URI}/profile/${id}`, formData, config);
         dispatch({
           type: types.UPDATE_PROFILE,
           payload: data,
         });
         dispatch<any>(getProfile());
-        dispatch<any>(
-          setAlert({
-            msg: "Cập nhật thông tin thành công!",
-            status: 200,
-            alertType: "success",
-          })
-        );
+        // dispatch<any>(
+        //   setAlert({
+        //     msg: "Cập nhật thông tin thành công!",
+        //     status: 200,
+        //     alertType: "success",
+        //   })
+        // );
       } catch (error: any) {
         dispatch<any>(
           setAlert({

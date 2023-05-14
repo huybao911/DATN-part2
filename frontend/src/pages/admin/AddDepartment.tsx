@@ -9,8 +9,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "redux/reducers";
 
 import { addDepartment, getDepartments } from "redux/actions/admin";
-import FormFieldDepartment from "pages/admin/FormFieldDepartment";
 import { Link } from 'react-router-dom';
+import { Box, Container, FormControl, FormLabel, TextField, Typography } from "@mui/material";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -30,11 +30,21 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "flex-start",
     marginTop: theme.spacing(2),
   },
+  textField: {
+    margin: theme.spacing(1.5, 0),
+    textAlign: 'left',
+    fontSize: '13px',
+    "& .MuiInputBase-root": {
+      "& fieldset": {
+        borderRadius: "10px",
+      },
+    },
+  },
 }));
 
 interface IInitialValues {
-    nameDepartment: string;
-    keyDepartment: string;
+  nameDepartment: string;
+  keyDepartment: string;
 }
 
 const AddDepartment: React.FC = (): JSX.Element => {
@@ -46,12 +56,12 @@ const AddDepartment: React.FC = (): JSX.Element => {
   const Department = useSelector((state: RootState) => state.admin);
 
   const initialValues: IInitialValues = {
-   nameDepartment: "",
-   keyDepartment: "",
+    nameDepartment: "",
+    keyDepartment: "",
   };
 
   const onHandleSubmit = (values: IInitialValues, { setSubmitting }: any) => {
-         dispatch(addDepartment({ ...values, role: ADMIN }, setSubmitting))
+    dispatch(addDepartment({ ...values, role: ADMIN }, setSubmitting))
   };
 
   const validationSchema = Yup.object({
@@ -64,47 +74,124 @@ const AddDepartment: React.FC = (): JSX.Element => {
   }, [dispatch]);
 
   React.useEffect(() => {
-    setDepartments(() => Department?.departments?.filter((department: any) => department.nameDepartment ));
+    setDepartments(() => Department?.departments?.filter((department: any) => department.nameDepartment));
   }, [Department]);
 
-  React.useEffect(() => {
-    document.title = "THÊM TÒA NHÀ ";
-  }, []);
-
   return (
-    <Grid
-      container
-      className={classes.root}
-      direction='column'
-      alignItems='center'
-      justifyContent='center'
-    >
+    <Container style={{ maxWidth: 600 }}>
+
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
         onSubmit={onHandleSubmit}
       >
-        {({ isSubmitting, handleSubmit }) => (
+        {({ isSubmitting, handleSubmit, values, handleChange, handleBlur, errors, touched }) => (
           <form noValidate onSubmit={handleSubmit}>
-            <FormFieldDepartment />
-            <Button
-              type='submit'
-              variant='contained'
-              color='secondary'
-              className={classes.btnRegister}
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? <CircularProgress size='1rem' /> : "Thêm Khoa"}
-            </Button>
+            <Box display={"flex"}
+              flexDirection={'column'}
+              justifyContent={'center'}
+              alignItems={'center'}
+              style={{ backgroundColor: 'white', padding: '40px 0px', borderRadius: '20px' }}>
+
+              <Typography style={{ fontWeight: "bold", fontSize: "18px", margin: 20 }} >
+                Thêm khoa
+              </Typography>
+
+              <FormControl>
+                <FormLabel style={{ fontWeight: "bold", fontSize: "14px", marginTop: "5px" }}>Ký tự viết tắt khoa</FormLabel>
+                <TextField
+                  style={{ width: 300, }}
+                  className={classes.textField}
+                  fullWidth
+                  variant={'outlined'}
+                  name='keyDepartment'
+                  value={values.keyDepartment}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  placeholder='Nhập ký tự viết tắt khoa muốn thêm'
+                  InputProps={{
+
+                  }}
+                  inputProps={{
+                    style: {
+                      fontSize: '12px',
+                    }
+                  }}
+                  helperText={touched.keyDepartment ? errors.keyDepartment : ""}
+                  error={touched.keyDepartment ? Boolean(errors.keyDepartment) : false}
+                />
+              </FormControl>
+
+              <FormControl style={{ marginTop: 2 }} >
+                <FormLabel style={{ fontWeight: "bold", fontSize: "14px", marginTop: 2 }}>
+                  Tên khoa
+                </FormLabel>
+                <TextField
+                  style={{ width: 300, }}
+                  className={classes.textField}
+                  fullWidth
+                  variant={'outlined'}
+                  name='nameDepartment'
+                  value={values.keyDepartment}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  placeholder='Nhập tên khoa muốn thêm'
+                  inputProps={{
+                    style: {
+                      fontSize: '12px',
+                    }
+                  }}
+                  helperText={touched.nameDepartment ? errors.nameDepartment : ""}
+                  error={touched.nameDepartment ? Boolean(errors.nameDepartment) : false} />
+
+              </FormControl>
+              <Box marginTop={2}>
+                <Button
+                  type='submit'
+                  disabled={isSubmitting}
+                  style={{
+                    color: "rgb(33, 43, 54)",
+                    height: "34px",
+                    width: "120px",
+                    fontSize: "12px",
+                    borderRadius: "4px",
+                    fontWeight: 500,
+                    textTransform: "capitalize",
+                    border: '1px solid rgb(33, 43, 54)',
+                    marginRight: 10
+                  }}
+                >
+                  {isSubmitting ? <CircularProgress size='1rem' /> : "Thêm Khoa"}
+                </Button>
+
+                <Link to={"/department"}>
+                  <Button style={{
+                    color: "#FF6969",
+                    height: "34px",
+                    width: "120px",
+                    fontSize: "12px",
+                    fontWeight: 500,
+                    borderRadius: "4px",
+                    textTransform: "capitalize",
+                    border: '1px solid #FF6969',
+
+                  }}
+                  >Quay lại</Button>
+                </Link>
+              </Box>
+
+
+            </Box>
           </form>
         )}
       </Formik>
-      <div style={{marginTop: "40px"}}>
-        <Link to={"/department"}>
-          <button style={{fontSize:"20px", backgroundColor:"#000", color:"#fff",border:"10px solid black"}}>QUAY LẠI</button>
-        </Link>
-      </div>
-    </Grid>
+
+
+
+
+
+    </Container >
+
   );
 };
 

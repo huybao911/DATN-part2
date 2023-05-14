@@ -221,11 +221,11 @@ const Users: React.FC = (): JSX.Element => {
   }, [dispatch]);
 
   React.useEffect(() => {
-    setUsers(() => smanager?.users?.filter((user: any) => user.role.keyRole === "user" || user.role.keyRole === "manager" || user.role.keyRole === "smanager"));
+    setUsers(() => smanager?.users?.filter((user: any) =>  user.role.keyRole === "manager"));
   }, [smanager]);
 
   React.useEffect(() => {
-    document.title = "SMANAGER";
+    document.title = "Smanager | CTV";
   }, []);
 
   return (

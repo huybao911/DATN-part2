@@ -47,6 +47,14 @@ interface IGetListCTV {
   payload: IEvent[];
 }
 
+interface IUpdateCoefficient {
+  type: typeof types.UPDATE_COEFFICIENT;
+  payload: {
+    event: IEvent;
+    id: number;
+  };
+}
+
 interface IApproveUserJobApply {
   type: typeof types.APPROVE_USER_APPLY_JOB;
   payload: {
@@ -145,6 +153,7 @@ export type ManagerActions =
   | IGetUser
   | IGetListUserApply
   | IGetListCTV
+  | IUpdateCoefficient
   | IApproveUserJobApply
   | IUnapproveUserJobApply
   | IGetEvents

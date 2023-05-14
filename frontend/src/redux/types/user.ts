@@ -10,6 +10,7 @@ export interface IUser {
   email: string;
   password: string | null;
   department: any;
+  avatar: string;
   role: any;
   date: string;
   fullName: string;

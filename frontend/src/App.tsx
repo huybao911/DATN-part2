@@ -57,15 +57,15 @@ const App: React.FC = (): JSX.Element => {
       <>
         <StyledRoot>
           {/* <AppHeader/> */}
-          <SideBar />
-          <HeaderHome/>
-         
-        <Main>
-          
-          <Routes />
           <Alert />
-        </Main>
-          
+          <SideBar />
+          <HeaderHome />
+
+          <Main >
+
+            <Routes />
+          </Main>
+
         </StyledRoot>
 
       </>

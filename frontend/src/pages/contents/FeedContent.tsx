@@ -1,18 +1,16 @@
 import * as React from 'react';
 import { makeStyles } from "@material-ui/core/styles";
 
-import { Avatar, Card, CardActions, CardContent, CardHeader, CardMedia, Collapse, IconButton, Toolbar, Typography } from '@mui/material';
-import {  Bookmark, BookmarkBorder } from '@mui/icons-material';
+import { Avatar, Card, Box, CardMedia, IconButton, Typography } from '@mui/material';
+import { Divider } from '@mui/material';
+import { Bookmark, BookmarkBorder } from '@mui/icons-material';
 import TabContext from '@mui/lab/TabContext';
-import TabPanel from '@mui/lab/TabPanel';
-import { green } from '@mui/material/colors';
-import { Box } from '@mui/material';
-import { userApplyJob, userUnApplyJob, createStorager, deleteStorager } from "redux/actions/user";
+import { createStorager, deleteStorager } from "redux/actions/user";
 
 import { formatDistance } from 'date-fns';
-
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "redux/reducers";
+
 
 type Props = {
     event: any;
@@ -28,7 +26,8 @@ const useStyles = makeStyles((theme) => ({
         justifyContent: 'center',
         backgroundColor: 'none',
         flexDirection: 'column',
-        marginBottom: 'auto'
+        marginBottom: 'auto',
+        letterSpacing: 0.6
     },
     card: {
         borderRadius: '12px',
@@ -37,19 +36,20 @@ const useStyles = makeStyles((theme) => ({
         maxWidth: '100%',
         maxHeight: '100%',
         width: '500px',
-        height: '800px',
+        marginBottom: 30,
+        boxShadow: 'rgba(145, 158, 171, 0.2) 0px 0px 2px 0px, rgba(145, 158, 171, 0.12) 0px 12px 24px -4px'
     },
     myMedia: {
-        height: "250px",
-        // paddingTop: '56.25%', // 16:9,
+        width: "450px",
+        borderRadius: "16px"
     },
     cardHold: {
         justifyContent: 'center',
         maxWidth: '100%',
         maxHeight: '100%',
         width: '500px',
-        height: '800px',
         borderRadius: '12px',
+
     },
     button: {
         backgroundColor: '#CBB7F5',
@@ -113,9 +113,6 @@ const FeedContent: React.FC<Props> = ({ event }): JSX.Element => {
     function handleClickUnStorage() {
         dispatch(deleteStorager(event._id));
     }
-
-    const PF = process.env.REACT_APP_PUBLIC_FOLDER;
-
     const textAvatar = event?.poster.username ?? null;
     const letterAvatar = textAvatar.charAt(0).toUpperCase();
 
@@ -125,159 +122,111 @@ const FeedContent: React.FC<Props> = ({ event }): JSX.Element => {
 
     const storagers = event.storagers.some((storager: any) => user.user.username.includes(storager.storager.username));
 
-    const userApply = event.usersApplyJob.map((userapply: any) => userapply.userApply.username);
-
-    const userApplys = event.usersApplyJob.some((userapply: any) => user.user.username.includes(userapply.userApply.username));
-
-    const userJob = event.usersApplyJob.map((userjob: any) => userjob.jobEvent._id);
-
     const compareUser = storagers ? (
-        <Bookmark onClick={handleClickUnStorage} style={{ width:"30px", height:"30px", color: 'black' }} />
+        <Bookmark onClick={handleClickUnStorage} style={{ width: "30px", height: "30px", color: 'rgb(33, 43, 54)' }} />
     ) : storager !== user.user.username ? (
-        <BookmarkBorder onClick={handleClickStorage} style={{ width:"30px", height:"30px", color: 'black' }} />
-    ) : null
-
-    const compareUserApply = userApplys ? (
-        event.job.map((job: any) =>
-            event.usersApplyJob.some((userjob: any) => job._id.includes(userjob.jobEvent._id) && user.user.username.includes(userjob.userApply.username)) ? (
-                <Box key={job._id}>
-                    <Box>
-                        <Typography sx={{ width: "200px", fontSize: '12px' }}>
-                            - {job.nameJob} {job.quantityRemaining}  {job.jobRequest}
-                        </Typography>
-                    </Box>
-                    <Box>
-                        <button style={{ backgroundColor: "red", color: "white", height: "30px", width: "90px", fontWeight: "bold", borderRadius: "6px" }} onClick={(e) => dispatch(userUnApplyJob(event._id, job._id))}>Hủy Ứng Tuyển</button>
-                    </Box>
-                </Box>
-            ) : (
-                <Box key={job._id}>
-                    <Box>
-                        <Typography key={job._id} sx={{ width: "200px", fontSize: '12px' }}>
-                            - {job.nameJob} {job.quantityRemaining}  {job.jobRequest}
-                        </Typography>
-                    </Box>
-                    <Box>
-                        <button style={{ backgroundColor: "black", color: "white", height: "30px", width: "90px", fontWeight: "bold", borderRadius: "6px" }} onClick={(e) => dispatch(userApplyJob(event._id, job._id))}>Ứng Tuyển</button>
-                    </Box>
-                </Box>
-            )
-        )
-    ) : userApply !== user.user.username ? (
-        event.job.map((job: any) =>
-            job._id !== userJob ? (
-                <Box key={job._id}>
-                    <Box>
-                        <Typography key={job._id} sx={{ width: "200px", fontSize: '12px' }}>
-                            - {job.nameJob} {job.quantityRemaining} {job.jobRequest}
-                        </Typography>
-                    </Box>
-                    <Box>
-                        <button style={{ backgroundColor: "black", color: "white", height: "30px", width: "90px", fontWeight: "bold", borderRadius: "6px" }} onClick={(e) => dispatch(userApplyJob(event._id, job._id))}>Ứng Tuyển</button>
-                    </Box>
-                </Box>
-            ) : null
-        )
+        <BookmarkBorder onClick={handleClickStorage} style={{ width: "30px", height: "30px", color: 'rgb(33, 43, 54)' }} />
     ) : null
 
     const classes = useStyles();
 
     return (
-        <>
-            <Toolbar className={classes.toolBar} key={event._id}>
-                <Box className={classes.toolbarContent}>
-                    <TabContext value={value}>
-                        <TabPanel value="1" >
-                            {/* de rieng ra 1 component */}
-                            <Card className={classes.card}>
-                                <CardHeader
-                                    avatar={
-                                        <Avatar sx={{ bgcolor: green[500] }} aria-label="recipe">
-                                            {letterAvatar}
-                                        </Avatar>
-                                    }
-                                    action={
-                                        <IconButton aria-label='settings'>
-                                            {compareUser}
-                                        </IconButton>
-                                    }
-                                    title={event?.poster.username ?? null}
-                                    titleTypographyProps={{ align: 'left', fontSize: '16px', fontWeight: 'bold', paddingBottom: '2px' }}
-                                    subheader={lettercreatedAt}
-                                    subheaderTypographyProps={{ align: 'left', fontSize: '12px' }}
-                                >
-                                </CardHeader>
+        <Box className={classes.toolbarContent}>
+            <TabContext value={value}>
 
-                                <CardContent>
-                                    <Typography sx={{ textAlign: 'left', fontSize: '24px', fontWeight: "bold" }}>
-                                        {event?.nameEvent ?? null}
-                                    </Typography>
-                                    <Typography sx={{ textAlign: 'left', fontSize: '14px' }}>
-                                        {event?.quantityUser ?? null}
-                                    </Typography>
-                                    <Typography sx={{ textAlign: 'left', fontSize: '14px' }}>
-                                        {event?.location ?? null}
-                                    </Typography>
-                                    <Typography sx={{ textAlign: 'left', fontSize: '14px' }}>
-                                        {event?.dayStart ?? null}
-                                    </Typography>
-                                    <Typography sx={{ textAlign: 'left', fontSize: '14px' }}>
-                                        {event?.dayEnd ?? null}
-                                    </Typography>
-                                    <Typography sx={{ textAlign: 'left', fontSize: '14px' }}>
-                                        {user.user.username}
-                                    </Typography>
-                                    {compareUserApply}
-                                </CardContent >
-                                <CardMedia
-                                    className={classes.myMedia}
-                                    component="img"
-                                    image={PF + event?.image ?? null}
-                                    alt="Paella dish"
-                                >
-                                </CardMedia>
-                                <CardActions disableSpacing >
+                {/* de rieng ra 1 component */}
+                <Card className={classes.card}>
+                    <Box margin={'0px 26px'}>
+                        <Box style={{ marginTop: "30px", fontSize: "20px", fontWeight: "bold" }}>
+                            Khoa {event.departmentEvent.nameDepartment.toLowerCase()}
+                        </Box>
+                    </Box>
 
-                                </CardActions>
+                    <Divider sx={{ margin: '20px 0px' }} />
+                    <Box margin={'0px 26px'}>
+                        <Box display={'flex'} flexDirection={'row'} margin={'10px 0px'}>
+                            <Box display={'flex'} flexDirection={'row'} marginTop={1}>
+                                <Avatar style={{
+                                    backgroundColor: 'white',
+                                    marginRight: '12px',
+                                    border: '1px dashed #b7b7b4',
+                                    color: '#454545'
+                                }}
+                                    aria-label="recipe">
+                                    {letterAvatar}
+                                </Avatar>
 
-                                <Collapse>
-                                </Collapse>
+                                <Box>
+                                    <Box fontWeight={1000} >{event?.poster.username ?? null}</Box>
+                                    <Box sx={{ color: '#757575', fontSize: '14px' }}>{lettercreatedAt}</Box>
+                                </Box>
+                            </Box>
 
-                            </Card>
-                        </TabPanel>
-                    </TabContext>
+                            <Box flexGrow={1} />
 
-                </Box>
-            </Toolbar >
-            {/* trang nay la trang can giu lai position={'fixed'} overflow='hidden'*/}
-            {/* <Box sx={{ marginBottom: 'auto', flexDirection: 'column', zIndex: '1' }} >
+                            <IconButton aria-label='settings'>
+                                {compareUser}
+                            </IconButton>
+                        </Box>
+                    </Box>
 
-                    <TabContext value={value}>
+                    <Box margin={'0px 26px'}>
+                        <Box style={{ marginBottom: '30px', paddingTop: '10px' }}>
 
-                        <TabPanel value="1" sx={{ margin: '0' }}> */}
-            {/* de rieng ra 1 component */}
-            {/* <Card className={classes.cardHold}>
-                                <CardHeader
-                                    title='Đây là tên bài viết chi tiết'
-                                    titleTypographyProps={{ align: 'left' }}
-                                >
+                            <Typography style={{ textAlign: 'left', fontSize: '17px', fontWeight: "600", paddingBottom: 6 }}>
+                                {event?.nameEvent ?? null}
+                            </Typography>
 
-                                </CardHeader> */}
-
-            {/* day la thanh ngach ngang phan cach */}
-            {/* <Box sx={{ maxWidth: '100%', height: '1px', width: '100%', backgroundColor: '#E8E8E8' }}>
-
+                            <Box display={'flex'} flexDirection={'row'} marginBottom={4} letterSpacing={0.6}>
+                                <Box sx={{
+                                    textAlign: 'left',
+                                    fontSize: '14px',
+                                    color: '#757575',
+                                    paddingRight: 1,
+                                    fontWeight: 500
+                                }}>
+                                    Thời gian:
+                                </Box>
+                                <Box style={{ textAlign: 'left', fontSize: '14px', fontWeight: '1000' }}>
+                                    {event?.dayStart ?? null} - {event?.dayEnd ?? null}
                                 </Box>
 
-                                <CardActions>
-                                    <Button className={classes.button} > Ứng tuyển </Button>
-                                </CardActions>
+                            </Box>
+                        </Box >
+                    </Box>
+                    <Divider sx={{ marginBottom: '50px' }} />
+                    <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", marginTop: "-20px" }}>
+                        <CardMedia
+                            className={classes.myMedia}
+                            component="img"
+                            image={event?.image}
+                            alt="Paella dish"
+                        >
+                        </CardMedia>
+                    </Box>
 
-                            </Card>
-                        </TabPanel>
-                    </TabContext>
-                </Box> */}
-        </>
+                    <Divider sx={{ margin: '20px 0px' }} />
+                    <Box margin={'0px 26px'}>
+                        <Box display={'flex'} flexDirection={'row'} marginBottom={4}>
+                            <Box sx={{
+                                textAlign: 'left',
+                                fontSize: '14px',
+                                color: '#757575',
+                                paddingRight: 1,
+                                fontWeight: 500
+                            }}>
+                                Địa điểm:
+                            </Box>
+                            <Box style={{ textAlign: 'left', fontSize: '14px', fontWeight: '1000' }}>
+                                {event?.location ?? null}
+                            </Box>
+
+                        </Box>
+                    </Box>
+
+                </Card>
+            </TabContext>
+        </Box>
     );
 };
 

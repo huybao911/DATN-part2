@@ -4,11 +4,16 @@ import { useDispatch, useSelector } from "react-redux";
 import { getListCTV } from "redux/actions/Manager";
 import { RootState } from "redux/reducers";
 import { IEvent } from "redux/types/event";
-import { TableSortLabel, Toolbar, OutlinedInput, InputAdornment, Card, Container, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography } from "@mui/material";
+import UpdateCoefficient from "./UpdateCoefficient"
+import { TableSortLabel, Toolbar, OutlinedInput, InputAdornment, Card, Container, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography, Popover, Button } from "@mui/material";
 // @mui
 import SearchIcon from '@mui/icons-material/Search';
 import { Box } from "@mui/system";
 import { visuallyHidden } from '@mui/utils';
+
+import { useParams } from 'react-router-dom';
+
+import { DownloadTableExcel } from 'react-export-table-to-excel';
 
 const StyledRoot = styled(Toolbar)(({ theme }) => ({
   height: 96,
@@ -74,8 +79,8 @@ interface DataUser {
   nameJob: keyof IEvent;
   userApply: keyof IEvent;
   unitPrice: keyof IEvent;
-  // approve: keyof IEvent;
-  // unapprove: keyof IEvent;
+  coefficient: keyof IEvent;
+  total: keyof IEvent;
 }
 
 interface HeadCell {
@@ -105,21 +110,16 @@ const headCells: HeadCell[] = [
     numeric: false,
     label: 'Lương',
   },
-  // {
-  //   _id: 'applyStatus',
-  //   numeric: false,
-  //   label: 'Trạng thái',
-  // },
-  // {
-  //   _id: 'approve',
-  //   numeric: false,
-  //   label: '',
-  // },
-  // {
-  //   _id: 'unapprove',
-  //   numeric: false,
-  //   label: '',
-  // },
+  {
+    _id: 'coefficient',
+    numeric: false,
+    label: 'Hệ số',
+  },
+  {
+    _id: 'total',
+    numeric: false,
+    label: 'Thành tiền',
+  },
 ];
 
 
@@ -173,12 +173,17 @@ function EnhancedTableHead(props: EnhancedTableProps) {
   );
 }
 
+interface RouteParams {
+  id: string
+}
+
 const Users: React.FC = (): JSX.Element => {
 
   const dispatch = useDispatch();
-
+  const params = useParams<RouteParams>();
 
   const [events, setEvents] = React.useState<IEvent[]>([]);
+  const [anchorEl, setAnchorEl] = React.useState([null]);
   const manager = useSelector((state: RootState) => state.manager);
 
   const [page, setPage] = React.useState(0);
@@ -187,8 +192,6 @@ const Users: React.FC = (): JSX.Element => {
 
   const [order, setOrder] = React.useState<Order>('asc');
   const [orderBy, setOrderBy] = React.useState<keyof DataUser>('nameEvent');
-
-
 
   const handleRequestSort = (
     event: React.MouseEvent<unknown>,
@@ -226,22 +229,41 @@ const Users: React.FC = (): JSX.Element => {
     setFilterName(keyword);
   };
 
+  const handleOpenMenu = (jobEvent: any, index: any) => {
+    const newAnchorEls = [
+      ...anchorEl.slice(0, index),
+      jobEvent.currentTarget,
+      ...anchorEl.slice(index + 1)
+    ];
+    setAnchorEl(newAnchorEls);
+  };
+
+  const handleCloseMenu = (index: any) => {
+    const newAnchorEls = [
+      ...anchorEl.slice(0, index),
+      null,
+      ...anchorEl.slice(index + 1)
+    ];
+    setAnchorEl(newAnchorEls);
+  };
+
   const sortApplyJob = stableSort(events, getComparator(order, orderBy));
 
-  const checkUserApply = manager?.events?.filter((event: any) => event.nameEvent);
+  const checkUserApply = manager?.events?.filter((event: any) => event._id == params.id);
 
   React.useEffect(() => {
     dispatch(getListCTV());
   }, [dispatch]);
 
   React.useEffect(() => {
-
     setEvents(() => checkUserApply);
   }, [manager]);
 
   React.useEffect(() => {
     document.title = "LIST CVT";
   }, []);
+
+  const tableRef = React.useRef(null);
 
   return (
 
@@ -274,11 +296,19 @@ const Users: React.FC = (): JSX.Element => {
                   }
                 />
               </Box>
+              <DownloadTableExcel
+                    filename="users table"
+                    sheet="users"
+                    currentTableRef={tableRef.current}
+                    
+                >
+                   <Button> Export excel </Button>
+                </DownloadTableExcel>
             </Box>
           </StyledRoot>
           <TableContainer>
             {/* Table user */}
-            <Table >
+            <Table ref={tableRef}>
               <EnhancedTableHead
                 order={order}
                 orderBy={orderBy}
@@ -287,44 +317,72 @@ const Users: React.FC = (): JSX.Element => {
               {events && events.length > 0 ? (
                 <TableBody>
                   {sortApplyJob.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((event: any, index) =>
-                    <TableRow key={event._id}>
+                    <TableRow id="row" key={event._id}>
                       <TableCell key={event._id} align="left" sx={{ width: "200px", fontSize: '12px' }}>
                         <Box >
                           {event?.nameEvent ?? null}
                         </Box>
                       </TableCell>
-                      {/* <TableCell align="left" sx={{ width: "200px", fontSize: '12px' }}>
-                        {event.usersApplyJob.filter((jobApply: any) => jobApply.notiApplyJob.includes("Bạn đã ứng tuyển thành công")).map((job: any) =>
-                          <Box style={{ display: "flex", flexDirection: "column", marginTop: "20px", paddingBottom: "20px" }}>
-                            {job.jobEvent.event.nameEvent}
-                          </Box>
-                        )}
-                      </TableCell> */}
                       <TableCell align="left" sx={{ width: "200px", fontSize: '12px' }}>
                         {event.usersApplyJob.filter((jobApply: any) => jobApply.notiApplyJob.includes("Bạn đã ứng tuyển thành công")).map((job: any) =>
-                          <Box key={job._id} style={{ display: "flex", flexDirection: "column", marginTop:"20px", paddingBottom:"20px" }}>
+                          <Box key={job._id} style={{ display: "flex", flexDirection: "column", marginTop: "20px", paddingBottom: "20px" }}>
                             {job.jobEvent.nameJob}
                           </Box>
                         )}
                       </TableCell>
                       <TableCell align="left" sx={{ width: "200px", fontSize: '12px' }}>
                         {event.usersApplyJob.filter((jobApply: any) => jobApply.notiApplyJob.includes("Bạn đã ứng tuyển thành công")).map((job: any) =>
-                          <Box key={job._id} style={{ display: "flex", flexDirection: "column", marginTop:"20px", paddingBottom:"20px" }}>
+                          <Box key={job._id} style={{ display: "flex", flexDirection: "column", marginTop: "20px", paddingBottom: "20px" }}>
                             {job.userApply.username}
                           </Box>
                         )}
                       </TableCell>
                       <TableCell align="left" sx={{ width: "300px", fontSize: '12px' }}>
                         {event.usersApplyJob.filter((jobApply: any) => jobApply.notiApplyJob.includes("Bạn đã ứng tuyển thành công")).map((job: any) =>
-                          <Box key={job._id} style={{ display: "flex", flexDirection: "column", marginTop:"20px", paddingBottom:"20px" }}>
+                          <Box key={job._id} style={{ display: "flex", flexDirection: "column", marginTop: "20px", paddingBottom: "20px" }}>
                             {new Intl.NumberFormat().format(job.jobEvent.unitPrice)} VND
+                          </Box>
+                        )}
+                      </TableCell>
+                      <TableCell align="left" sx={{ width: "250px", fontSize: '12px' }}>
+                        {event.usersApplyJob.filter((jobApply: any) => jobApply.notiApplyJob.includes("Bạn đã ứng tuyển thành công")).map((job: any, index: number) =>
+                          <Box key={job._id} style={{ display: "flex", flexDirection: "column", marginTop: "14px", paddingBottom: "14px" }}>
+                            <Button style={{ fontSize: '12px', fontWeight: "normal", textTransform: "lowercase", width: "20px" }} size="small" color="inherit" onClick={(jobApply) => handleOpenMenu(jobApply, index)} >
+                              {job.coefficient}
+                            </Button>
+                            <Popover
+                              open={!!anchorEl[index]}
+                              anchorEl={anchorEl[index]}
+                              onClose={() => handleCloseMenu(index)}
+                              anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
+                              transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                              PaperProps={{
+                                sx: {
+
+                                  width: 340,
+                                  '& .MuiMenuItem-root': {
+                                    px: 1,
+                                    typography: 'body2',
+                                    borderRadius: 0.75,
+                                  },
+                                },
+                              }}
+                            >
+                              <UpdateCoefficient event={event} job={job} key={event._id} />
+                            </Popover>
+                          </Box>
+                        )}
+                      </TableCell>
+                      <TableCell align="left" sx={{ width: "300px", fontSize: '12px' }}>
+                        {event.usersApplyJob.filter((jobApply: any) => jobApply.notiApplyJob.includes("Bạn đã ứng tuyển thành công")).map((job: any) =>
+                          <Box key={job._id} style={{ display: "flex", flexDirection: "column", marginTop: "20px", paddingBottom: "20px" }}>
+                            {new Intl.NumberFormat().format(job.total)} VND
                           </Box>
                         )}
                       </TableCell>
                     </TableRow>
                   )}
 
-                  <TableRow>
                     <TablePagination
                       style={{ fontSize: "12px" }}
                       sx={{
@@ -358,7 +416,6 @@ const Users: React.FC = (): JSX.Element => {
                         }
                       }}
                     />
-                  </TableRow>
                 </TableBody>
               ) : (
                 <TableBody>

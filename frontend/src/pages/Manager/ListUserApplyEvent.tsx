@@ -4,13 +4,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { getListUserApply, approveUserApplyJob, unapproveUserApplyJob } from "redux/actions/Manager";
 import { RootState } from "redux/reducers";
 import { IEvent } from "redux/types/event";
-import { TableSortLabel, IconButton, Toolbar, OutlinedInput, InputAdornment, Button, Card, Container, Popover, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography } from "@mui/material";
+import { Avatar, TableSortLabel, IconButton, Toolbar, OutlinedInput, InputAdornment, Button, Card, Container, Popover, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography } from "@mui/material";
 // @mui
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import SearchIcon from '@mui/icons-material/Search';
 import { Box } from "@mui/system";
 import { visuallyHidden } from '@mui/utils';
+
+import { useParams } from 'react-router-dom';
 
 const StyledRoot = styled(Toolbar)(({ theme }) => ({
   height: 96,
@@ -169,10 +171,13 @@ function EnhancedTableHead(props: EnhancedTableProps) {
     </TableHead>
   );
 }
-
+interface RouteParams {
+    id: string
+}
 const Users: React.FC = (): JSX.Element => {
 
-  const dispatch = useDispatch();
+    const dispatch = useDispatch();
+    const params = useParams<RouteParams>();
 
 
   const [events, setEvents] = React.useState<IEvent[]>([]);
@@ -254,7 +259,7 @@ const Users: React.FC = (): JSX.Element => {
 
   React.useEffect(() => {
 
-    setEvents(() => manager?.events?.filter((event: any) => event.nameEvent));
+    setEvents(() => manager?.events?.filter((event: any) => event._id == params.id));
   }, [manager]);
 
   React.useEffect(() => {
@@ -353,6 +358,7 @@ const Users: React.FC = (): JSX.Element => {
                                 <Box sx={{ textAlign: "center", fontWeight: "bold", marginBottom: "10px" }}>
                                   Thông tin của {job.userApply.username}
                                 </Box>
+                                <Avatar src={job.userApply.avatar}/>
                                 <Box>
                                   Tên: {job.userApply.fullName}
                                 </Box>
@@ -383,7 +389,7 @@ const Users: React.FC = (): JSX.Element => {
                       </TableCell>
                       <TableCell align="left" sx={{ width: "50px", fontSize: '12px' }}>
                         {event.usersApplyJob.filter((jobApply: any) => jobApply.applyStatus.includes("Chờ phê duyệt")).map((job: any) =>
-                          <Box key={job._id} style={{ display: "flex", flexDirection: "column", marginTop: "10px", paddingBottom: "10px" }}>
+                          <Box key={job._id} style={{ display: "flex", flexDirection: "column", marginTop: "5px", paddingBottom: "10px" }}>
                             <IconButton onClick={(e) => dispatch(approveUserApplyJob(event._id, job._id))} style={{ color: "green" }}>
                               <CheckCircleOutlineIcon />
                             </IconButton>
@@ -392,7 +398,7 @@ const Users: React.FC = (): JSX.Element => {
                       </TableCell>
                       <TableCell align="left" sx={{ width: "50px", fontSize: '12px' }}>
                         {event.usersApplyJob.filter((jobApply: any) => jobApply.applyStatus.includes("Chờ phê duyệt")).map((job: any) =>
-                          <Box key={job._id} style={{ display: "flex", flexDirection: "column", marginTop: "10px", paddingBottom: "10px" }}>
+                          <Box key={job._id} style={{ display: "flex", flexDirection: "column", marginTop: "5px", paddingBottom: "10px" }}>
                             <IconButton onClick={(e) => dispatch(unapproveUserApplyJob(event._id, job._id))} style={{ color: "red" }}>
                               <HighlightOffIcon />
                             </IconButton>
