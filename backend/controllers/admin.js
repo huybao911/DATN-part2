@@ -10,6 +10,7 @@ const JobEvent = require("../models/JobEvent");
 
 exports.login = async (req, res, next) => {
   const { username, password } = req.body;
+  
   try {
     const admin = await User.findOne({ username }).lean();
     //Load danh sách role 
