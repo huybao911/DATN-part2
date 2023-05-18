@@ -234,7 +234,7 @@ export const getListCTV =
 
 // UPDATE COEFFICIENT
 export const updateCoefficient =
-  (body: any,eventId: number, userApplyId: number, setSubmitting: any) =>
+  (body: any, eventId: number, userApplyId: number, setSubmitting: any) =>
     async (dispatch: Dispatch<ManagerActions | AlertActions>) => {
       const config: any = {
         header: {
@@ -264,10 +264,10 @@ export const updateCoefficient =
             alertType: "error",
           })
         );
-      }finally {
+      } finally {
         setSubmitting(false);
       }
-    };  
+    };
 
 // APPROVE USER APPLY JOB
 export const approveUserApplyJob =
@@ -304,7 +304,7 @@ export const approveUserApplyJob =
       }
     };
 
-// APPROVE USER APPLY JOB
+// UNAPPROVE USER APPLY JOB
 export const unapproveUserApplyJob =
   (eventId: number, userApplyId: number) =>
     async (dispatch: Dispatch<ManagerActions | AlertActions>) => {
@@ -321,6 +321,76 @@ export const unapproveUserApplyJob =
           payload: data,
         });
         dispatch<any>(getListUserApply());
+        // dispatch<any>(
+        //   setAlert({
+        //     msg: "Không duyệt người dùng thành công!",
+        //     status: 200,
+        //     alertType: "success",
+        //   })
+        // );
+      } catch (error: any) {
+        dispatch<any>(
+          setAlert({
+            msg: "Không duyệt người dùng thất bại!",
+            status: error.response.status,
+            alertType: "error",
+          })
+        );
+      }
+    };
+
+// ACCEPT CTV
+export const acceptCTV =
+  (eventId: number, userApplyId: number) =>
+    async (dispatch: Dispatch<ManagerActions | AlertActions>) => {
+      const config: any = {
+        header: {
+          "Content-Type": "application/json",
+        },
+      };
+
+      try {
+        const { data } = await axios.put(`${URI}/acceptCTV/${eventId}/${userApplyId}`, config);
+        dispatch({
+          type: types.ACCEPT_CTV,
+          payload: data,
+        });
+        dispatch<any>(getListCTV());
+        // dispatch<any>(
+        //   setAlert({
+        //     msg: "Duyệt người dùng thành công!",
+        //     status: 200,
+        //     alertType: "success",
+        //   })
+        // );
+      } catch (error: any) {
+        dispatch<any>(
+          setAlert({
+            msg: "Duyệt người dùng thất bại!",
+            status: error.response.status,
+            alertType: "error",
+          })
+        );
+      }
+    };
+
+// UNACCEPT CTV
+export const unacceptCTV =
+  (eventId: number, userApplyId: number) =>
+    async (dispatch: Dispatch<ManagerActions | AlertActions>) => {
+      const config: any = {
+        header: {
+          "Content-Type": "application/json",
+        },
+      };
+
+      try {
+        const { data } = await axios.put(`${URI}/unAcceptCTV/${eventId}/${userApplyId}`, config);
+        dispatch({
+          type: types.UNACCEPT_CTV,
+          payload: data,
+        });
+        dispatch<any>(getListCTV());
         // dispatch<any>(
         //   setAlert({
         //     msg: "Không duyệt người dùng thành công!",

@@ -71,6 +71,22 @@ interface IUnapproveUserJobApply {
   };
 }
 
+interface IAcceptCTV {
+  type: typeof types.ACCEPT_CTV;
+  payload: {
+    event: IEvent;
+    id: number;
+  };
+}
+
+interface IUnAcceptCTV {
+  type: typeof types.UNACCEPT_CTV;
+  payload: {
+    event: IEvent;
+    id: number;
+  };
+}
+
 interface IGetEvents {
   type: typeof types.GET_EVENTS;
   payload: IEvent[];
@@ -156,6 +172,8 @@ export type ManagerActions =
   | IUpdateCoefficient
   | IApproveUserJobApply
   | IUnapproveUserJobApply
+  | IAcceptCTV
+  | IUnAcceptCTV
   | IGetEvents
   | ICreateEventSuccess
   | ICreateEventFail

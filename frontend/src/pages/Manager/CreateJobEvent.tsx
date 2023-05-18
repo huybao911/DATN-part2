@@ -1,30 +1,34 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import { Button, CircularProgress } from "@material-ui/core";
+import { Box, Button, CircularProgress, Container, FormControl, FormLabel, TextField, Typography } from "@mui/material";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import Accordion from "@mui/material/Accordion";
-import AccordionDetails from "@mui/material/AccordionDetails";
 import { useDispatch } from "react-redux";
 import { createJobEvent } from "redux/actions/Manager";
-import FormJobEvent from "pages/Manager/FormJobEvent";
 import FormEvent from "pages/auth/FormEvent-Manager";
+import { makeStyles } from "@material-ui/core";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
-    root: {
-        flexGrow: 1,
+    formLabel: {
+        fontWeight: 600,
+        marginBottom: theme.spacing(1.5),
     },
-    btnLogin: {
-        marginTop: theme.spacing(1.5),
-        marginRight: theme.spacing(1),
-        padding: theme.spacing(1, 2),
+    formControl: {
+        margin: theme.spacing(1, 0),
     },
-    accordion: {
-        marginBottom: theme.spacing(3),
-        padding: theme.spacing(1),
+    placeholder: {
+        color: "#aaa"
+    },
+    selectStyle: {
+        fontSize: '13px',
+        marginBottom: '28px',
+        marginTop: 10,
+        width: 300,
+        "& fieldset": {
+            borderRadius: "10px",
+        },
     },
 }));
-
 type Props = {
     jobEvent: any;
 };
@@ -39,8 +43,9 @@ interface IInitialValues {
 }
 
 const CreateJobEvent: React.FC<Props> = ({ jobEvent }): JSX.Element => {
-    const classes = useStyles();
     const dispatch = useDispatch();
+    const history = useHistory();
+    const classes = useStyles();
 
     const initialValues: IInitialValues = {
         nameJob: jobEvent?.nameJob ?? "",
@@ -68,40 +73,181 @@ const CreateJobEvent: React.FC<Props> = ({ jobEvent }): JSX.Element => {
     });
 
     return (
-        <Accordion className={classes.accordion} elevation={0}>
-            {/* <AccordionSummary
-        expandIcon={<ExpandMoreIcon />}
-        aria-controls='panel1a-content'
-        id={`panel1a-header-${user._id}`}
-      >
-        <Typography>{user?.username ?? null}</Typography>
-      </AccordionSummary> */}
-            <AccordionDetails>
-                <Formik
-                    enableReinitialize
-                    initialValues={initialValues}
-                    validationSchema={validationSchema}
-                    onSubmit={onHandleSubmit}
-                >
-                    {({ isSubmitting, handleSubmit }) => (
-                        <form noValidate onSubmit={handleSubmit}>
-                            <FormJobEvent />   
-                            <FormEvent isEvent={true}/>       
-                            <Button
-                                type='submit'
-                                variant='contained'
-                                color='primary'
-                                size='small'
-                                className={classes.btnLogin}
-                                disabled={isSubmitting}
-                            >
-                                {isSubmitting ? <CircularProgress size='1rem' /> : "Tạo Công Việc Sự Kiện"}
-                            </Button>
-                        </form>
-                    )}
-                </Formik>
-            </AccordionDetails>
-        </Accordion>
+        <Container style={{ maxWidth: 600 }}>
+            <Formik
+                enableReinitialize
+                initialValues={initialValues}
+                validationSchema={validationSchema}
+                onSubmit={onHandleSubmit}
+                onReset = {(values, { resetForm }) => resetForm()}
+            >
+                {({ isSubmitting, handleSubmit, values, handleChange, handleBlur,setSubmitting, errors, touched, }) => (
+                    <form noValidate onSubmit={handleSubmit}>
+                        <Box display={"flex"}
+                            flexDirection={'column'}
+                            justifyContent={'center'}
+                            alignItems={'center'}
+                            style={{ backgroundColor: 'white', padding: '30px 0px', borderRadius: '20px' }}>
+                            <Typography style={{ fontWeight: "bold", fontSize: "18px", margin: 20 }} >
+                                Thêm Công việc
+                            </Typography>
+                            <FormControl className={classes.formControl}>
+                                <FormLabel style={{ fontWeight: "bold", fontSize: "14px", margin: "10px 0" }}>
+                                    Tên công việc
+                                </FormLabel>
+
+                                <TextField
+                                    style={{ width: 300 }}
+                                    fullWidth
+                                    variant={'outlined'}
+                                    name='nameJob'
+                                    value={values.nameJob}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    placeholder='Nhập tên công việc'
+                                    inputProps={{
+                                        style: {
+                                            fontSize: '12px',
+                                        }
+                                    }}
+                                    helperText={touched.nameJob ? errors.nameJob : ""}
+                                    error={touched.nameJob ? Boolean(errors.nameJob) : false}
+                                />
+                            </FormControl>
+
+                            <FormControl className={classes.formControl}>
+                                <FormLabel style={{ fontWeight: "bold", fontSize: "14px", margin: "10px 0" }}>
+                                    Số lượng người
+                                </FormLabel>
+
+                                <TextField
+                                    style={{ width: 300 }}
+                                    fullWidth
+                                    variant={'outlined'}
+                                    name='quantity'
+                                    value={values.quantity}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    placeholder='Nhập số lượng người'
+                                    inputProps={{
+                                        style: {
+                                            fontSize: '12px',
+                                        }
+                                    }}
+                                    helperText={touched.quantity ? errors.quantity : ""}
+                                    error={touched.quantity ? Boolean(errors.quantity) : false}
+                                />
+                            </FormControl>
+
+                            <FormControl className={classes.formControl}>
+                                <FormLabel style={{ fontWeight: "bold", fontSize: "14px", margin: "10px 0" }}>
+                                    Đơn giá
+                                </FormLabel>
+                                <TextField
+                                    style={{ width: 300 }}
+                                    fullWidth
+                                    variant="outlined"
+                                    name='unitPrice'
+                                    value={values.unitPrice}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    placeholder='Nhập đơn giá'
+                                    helperText={touched.unitPrice ? errors.unitPrice : ""}
+                                    error={touched.unitPrice ? Boolean(errors.unitPrice) : false}
+                                    inputProps={{
+                                        style: {
+                                            fontSize: '12px',
+                                        }
+                                    }}
+                                />
+                            </FormControl>
+
+                            <FormControl className={classes.formControl}>
+                                <FormLabel style={{ fontWeight: "bold", fontSize: "14px", margin: "10px 0" }}>
+                                    Mô tả công việc
+                                </FormLabel>
+
+                                <TextField
+                                    style={{ width: 300 }}
+                                    fullWidth
+                                    variant="outlined"
+                                    name='jobDescription'
+                                    value={values.jobDescription}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    placeholder='Nhập mô tả công việc'
+                                    helperText={touched.jobDescription ? errors.jobDescription : ""}
+                                    error={touched.jobDescription ? Boolean(errors.jobDescription) : false}
+                                    inputProps={{
+                                        style: {
+                                            fontSize: '12px',
+                                        }
+                                    }}
+                                />
+                            </FormControl>
+
+                            <FormControl className={classes.formControl}>
+                                <FormLabel style={{ fontWeight: "bold", fontSize: "14px", margin: "10px 0" }}>
+                                    Yêu cầu công việc
+                                </FormLabel>
+                                <TextField
+                                    style={{ width: 300 }}
+                                    fullWidth
+                                    variant="outlined"
+                                    name='jobRequest'
+                                    value={values.jobRequest}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    placeholder='Nhập yêu cầu công việc'
+                                    helperText={touched.jobRequest ? errors.jobRequest : ""}
+                                    error={touched.jobRequest ? Boolean(errors.jobRequest) : false}
+                                    inputProps={{
+                                        style: {
+                                            fontSize: '12px',
+                                        }
+                                    }}
+                                />
+                            </FormControl>
+
+                            <FormEvent isEvent={true} />
+                            <Box>
+                                <Button
+                                    type='submit'
+                                    style={{
+                                        color: "rgb(33, 43, 54)",
+                                        height: "34px",
+                                        width: "120px",
+                                        fontSize: "12px",
+                                        borderRadius: "4px",
+                                        fontWeight: 500,
+                                        textTransform: "capitalize",
+                                        border: '1px solid rgb(33, 43, 54)',
+                                        marginRight: 10
+                                    }}
+                                    disabled={isSubmitting}
+                                >
+                                    {isSubmitting ? <CircularProgress size='1rem' /> : "Tạo Công Việc"}
+                                </Button>
+                                <Button style={{
+                                    color: "#FF6969",
+                                    height: "34px",
+                                    width: "120px",
+                                    fontSize: "12px",
+                                    fontWeight: 500,
+                                    borderRadius: "4px",
+                                    textTransform: "capitalize",
+                                    border: '1px solid #FF6969',
+                                }}
+                                    onClick={history.goBack}
+                                >Quay lại</Button>
+                            </Box>
+
+                        </Box>
+
+                    </form>
+                )}
+            </Formik>
+        </Container>
     );
 };
 

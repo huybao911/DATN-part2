@@ -136,6 +136,7 @@ const FeedGuest: React.FC<Props> = ({ event }): JSX.Element => {
                     <Box margin={'0px 26px'}>
                         <Box display={'flex'} flexDirection={'row'} margin={'10px 0px'}>
                             <Avatar style={{
+                                fontSize: "14px",
                                 backgroundColor: 'white',
                                 marginRight: '12px',
                                 border: '1px dashed #b7b7b4',

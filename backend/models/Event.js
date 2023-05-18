@@ -55,6 +55,9 @@ const eventSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
+        ggSheet : {
+            type: String,
+        },
         dayStart: {
             type: String,
             trim: true,
@@ -97,13 +100,21 @@ const eventSchema = new mongoose.Schema(
                     type: String,
                     default: "Chờ phê duyệt",
                 },
+                acceptStatus: {
+                    type: String,
+                    default: "Chờ phê duyệt",
+                },
+                notiAccept: {
+                    type: String,
+                    default: "Chờ phê duyệt",
+                },
                 coefficient : {
                     type: Number,
                     default: 1,
                 },
                 total : {
                     type: Number,
-                }
+                },
             },
         ],
     },

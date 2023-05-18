@@ -100,6 +100,21 @@ const ManagerReducer = (
         ),
       };
 
+    case types.ACCEPT_CTV:
+      return {
+        ...state,
+        events: state.events.map((event) =>
+          event._id === action.payload.id ? { ...action.payload.event } : event
+        ),
+      };
+    case types.UNACCEPT_CTV:
+      return {
+        ...state,
+        events: state.events.map((event) =>
+          event._id === action.payload.id ? { ...action.payload.event } : event
+        ),
+      };
+
     case types.CREATE_EVENT_SUCCESS:
       return {
         ...state,

@@ -29,6 +29,9 @@ router.put("/coefficient/:eventId/:userApplyId", isAuth, ManagerController.updat
 router.put("/approveUser/:eventId/:userApplyId", isAuth, ManagerController.approveUserApplyJob);
 router.put("/unapproveUser/:eventId/:userApplyId", isAuth, ManagerController.unapproveUserApplyJob);
 
+router.put("/acceptCTV/:eventId/:userApplyId", isAuth, ManagerController.acceptCTV);
+router.put("/unAcceptCTV/:eventId/:userApplyId", isAuth, ManagerController.unAcceptCTV);
+
 router.get("/test/:id", isAuth, ManagerController.test);
 
 

@@ -193,23 +193,6 @@ const ListCTVExcel: React.FC = (): JSX.Element => {
     const [order, setOrder] = React.useState<Order>('asc');
     const [orderBy, setOrderBy] = React.useState<keyof DataUser>('nameEvent');
 
-    const handleRequestSort = (
-        event: React.MouseEvent<unknown>,
-        property: keyof DataUser,
-    ) => {
-        const isAsc = orderBy === property && order === 'asc';
-        setOrder(isAsc ? 'desc' : 'asc');
-        setOrderBy(property);
-    };
-
-    const handleChangeRowsPerPage = (event: any) => {
-        setPage(0);
-        setRowsPerPage(parseInt(event.target.value, 10));
-    };
-
-    const handleChangePage = (event: any, newPage: any) => {
-        setPage(newPage);
-    };
 
     const handleFilterByName = (event: any) => {
         setPage(0);
@@ -265,6 +248,8 @@ const ListCTVExcel: React.FC = (): JSX.Element => {
 
     const tableRef = React.useRef(null);
 
+    const nameEvent = events.map((event:any) => event.nameEvent)
+
     return (
 
         <>
@@ -279,7 +264,7 @@ const ListCTVExcel: React.FC = (): JSX.Element => {
                     >
                         <Box>
                             <Typography gutterBottom style={{ color: "black", fontSize: "22px" }}>
-                                Danh Sách Cộng Tác Viên
+                                Danh Sách CTV Hoàn Thành Công Việc
                             </Typography>
                         </Box>
                         <Box style={{ display: "flex", flexDirection: "row" }} >
@@ -297,12 +282,14 @@ const ListCTVExcel: React.FC = (): JSX.Element => {
                                 />
                             </Box>
                             <DownloadTableExcel
-                                filename="users table"
-                                sheet="users"
+                                filename={nameEvent.toString()}
+                                sheet= {"Danh sách ctv sự kiện " + nameEvent.toString()}
                                 currentTableRef={tableRef.current}
 
                             >
-                                <Button> Export excel </Button>
+                                <Button>
+                                    <img src="/icons8-excel-48.png" style={{  width: "30px" }}></img>
+                                </Button>
                             </DownloadTableExcel>
                         </Box>
                     </StyledRoot>
@@ -359,28 +346,28 @@ const ListCTVExcel: React.FC = (): JSX.Element => {
                                                 </Box>
                                             </TableCell>
                                             <TableCell align="left" sx={{ width: "200px", fontSize: '12px' }}>
-                                                {event.usersApplyJob.filter((jobApply: any) => jobApply.notiApplyJob.includes("Bạn đã ứng tuyển thành công")).map((job: any) =>
+                                                {event.usersApplyJob.filter((jobApply: any) => jobApply.notiAccept.includes("Đã hoàn thành công việc. Liên hệ văn phòng Viện/Khoa.")).map((job: any) =>
                                                     <Box key={job._id} style={{ display: "flex", flexDirection: "column", marginTop: "20px", paddingBottom: "20px" }}>
                                                         {job.jobEvent.nameJob}
                                                     </Box>
                                                 )}
                                             </TableCell>
                                             <TableCell align="left" sx={{ width: "200px", fontSize: '12px' }}>
-                                                {event.usersApplyJob.filter((jobApply: any) => jobApply.notiApplyJob.includes("Bạn đã ứng tuyển thành công")).map((job: any) =>
+                                                {event.usersApplyJob.filter((jobApply: any) => jobApply.notiAccept.includes("Đã hoàn thành công việc. Liên hệ văn phòng Viện/Khoa.")).map((job: any) =>
                                                     <Box key={job._id} style={{ display: "flex", flexDirection: "column", marginTop: "20px", paddingBottom: "20px" }}>
                                                         {job.userApply.username}
                                                     </Box>
                                                 )}
                                             </TableCell>
                                             <TableCell align="left" sx={{ width: "300px", fontSize: '12px' }}>
-                                                {event.usersApplyJob.filter((jobApply: any) => jobApply.notiApplyJob.includes("Bạn đã ứng tuyển thành công")).map((job: any) =>
+                                                {event.usersApplyJob.filter((jobApply: any) => jobApply.notiAccept.includes("Đã hoàn thành công việc. Liên hệ văn phòng Viện/Khoa.")).map((job: any) =>
                                                     <Box key={job._id} style={{ display: "flex", flexDirection: "column", marginTop: "20px", paddingBottom: "20px" }}>
                                                         {new Intl.NumberFormat().format(job.jobEvent.unitPrice)} VND
                                                     </Box>
                                                 )}
                                             </TableCell>
                                             <TableCell align="left" sx={{ width: "250px", fontSize: '12px' }}>
-                                                {event.usersApplyJob.filter((jobApply: any) => jobApply.notiApplyJob.includes("Bạn đã ứng tuyển thành công")).map((job: any, index: number) =>
+                                                {event.usersApplyJob.filter((jobApply: any) => jobApply.notiAccept.includes("Đã hoàn thành công việc. Liên hệ văn phòng Viện/Khoa.")).map((job: any, index: number) =>
                                                     <Box key={job._id} style={{ display: "flex", flexDirection: "column", marginTop: "14px", paddingBottom: "14px" }}>
                                                         <Button style={{ fontSize: '12px', fontWeight: "normal", textTransform: "lowercase", width: "20px" }} size="small" color="inherit" onClick={(jobApply) => handleOpenMenu(jobApply, index)} >
                                                             {job.coefficient}
@@ -409,7 +396,7 @@ const ListCTVExcel: React.FC = (): JSX.Element => {
                                                 )}
                                             </TableCell>
                                             <TableCell align="left" sx={{ width: "300px", fontSize: '12px' }}>
-                                                {event.usersApplyJob.filter((jobApply: any) => jobApply.notiApplyJob.includes("Bạn đã ứng tuyển thành công")).map((job: any) =>
+                                                {event.usersApplyJob.filter((jobApply: any) => jobApply.notiAccept.includes("Đã hoàn thành công việc. Liên hệ văn phòng Viện/Khoa.")).map((job: any) =>
                                                     <Box key={job._id} style={{ display: "flex", flexDirection: "column", marginTop: "20px", paddingBottom: "20px" }}>
                                                         {new Intl.NumberFormat().format(job.total)} VND
                                                     </Box>

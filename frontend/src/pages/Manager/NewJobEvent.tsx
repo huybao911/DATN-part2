@@ -17,14 +17,14 @@ const NewEvent: React.FC = (): JSX.Element => {
     }, [dispatch]);
 
     React.useEffect(() => {
-        setManagers(() => 
-        manager?.users?.filter((user: any) =>
-         user.role.keyRole === "manager"
-         ));
+        setManagers(() =>
+            manager?.users?.filter((user: any) =>
+                user.role.keyRole === "manager"
+            ));
     }, [manager]);
 
     React.useEffect(() => {
-        document.title = "JOB EVENT";
+        document.title = "Công việc sự kiện | CTV";
     }, []);
 
     return (
@@ -32,7 +32,7 @@ const NewEvent: React.FC = (): JSX.Element => {
         <>
             {Managers.map((jobEvent: any) =>
                 <Box key={jobEvent._id} >
-                    <CreateJobEvent jobEvent={jobEvent}  />
+                    <CreateJobEvent jobEvent={jobEvent} />
                 </Box>
             )}
         </>

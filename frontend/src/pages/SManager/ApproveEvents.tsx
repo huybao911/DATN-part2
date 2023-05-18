@@ -13,6 +13,7 @@ import { formatDistance } from 'date-fns';
 
 import CheckIcon from '@mui/icons-material/Check';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import { border } from "@mui/system";
 
 const useStyles = makeStyles((theme) => ({
     btnLogin: {
@@ -56,7 +57,7 @@ const ApproveEvents: React.FC = (): JSX.Element => {
     React.useEffect(() => {
         setEvents(() =>
             smanager?.events?.filter((event: any) =>
-                event.poster || event.approver || event.comments || event.quantityUser || event.job || event.location || event.departmentEvent || event.costs || event.dayStart || event.dayEnd || event.image || event.created_at
+                event.poster
             ));
     }, [smanager]);
 
@@ -68,143 +69,192 @@ const ApproveEvents: React.FC = (): JSX.Element => {
         <Container >
             <StyledRoot style={{ display: "flex", flexDirection: "column" }}>
                 {events.map((event: any) =>
-                    <Box key={event._id} width={720} >
+                    <Box key={event._id} width={680}>
                         <Box >
-                            <Card style={{ boxShadow: "none", padding: "30px", borderRadius: "24px" }}>
-                                <Box style={{ display: "flex", justifyContent: "center", alignItems: "center", marginBottom: "20px" }}>
-                                    <Box boxShadow={2}
-                                        style={{
-                                            display: "flex", flexDirection: "row", alignItems: "center",
-                                            padding: "6px 16px", borderRadius: "40px",
-                                        }}>
-                                        <Avatar style={{ backgroundColor: "green", marginRight: "15px", width: '28px', height: '28px', fontSize: '13px' }}>
-                                            {event.poster.username.charAt(0).toUpperCase()}
-                                        </Avatar>
-                                        <Typography style={{ fontWeight: "bold", fontSize: '13px' }}>{event.poster.username}</Typography>
+                            <Card style={{ boxShadow: "none", padding: 40, borderRadius: "24px" }}>
+                                {/* header */}
+                                <Box style={{ display: "flex", justifyContent: "center", alignItems: "center", marginBottom: "30px" }}>
+                                    <Box >
+                                        <Box style={{ fontSize: 24, fontWeight: '700', letterSpacing: 0.4 }}>
+                                            {event?.nameEvent}
+                                        </Box>
+                                        <Box display={'flex'} flexDirection={'row'} >
+                                            <Typography style={{ fontWeight: "bold", fontSize: '13px', color: '#757575' }}>
+                                                {event.poster.username}
+                                            </Typography>
+                                            <Typography style={{ fontSize: '13px', padding: '0px 4px', color: '#757575' }}>
+                                                |
+                                            </Typography>
+                                            <Typography style={{ fontWeight: "bold", fontSize: '13px', color: '#757575' }}>
+                                                {convertTZ((event.created_at), "Asia/Bangkok")}
+                                            </Typography>
+                                        </Box>
+
                                     </Box>
                                     <Box flexGrow={1} />
                                     <Button
                                         style={{
-                                            display: "flex", margin: "auto", color: "green",
-                                            textTransform: "capitalize", marginTop: "20px",
+                                            display: "flex", color: "green",
+                                            textTransform: "capitalize",
+                                            border: '1px solid'
                                         }}
                                         className={classes.btnLogin}
-                                        size='medium'
                                         onClick={(e) => dispatch(approveEvent(event._id))}><CheckIcon style={{ width: '18px' }} />
                                     </Button>
                                 </Box>
-                                {/* name event */}
-                                <Box display={"flex"}
-                                    flexDirection={'column'}
-                                    justifyContent={'center'}
-                                    alignItems={'center'}>
-                                    {event?.nameEvent}
-                                    {/* Image event */}
-                                    <CardMedia
-                                        component="img"
-                                        image={event.image}
-                                        alt="Không có ảnh"
-                                        style={{ width: 600, borderRadius: 10, marginBottom: 30 }}
-                                    />
+                                {/* detail */}
+                                <Box style={{ marginBottom: "20px" }}>
+                                    <Typography gutterBottom style={{ color: "black", fontSize: "16px", fontWeight: '600' }}>
+                                        Nội dung
+                                    </Typography>
+                                    <Box style={{ fontSize: '13px' }} dangerouslySetInnerHTML={{ __html: event.contentEvent }} />
                                 </Box>
+                                <Box style={{ marginBottom: "20px" }}>
+                                    <Typography gutterBottom style={{ color: "black", fontSize: "16px", fontWeight: '600' }}>
+                                        Công việc
+                                    </Typography>
+                                    {event.job.map((job: any) =>
+                                        <Box sx={{
+                                            display: 'grid',
+                                            gap: 4,
+                                            gridTemplateColumns: 'repeat(3, 1fr)',
+                                            color: "rgb(33, 43, 54)",
+                                            columnGap: 1,
+                                            marginBottom: 5
 
-                                <Divider style={{ borderStyle: 'dashed', }} />
+                                        }} >
+                                            <FormControl sx={{ alignItems: 'center', gap: 1 }} >
+                                                <Box sx={{ fontSize: '14px', color: '#757575', fontWeight: 500, }}>
+                                                    Tên công việc
+                                                </Box>
+                                                <Box sx={{ fontSize: '14px', fontWeight: '1000' }}>
+                                                    {job.nameJob}
+                                                </Box>
+                                            </FormControl>
+                                            <FormControl sx={{ alignItems: 'center', gap: 1 }} >
+                                                <Box sx={{ fontSize: '14px', color: '#757575', fontWeight: 500, }}>
+                                                    Số lượng
+                                                </Box>
+                                                <Box sx={{ fontSize: '14px', fontWeight: '1000' }}>
+                                                    {job.quantity}
+                                                </Box>
+                                            </FormControl>
+                                            <FormControl sx={{ alignItems: 'center', gap: 1 }} >
+                                                <Box sx={{ fontSize: '14px', color: '#757575', fontWeight: 500, }}>
+                                                    Đơn giá
+                                                </Box>
+                                                <Box sx={{ fontSize: '14px', fontWeight: '1000' }}>
+                                                    {new Intl.NumberFormat().format(job.unitPrice)} VNĐ
+                                                </Box>
+                                            </FormControl>
+
+                                        </Box>
+                                    )}
+                                </Box>
+                                <Typography gutterBottom style={{ color: "black", fontSize: "16px", fontWeight: '600' }}>
+                                    Chi tiết sự kiện
+                                </Typography>
                                 <Box display={"flex"}
                                     flexDirection={'column'}
                                     justifyContent={'center'}
                                     alignItems={'center'}
-                                    style={{ backgroundColor: 'white', padding: '40px 0px', borderRadius: '20px' }}>
+                                    style={{ backgroundColor: 'white', padding: '20px 0px', borderRadius: '20px' }}>
 
                                     <Box sx={{
                                         display: 'grid',
-                                        gap: 8,
+                                        gap: 4,
                                         gridTemplateColumns: 'repeat(3, 1fr)',
                                         color: "rgb(33, 43, 54)",
+                                        columnGap: 11
 
                                     }} >
 
                                         <FormControl sx={{ alignItems: 'center', gap: 1 }} >
-                                            <Box>Số lượng</Box>
-                                            <Box>
+                                            <Box sx={{ fontSize: '14px', color: '#757575', fontWeight: 500, }}>
+                                                Tổng số lượng
+                                            </Box>
+                                            <Box sx={{ fontSize: '14px', fontWeight: '1000' }}>
                                                 {event.quantityUser}
                                             </Box>
                                         </FormControl>
 
                                         <FormControl sx={{ alignItems: 'center', gap: 1 }} >
-                                            <Box>Địa điểm</Box>
-                                            <Box>{event.location}</Box>
+                                            <Box sx={{ fontSize: '14px', color: '#757575', fontWeight: 500, }}>Địa điểm</Box>
+                                            <Box sx={{ fontSize: '14px', fontWeight: '1000' }}>{event.location}</Box>
                                         </FormControl>
 
                                         <FormControl sx={{ alignItems: 'center', gap: 1 }} >
-                                            <Box>Tổng chi phí </Box>
-                                            <Box>{new Intl.NumberFormat().format(event.costs)}</Box>
+                                            <Box sx={{ fontSize: '14px', color: '#757575', fontWeight: 500, }}>Tổng chi phí </Box>
+                                            <Box sx={{ fontSize: '14px', fontWeight: '1000' }}>{new Intl.NumberFormat().format(event.costs)} VNĐ</Box>
                                         </FormControl>
 
+
                                         <FormControl sx={{ alignItems: 'center', gap: 1 }} >
-                                            <Box>Công việc </Box>
-                                            {event.job.map((job: any) =>
-                                                <Typography key={job._id} style={{ width: "100px", fontSize: '12px' }}>
-                                                    - {job.nameJob}
-                                                </Typography>
-                                            )}
-                                        </FormControl>
-                                        <FormControl sx={{ alignItems: 'center', gap: 1 }} >
-                                            <Box>Ngày bắt đầu </Box>
-                                            <Box >
+                                            <Box sx={{ fontSize: '14px', color: '#757575', fontWeight: 500, }}>Ngày bắt đầu </Box>
+                                            <Box sx={{ fontSize: '14px', fontWeight: '1000' }} >
                                                 {event.dayStart}
                                             </Box>
                                         </FormControl>
 
                                         <FormControl sx={{ alignItems: 'center', gap: 1 }} >
-                                            <Box>Ngày kết thúc </Box>
-                                            <Box >
+                                            <Box sx={{ fontSize: '14px', color: '#757575', fontWeight: 500, }}>Ngày kết thúc </Box>
+                                            <Box sx={{ fontSize: '14px', fontWeight: '1000' }}>
                                                 {event.dayEnd}
-                                            </Box>
-                                        </FormControl>
-
-                                        <FormControl sx={{ alignItems: 'center', gap: 1 }} >
-                                            <Box>Ngày tạo </Box>
-                                            <Box style={{
-                                                fontSize: "12px",
-                                                color: "#6a7b78",
-                                                padding: "12px 0px"
-                                            }}>
-                                                {convertTZ((event.created_at), "Asia/Bangkok")}
                                             </Box>
                                         </FormControl>
 
                                     </Box>
                                 </Box>
+                                {/* Image event */}
+                                <Box display={"flex"}
+                                    flexDirection={'column'}
+                                    justifyContent={'center'}
+                                    alignItems={'center'} >
 
-                                {event.comments.map((comment: any) =>
-                                    <Box style={{ marginTop: "6px" }}>
-                                        <Card style={{ boxShadow: "none", }}>
-                                            <Box style={{ display: "flex", flexDirection: "row", paddingLeft: '20px' }}>
-                                                <Avatar style={{ backgroundColor: "green", marginRight: "10px", marginTop: "10px", width: '28px', height: '28px', fontSize: '13px' }} aria-label="recipe">
-                                                    {comment.commenter.username.charAt(0).toUpperCase()}
-                                                </Avatar>
-                                                <CardContent style={{ backgroundColor: "#f4f5f5", padding: "10px 10px", borderRadius: "10px" }}>
-                                                    <Box style={{ display: "flex", flexDirection: "row" }}>
-                                                        <Typography style={{ fontWeight: "bold", fontSize: "13px", marginBottom: "5px" }}>{comment.commenter.username}</Typography>
-                                                        <Box style={{ flexGrow: "1" }}></Box>
-                                                        <Typography style={{ fontSize: '12px' }}>{(formatDistance(new Date(comment.created), Date.now(), { addSuffix: true })).split("about")}</Typography>
-                                                    </Box>
-                                                    <Typography style={{ fontSize: "12px", width: "260px", textAlign: "justify" }}>
-                                                        {comment.contentComment}
-                                                    </Typography>
-                                                </CardContent>
-                                                <Button
-                                                    style={{ color: "red" }}
-                                                    disableRipple
-                                                    className={classes.btnLogin}
-                                                    size='small'
-                                                    onClick={(e) => dispatch(deleteComment(event._id, comment._id))}> <DeleteForeverIcon style={{ width: '18px' }} />
-                                                </Button>
-                                            </Box>
-                                        </Card>
-                                    </Box>
-                                )}
-                                <UpdateComment event={event} />
+                                    <CardMedia
+                                        component="img"
+                                        image={event.image}
+                                        alt="Không có ảnh"
+                                        style={{ width: 500, borderRadius: 10, margin: '14px 0' }}
+                                    />
+                                </Box>
+
+                                <Divider style={{ margin: '10px 0' }} />
+
+                                <Typography gutterBottom style={{ color: "black", fontSize: "16px", fontWeight: '600' }}>
+                                    Bình luận
+                                </Typography>
+                                {/* Comment */}
+                                <Box display={"flex"}
+                                    flexDirection={'column'}
+                                    justifyContent={'center'}
+                                    alignItems={'center'}>
+                                    {event.comments.map((comment: any) =>
+                                        <Box style={{ display: "flex", flexDirection: "row", marginTop: 10, }}>
+                                            <Avatar style={{ backgroundColor: "green", marginRight: "10px", marginTop: "10px", width: '28px', height: '28px', fontSize: '13px' }} aria-label="recipe">
+                                                {comment.commenter.username.charAt(0).toUpperCase()}
+                                            </Avatar>
+                                            <CardContent style={{ backgroundColor: "#f4f5f5", padding: "10px 10px", borderRadius: "10px" }}>
+                                                <Box style={{ display: "flex", flexDirection: "row" }}>
+                                                    <Typography style={{ fontWeight: "bold", fontSize: "13px", marginBottom: "5px" }}>{comment.commenter.username}</Typography>
+                                                    <Box style={{ flexGrow: "1" }}></Box>
+                                                    <Typography style={{ fontSize: '12px' }}>{(formatDistance(new Date(comment.created), Date.now(), { addSuffix: true })).split("about")}</Typography>
+                                                </Box>
+                                                <Typography style={{ fontSize: "12px", width: 400, textAlign: "justify" }}>
+                                                    {comment.contentComment}
+                                                </Typography>
+                                            </CardContent>
+                                            <Button
+                                                style={{ color: "red" }}
+                                                disableRipple
+                                                className={classes.btnLogin}
+                                                size='small'
+                                                onClick={(e) => dispatch(deleteComment(event._id, comment._id))}> <DeleteForeverIcon style={{ width: '18px' }} />
+                                            </Button>
+                                        </Box>
+                                    )}
+                                    <UpdateComment event={event} />
+                                </Box>
                             </Card>
                         </Box>
                     </Box>

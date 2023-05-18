@@ -1,14 +1,12 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { Button, CircularProgress } from "@material-ui/core";
+import { Box, Button, CircularProgress, FormControl, FormLabel, TextField, Typography, } from "@mui/material";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import Accordion from "@mui/material/Accordion";
-import AccordionDetails from "@mui/material/AccordionDetails";
 import { useDispatch } from "react-redux";
 import { updateJobEvent } from "redux/actions/Manager";
-import FormJobEvent from "pages/Manager/FormJobEvent";
 import FormEvent from "pages/auth/FormEvent-Manager";
+import { Container } from "@mui/material";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -19,9 +17,12 @@ const useStyles = makeStyles((theme) => ({
         marginRight: theme.spacing(1),
         padding: theme.spacing(1, 2),
     },
-    accordion: {
-        marginBottom: theme.spacing(3),
-        padding: theme.spacing(1),
+    formLabel: {
+        fontWeight: 600,
+        marginBottom: theme.spacing(1.5),
+    },
+    formControl: {
+        margin: theme.spacing(1, 0),
     },
 }));
 
@@ -67,25 +68,139 @@ const UpdateJobEvent: React.FC<Props> = ({ jobEvent }): JSX.Element => {
     });
 
     return (
-        <Accordion className={classes.accordion} elevation={0}>
-            {/* <AccordionSummary
-        expandIcon={<ExpandMoreIcon />}
-        aria-controls='panel1a-content'
-        id={`panel1a-header-${user._id}`}
-      >
-        <Typography>{user?.username ?? null}</Typography>
-      </AccordionSummary> */}
-            <AccordionDetails>
-                <Formik
-                    enableReinitialize
-                    initialValues={initialValues}
-                    validationSchema={validationSchema}
-                    onSubmit={onHandleSubmit}
-                >
-                    {({ isSubmitting, handleSubmit }) => (
-                        <form noValidate onSubmit={handleSubmit}>
-                            <FormJobEvent />
-                            <FormEvent isEvent={true}/>
+        <Container style={{ maxWidth: 600 }}>
+            <Formik
+                enableReinitialize
+                initialValues={initialValues}
+                validationSchema={validationSchema}
+                onSubmit={onHandleSubmit}
+            >
+                {({ isSubmitting, handleSubmit, values, handleChange, handleBlur, errors, touched }) => (
+                    <form noValidate onSubmit={handleSubmit}>
+                        <Box display={"flex"}
+                            flexDirection={'column'}
+                            justifyContent={'center'}
+                            alignItems={'center'}
+                            style={{ backgroundColor: 'white', padding: '30px 0px', borderRadius: '20px' }}>
+                            <FormControl className={classes.formControl}>
+                                <FormLabel style={{ fontWeight: "bold", fontSize: "14px", margin: "10px 0" }}>
+                                    Tên công việc
+                                </FormLabel>
+
+                                <TextField
+                                    style={{ width: 300 }}
+                                    fullWidth
+                                    variant={'outlined'}
+                                    name='nameJob'
+                                    value={values.nameJob}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    placeholder='Nhập tên công việc'
+                                    inputProps={{
+                                        style: {
+                                            fontSize: '12px',
+                                        }
+                                    }}
+                                    helperText={touched.nameJob ? errors.nameJob : ""}
+                                    error={touched.nameJob ? Boolean(errors.nameJob) : false}
+                                />
+                            </FormControl>
+
+                            <FormControl className={classes.formControl}>
+                                <FormLabel style={{ fontWeight: "bold", fontSize: "14px", margin: "10px 0" }}>
+                                    Số lượng người
+                                </FormLabel>
+
+                                <TextField
+                                    style={{ width: 300 }}
+                                    fullWidth
+                                    variant={'outlined'}
+                                    name='quantity'
+                                    value={values.quantity}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    placeholder='Nhập số lượng người'
+                                    inputProps={{
+                                        style: {
+                                            fontSize: '12px',
+                                        }
+                                    }}
+                                    helperText={touched.quantity ? errors.quantity : ""}
+                                    error={touched.quantity ? Boolean(errors.quantity) : false}
+                                />
+                            </FormControl>
+
+                            <FormControl className={classes.formControl}>
+                                <FormLabel style={{ fontWeight: "bold", fontSize: "14px", margin: "10px 0" }}>
+                                    Đơn giá
+                                </FormLabel>
+                                <TextField
+                                    style={{ width: 300 }}
+                                    fullWidth
+                                    variant="outlined"
+                                    name='unitPrice'
+                                    value={values.unitPrice}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    placeholder='Nhập đơn giá'
+                                    helperText={touched.unitPrice ? errors.unitPrice : ""}
+                                    error={touched.unitPrice ? Boolean(errors.unitPrice) : false}
+                                    inputProps={{
+                                        style: {
+                                            fontSize: '12px',
+                                        }
+                                    }}
+                                />
+                            </FormControl>
+
+                            <FormControl className={classes.formControl}>
+                                <FormLabel style={{ fontWeight: "bold", fontSize: "14px", margin: "10px 0" }}>
+                                    Mô tả công việc
+                                </FormLabel>
+
+                                <TextField
+                                    style={{ width: 300 }}
+                                    fullWidth
+                                    variant="outlined"
+                                    name='jobDescription'
+                                    value={values.jobDescription}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    placeholder='Nhập mô tả công việc'
+                                    helperText={touched.jobDescription ? errors.jobDescription : ""}
+                                    error={touched.jobDescription ? Boolean(errors.jobDescription) : false}
+                                    inputProps={{
+                                        style: {
+                                            fontSize: '12px',
+                                        }
+                                    }}
+                                />
+                            </FormControl>
+
+                            <FormControl className={classes.formControl}>
+                                <FormLabel style={{ fontWeight: "bold", fontSize: "14px", margin: "10px 0" }}>
+                                    Yêu cầu công việc
+                                </FormLabel>
+                                <TextField
+                                    style={{ width: 300 }}
+                                    fullWidth
+                                    variant="outlined"
+                                    name='jobRequest'
+                                    value={values.jobRequest}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    placeholder='Nhập yêu cầu công việc'
+                                    helperText={touched.jobRequest ? errors.jobRequest : ""}
+                                    error={touched.jobRequest ? Boolean(errors.jobRequest) : false}
+                                    inputProps={{
+                                        style: {
+                                            fontSize: '12px',
+                                        }
+                                    }}
+                                />
+                            </FormControl>
+
+                            <FormEvent isEvent={true} />
                             <Button
                                 style={{ backgroundColor: "black", color: "white" }}
                                 type='submit'
@@ -97,11 +212,11 @@ const UpdateJobEvent: React.FC<Props> = ({ jobEvent }): JSX.Element => {
                             >
                                 {isSubmitting ? <CircularProgress size='1rem' /> : "Cập Nhật Công Việc"}
                             </Button>
-                        </form>
-                    )}
-                </Formik>
-            </AccordionDetails>
-        </Accordion>
+                        </Box>
+                    </form>
+                )}
+            </Formik>
+        </Container>
     );
 };
 

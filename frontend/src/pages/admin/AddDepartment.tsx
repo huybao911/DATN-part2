@@ -1,6 +1,6 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { Grid, Button, CircularProgress } from "@material-ui/core";
+import { Button, CircularProgress } from "@material-ui/core";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { IDepartment } from "redux/types/department";
@@ -9,8 +9,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "redux/reducers";
 
 import { addDepartment, getDepartments } from "redux/actions/admin";
-import { Link } from 'react-router-dom';
+
 import { Box, Container, FormControl, FormLabel, TextField, Typography } from "@mui/material";
+
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -49,6 +51,7 @@ interface IInitialValues {
 
 const AddDepartment: React.FC = (): JSX.Element => {
   const classes = useStyles();
+  const history = useHistory();
   const dispatch = useDispatch();
   const ADMIN = "640cbf0573094a5e2e001859";
 
@@ -100,7 +103,7 @@ const AddDepartment: React.FC = (): JSX.Element => {
               <FormControl>
                 <FormLabel style={{ fontWeight: "bold", fontSize: "14px", marginTop: "5px" }}>Ký tự viết tắt khoa</FormLabel>
                 <TextField
-                  style={{ width: 300, }}
+                  style={{ width: 300 }}
                   className={classes.textField}
                   fullWidth
                   variant={'outlined'}
@@ -164,20 +167,19 @@ const AddDepartment: React.FC = (): JSX.Element => {
                   {isSubmitting ? <CircularProgress size='1rem' /> : "Thêm Khoa"}
                 </Button>
 
-                <Link to={"/department"}>
-                  <Button style={{
-                    color: "#FF6969",
-                    height: "34px",
-                    width: "120px",
-                    fontSize: "12px",
-                    fontWeight: 500,
-                    borderRadius: "4px",
-                    textTransform: "capitalize",
-                    border: '1px solid #FF6969',
+                <Button style={{
+                  color: "#FF6969",
+                  height: "34px",
+                  width: "120px",
+                  fontSize: "12px",
+                  fontWeight: 500,
+                  borderRadius: "4px",
+                  textTransform: "capitalize",
+                  border: '1px solid #FF6969',
 
-                  }}
-                  >Quay lại</Button>
-                </Link>
+                }}
+                  onClick={history.goBack}
+                >Quay lại</Button>
               </Box>
 
 

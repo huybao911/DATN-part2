@@ -2,7 +2,7 @@ import * as React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getApplyJob } from "redux/actions/user";
 import { RootState } from "redux/reducers";
-import FeedApplyJob from "pages/User/FeedApplyJob";
+import FeedManageJob from "pages/User/FeedManageJob";
 import { Typography, Container } from '@mui/material';
 import { IEvent } from "redux/types/event";
 
@@ -25,16 +25,16 @@ const ApplyJob: React.FC = (): JSX.Element => {
     }, [user]);
 
     React.useEffect(() => {
-        document.title = "Công việc đã ứng tuyển";
+        document.title = "Quản lý công việc";
     }, []);
 
     return (
 
         <Container>
-            <Typography style={{ fontSize: "30px", fontWeight: "bold", margin: "20px 0px 10px 15px" }}>Công Việc Đã Ứng Tuyển</Typography>
+            <Typography style={{ fontSize: "30px", fontWeight: "bold", margin: "20px 0px 10px 15px" }}>Quản Lý Công Việc</Typography>
             {events.map((event: any) =>
-                <FeedApplyJob event={event} key={event._id} />) ?? (
-                    <p>No FeedApplyJob Found.</p>
+                <FeedManageJob event={event} key={event._id} />) ?? (
+                    <p>No FeedManageJob Found.</p>
                 )}
         </Container>
     );

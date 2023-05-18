@@ -19,7 +19,16 @@ const useStyles = makeStyles((theme) => ({
     },
     placeholder: {
         color: "#aaa"
-    }
+    },
+    selectStyle: {
+        fontSize: '13px',
+        marginBottom: '28px',
+        marginTop: 10,
+        width: 300,
+        "& fieldset": {
+            borderRadius: "10px",
+        },
+    },
 }));
 
 type Props = {
@@ -58,9 +67,12 @@ const FormField: React.FC<Props> = ({ isEvent = false }): JSX.Element => {
         <>
 
             {isEvent ? (
-                <FormControl fullWidth className={classes.formControl}>
-                    <FormLabel classes={{ root: classes.formLabel }}>Sự kiện</FormLabel>
-                    <Select
+                <FormControl className={classes.formControl}>
+                    <FormLabel style={{ fontWeight: "bold", fontSize: "14px", marginTop: "5px" }}>
+                        Sự kiện
+                    </FormLabel>
+
+                    <Select 
                         name="event"
                         labelId="demo-simple-select-label"
                         id="handle-event"
@@ -68,10 +80,16 @@ const FormField: React.FC<Props> = ({ isEvent = false }): JSX.Element => {
                         onChange={handleChange}
                         onBlur={handleBlur}
                         error={touched.event ? Boolean(errors.event) : false}
+                        className={classes.selectStyle}
 
-                    // renderValue={
-                    //     role !== "" ? undefined : () => <Placeholder>Role</Placeholder>
-                    // }
+                        variant={'outlined'}
+                        MenuProps={{
+                            PaperProps: {
+                                style: {
+                                    fontSize: 10,
+                                },
+                            },
+                        }}
                     >
                         {events?.map((event: any) => (
                             <MenuItem value={event._id} key={event._id}>
