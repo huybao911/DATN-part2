@@ -109,9 +109,7 @@ const FeedDetailContent: React.FC<Props> = ({ event }): JSX.Element => {
                             <BoxNameDetails>
                                 Mô tả:
                             </BoxNameDetails>
-                            <Box sx={{ textAlign: 'left', fontSize: '14px', fontWeight: 500 }}>
-                                {event.contentEvent}
-                            </Box>
+                            <Box sx={{ textAlign: 'left', fontSize: '14px', fontWeight: 500 }} dangerouslySetInnerHTML={{ __html: event.contentEvent }} />
                         </Box>
                     </BoxDetails>
 

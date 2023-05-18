@@ -31,7 +31,7 @@ const Homepage: React.FC = (): JSX.Element => {
 
   const user = useSelector((state: RootState) => state.user);
 
-  const userHeader = user.isAuthenticated && window.location.pathname.includes('/storageEvent') || user.isAuthenticated && window.location.pathname.includes('/applyJob') || user.isAuthenticated && window.location.pathname.includes('/profile') ? (
+  const userHeader = user.isAuthenticated && window.location.pathname.includes('/storageEvent') || user.isAuthenticated && window.location.pathname.includes('/applyJob') || user.isAuthenticated && window.location.pathname.includes('/profile') || user.isAuthenticated && window.location.pathname.includes('/manageJob') ? (
     <StyledRoot style={{ boxShadow: "none", overflowX: "hidden" }}>
       <Toolbar>
         <NavLink style={{ textDecoration: 'none' }} to={'/user'}>
@@ -121,7 +121,11 @@ const Homepage: React.FC = (): JSX.Element => {
                 </StyledMenuItem>
 
                 <StyledMenuItem component={NavLink} to={'/applyJob'}>
-                  <Typography style={{ fontSize: '14px', float: 'left' }}>Sự Kiện Đã Ứng Tuyển</Typography>
+                  <Typography style={{ fontSize: '14px', float: 'left' }}>Công việc Đã Ứng Tuyển</Typography>
+                </StyledMenuItem>
+
+                <StyledMenuItem component={NavLink} to={'/manageJob'}>
+                  <Typography style={{ fontSize: '14px', float: 'left' }}>Quản Lý Công việc</Typography>
                 </StyledMenuItem>
 
                 <Divider sx={{ borderStyle: 'dashed' }} />

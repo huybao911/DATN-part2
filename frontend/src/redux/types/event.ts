@@ -15,7 +15,7 @@ export interface IEvent {
     update: string;
     delete: string;
     image: string;
-    testImage: File;
+    ggSheet: string;
     created_at:string;
     
     usersApplyJob:any;
@@ -29,4 +29,7 @@ export interface IEvent {
     total: number;
     approve: string;
     unapprove: string;
+    acceptStatus: string;
+    accept: string;
+    unaccept: string;
   }

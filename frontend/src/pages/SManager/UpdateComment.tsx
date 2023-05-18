@@ -6,15 +6,25 @@ import * as Yup from "yup";
 import SendIcon from '@mui/icons-material/Send';
 import { useDispatch } from "react-redux";
 import { commentEvent } from "redux/actions/sManager";
-import FormComment from "pages/SManager/FormComment";
+import { FormControl, TextField } from "@mui/material";
 
 const useStyles = makeStyles((theme) => ({
     btnLogin: {
         '&.MuiButton-root:hover': {
-            backgroundColor:"transparent",
+            backgroundColor: "transparent",
         }
     },
-  }));
+    formTextField: {
+        "& .MuiInputBase-root": {
+            "& fieldset": {
+                borderRadius: 10,
+            },
+            "&.Mui-focused fieldset": {
+                borderColor: "black"
+            },
+        }
+    },
+}));
 
 type Props = {
     event: any;
@@ -32,35 +42,47 @@ const CommentPost: React.FC<Props> = ({ event }): JSX.Element => {
         contentComment: event?.contentComment ?? "",
     };
 
-
     const onHandleSubmit = (
         values: IInitialValues,
         { setSubmitting }: any
     ): Promise<void> =>
         dispatch<any>(commentEvent(values, event._id, setSubmitting));
 
-    const validationSchema = Yup.object({
-        contentComment: Yup.string().required("required!"),
-    });
-
     return (
         <Formik
             enableReinitialize
             initialValues={initialValues}
-            validationSchema={validationSchema}
             onSubmit={onHandleSubmit}
         >
-            {({ isSubmitting, handleSubmit }) => (
+            {({ isSubmitting, handleSubmit, values, handleChange, handleBlur, errors, touched }) => (
                 <form noValidate onSubmit={handleSubmit}>
-                    <Box style={{ display: "flex", flexDirection: "row", marginTop:"30px" }}>
-                        <FormComment />
+                    <Box style={{ display: "flex", flexDirection: "row", marginTop: "30px" }}>
+                        {/* <FormComment /> */}
+                        <FormControl style={{ paddingLeft: 10 }}>
+                            <TextField
+                                style={{ width: 450, }}
+                                className={classes.formTextField}
+                                variant="outlined"
+                                inputProps={{
+                                    style: {
+                                        fontSize: '12px',
+                                        padding: '12px'
+                                    }
+                                }}
+                                name='contentComment'
+                                value={values.contentComment}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                placeholder='Nhập bình luận...'
+                            />
+                        </FormControl>
                         <Button
                             disableRipple
                             type='submit'
                             className={classes.btnLogin}
                             disabled={isSubmitting}
                         >
-                            {isSubmitting ? <CircularProgress size='1rem' /> : <SendIcon style={{width: '16px'}} />}
+                            {isSubmitting ? <CircularProgress size='1rem' /> : <SendIcon style={{ width: '16px' }} />}
                         </Button>
                     </Box>
                 </form>

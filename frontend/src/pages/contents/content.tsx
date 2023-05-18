@@ -278,7 +278,11 @@ const Content: React.FC = (): JSX.Element => {
                                         </StyledMenuItem>
 
                                         <StyledMenuItem component={NavLink} to={'/applyJob'}>
-                                            <Typography style={{ fontSize: '14px', float: 'left' }}>Sự Kiện Đã Ứng Tuyển</Typography>
+                                            <Typography style={{ fontSize: '14px', float: 'left' }}>Công Việc Đã Ứng Tuyển</Typography>
+                                        </StyledMenuItem>
+
+                                        <StyledMenuItem component={NavLink} to={'/manageJob'}>
+                                            <Typography style={{ fontSize: '14px', float: 'left' }}>Quản Lý Công việc</Typography>
                                         </StyledMenuItem>
 
                                         <Divider sx={{ borderStyle: 'dashed' }} />

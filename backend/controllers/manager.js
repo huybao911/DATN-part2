@@ -362,9 +362,6 @@ exports.approveUserApplyJob = async (req, res, next) => {
       },
       { new: true }
     );
-    // const eventObj = {
-    //   job: getJobEvent,
-    // };
     await Event.findByIdAndUpdate(
       { _id: eventId },
       {
@@ -388,9 +385,6 @@ exports.approveUserApplyJob = async (req, res, next) => {
 
 exports.unapproveUserApplyJob = async (req, res, next) => {
   const { eventId, userApplyId } = req.params;
-  // const userStorage = await User.findById(req?.user?._id).populate("role").populate("department");
-  // const getJobEvent = await JobEvent.find({ event: eventId });
-  // quantityRe = getJobEvent.quantityRemaining - 1;
   try {
     if (!req.manager) return res.status(400).send("You dont have permission");
     const newUserApply = await Event.findOneAndUpdate(
@@ -401,6 +395,68 @@ exports.unapproveUserApplyJob = async (req, res, next) => {
         $set: {
           'usersApplyJob.$[el].applyStatus': "Không Duyệt",
           'usersApplyJob.$[el].notiApplyJob': "Bạn đã ứng tuyển thất bại"
+        }
+      },
+      { 
+        arrayFilters:[{
+          "el._id":userApplyId
+        }],
+        'new': true, 'safe': true, 'upsert': true
+      }
+    );
+    return res.status(200).json(newUserApply);
+  } catch (error) {
+    console.log(error.message);
+    return res.status(500).json(error);
+  }
+};
+
+exports.acceptCTV = async (req, res, next) => {
+  const { eventId, userApplyId } = req.params;
+  const event = await Event.find({_id:eventId});
+  const userApply = event.map((applyUser) => applyUser.usersApplyJob.filter(((applyUser) => applyUser._id == userApplyId)))
+  const userApplys = userApply.map((applyUser) => applyUser.map((applyUser) => applyUser.jobEvent));
+  const jobEvent  = await JobEvent.findById(userApplys.toString());
+  quantityRe = jobEvent.quantityRemaining - 1;
+
+  try {
+    if (!req.manager) return res.status(400).send("You dont have permission");
+    const newUserApply = await Event.findOneAndUpdate(
+      {
+        _id: eventId,
+      },
+      {
+        $set: {
+          'usersApplyJob.$[el].acceptStatus': "Duyệt",
+          'usersApplyJob.$[el].notiAccept': "Đã hoàn thành công việc. Liên hệ văn phòng Viện/Khoa."
+        }
+      },
+      { 
+        arrayFilters:[{
+          "el._id":userApplyId
+        }],
+        'new': true, 'safe': true, 'upsert': true
+      }
+    );
+    return res.status(200).json(newUserApply);
+  } catch (error) {
+    console.log(error.message);
+    return res.status(500).json(error);
+  }
+};
+
+exports.unAcceptCTV = async (req, res, next) => {
+  const { eventId, userApplyId } = req.params;
+  try {
+    if (!req.manager) return res.status(400).send("You dont have permission");
+    const newUserApply = await Event.findOneAndUpdate(
+      {
+        _id: eventId,
+      },
+      {
+        $set: {
+          'usersApplyJob.$[el].acceptStatus': "Không Duyệt",
+          'usersApplyJob.$[el].notiAnotiAcceptpplyJob': "Chưa hoàn thành công việc."
         }
       },
       { 

@@ -74,12 +74,12 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storages });
 app.post("/api/v1/manager/createEvent", upload.single("image"), isAuth, async (req, res) => {
-    const { nameEvent, comments, job, location, dayStart, dayEnd, storagers, usersApplyJob, image, contentEvent } = req.body;
+    const { nameEvent, comments, job, location, dayStart, dayEnd, storagers, usersApplyJob, image, contentEvent, ggSheet } = req.body;
     const managerUser = await User.findById(req?.manager?._id);
     const managerDepartment = await Department.findOne({ _id: managerUser.department });
     try {
         if (!req.manager) return res.status(400).send("You dont have permission");
-        if (!nameEvent || !location || !dayStart || !dayEnd || !contentEvent)
+        if (!nameEvent || !location || !dayStart || !dayEnd || !contentEvent || !ggSheet)
             return res.status(400).send("Please fill in all the required fields!")
         const newEvent = new Event({
             nameEvent,
@@ -94,6 +94,7 @@ app.post("/api/v1/manager/createEvent", upload.single("image"), isAuth, async (r
             contentEvent,
             storagers,
             usersApplyJob,
+            ggSheet,
             image: req.file.path,
         });
         await newEvent.save();
@@ -115,7 +116,7 @@ app.put("/api/v1/manager/event/:id", upload.single("image"), isAuth, async (req,
     const getTotalJob = getJobEvent.map((job) => job.total);
     const sumTotalJob = getTotalJob.reduce((a, b) => a + b);
 
-    const { nameEvent, poster, approver, location, dayStart, dayEnd, image, contentEvent } = req.body;
+    const { nameEvent, poster, approver, location, dayStart, dayEnd, ggSheet, contentEvent } = req.body;
     try {
         if (!req.manager) return res.status(400).send("You dont have permission");
         const event = await Event.findById(id).lean();
@@ -133,6 +134,7 @@ app.put("/api/v1/manager/event/:id", upload.single("image"), isAuth, async (req,
                 dayEnd: dayEnd,
                 contentEvent: contentEvent,
                 image: req.file.path,
+                ggSheet: ggSheet,
             };
             const newEvent = await Event.findByIdAndUpdate(
                 { _id: id },
@@ -147,6 +149,7 @@ app.put("/api/v1/manager/event/:id", upload.single("image"), isAuth, async (req,
                     dayStart: eventObj.dayStart,
                     dayEnd: eventObj.dayEnd,
                     contentEvent: eventObj.contentEvent,
+                    ggSheet: eventObj.ggSheet,
                     image: eventObj.image,
                 },
                 { new: true }
@@ -165,6 +168,7 @@ app.put("/api/v1/manager/event/:id", upload.single("image"), isAuth, async (req,
                 dayStart: dayStart,
                 dayEnd: dayEnd,
                 contentEvent: contentEvent,
+                ggSheet: ggSheet,
             };
             const newEvent = await Event.findByIdAndUpdate(
                 { _id: id },
@@ -179,6 +183,7 @@ app.put("/api/v1/manager/event/:id", upload.single("image"), isAuth, async (req,
                     dayStart: eventObj.dayStart,
                     dayEnd: eventObj.dayEnd,
                     contentEvent: eventObj.contentEvent,
+                    ggSheet: eventObj.ggSheet,
                 },
                 { new: true }
             );
@@ -191,7 +196,7 @@ app.put("/api/v1/manager/event/:id", upload.single("image"), isAuth, async (req,
 
 });
 
-app.put("/api/v1/user/profile/:id" ,upload.single("avatar"), isAuthUser, async (req, res) => {
+app.put("/api/v1/user/profile/:id", upload.single("avatar"), isAuthUser, async (req, res) => {
     const { id } = req.params;
     const { username, email, department, fullName, birthday, mssv, classUser, phone, address } = req.body;
     try {

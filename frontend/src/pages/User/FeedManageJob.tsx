@@ -98,7 +98,7 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
-const FeedApplyJob: React.FC<Props> = ({ event }): JSX.Element => {
+const FeedManageJob: React.FC<Props> = ({ event }): JSX.Element => {
 
     const dispatch = useDispatch();
     const [value, setValue] = React.useState('1');
@@ -107,13 +107,8 @@ const FeedApplyJob: React.FC<Props> = ({ event }): JSX.Element => {
 
     const classes = useStyles();
 
-    const findJobUserApply = event.usersApplyJob.filter((userapply: any) => userapply.userApply.username === user.user.username);
+    const findJobUserApply = event.usersApplyJob.filter((userapply: any) => userapply.userApply.username === user.user.username && userapply.notiApplyJob == "Bạn đã ứng tuyển thành công");
 
-    const userApply = event.usersApplyJob.map((userapply: any) => userapply.userApply.username);
-
-    const userApplys = event.usersApplyJob.some((userapply: any) => user.user.username.includes(userapply.userApply.username));
-
-    const userJob = event.usersApplyJob.map((userjob: any) => userjob.jobEvent._id);
     return (
         <>
             {findJobUserApply.map((job: any) =>
@@ -133,60 +128,29 @@ const FeedApplyJob: React.FC<Props> = ({ event }): JSX.Element => {
                                                 {job.jobEvent.nameJob}
                                             </Box>
                                             <Box flexGrow={1} />
-                                            {job.notiApplyJob == "Chờ phê duyệt" ? (
-                                                <Box sx={{ marginRight: "40px", fontWeight: "500" }}>
-                                                    {job.notiApplyJob}
-                                                </Box>
-                                            ) : job.notiApplyJob == "Bạn đã ứng tuyển thành công" ? (
-                                                <Box sx={{ marginRight: "40px", fontWeight: "500", color: "#00B14F" }}>
-                                                    {job.notiApplyJob}
-                                                </Box>
-                                            ) : job.notiApplyJob == "Bạn đã ứng tuyển thất bại" ? (
-                                                <Box sx={{ marginRight: "40px", fontWeight: "500", color: "red" }}>
-                                                    {job.notiApplyJob}
-                                                </Box>
-                                            ) : null
-                                            }
+                                            <Box>
+
+                                            </Box>
                                         </Box>
 
-                                        <Box sx={{ fontSize: "16px", marginTop: "7px", marginLeft: "35px" }}>
-                                            {event.poster.username}
+                                        <Box sx={{ fontSize: "15px", marginTop: "10px", marginLeft: "35px" }}>
+                                            {event?.dayStart ?? null} - {event?.dayEnd ?? null}
                                         </Box>
 
                                         <Box sx={{ fontSize: "16px", marginTop: "30px", marginLeft: "35px" }}>
                                             Địa điểm: {event.location}
                                         </Box>
 
-                                        <Box sx={{ fontSize: "15px", marginTop: "10px", marginLeft: "35px" }}>
-                                            {event?.dayStart ?? null} - {event?.dayEnd ?? null}
-                                        </Box>
                                         <Box sx={{ display: "flex", flexDirection: "row" }} >
                                             <Box>
                                                 <Box sx={{ fontSize: "15px", marginTop: "20px", marginLeft: "35px" }}>
                                                     Mô tả: {job.jobEvent.jobDescription}
                                                 </Box>
-
-                                                <Box sx={{ fontSize: "15px", marginTop: "10px", marginLeft: "35px" }}>
-                                                    Yêu cầu: {job.jobEvent.jobRequest}
-                                                </Box>
                                             </Box>
                                             <Box flexGrow={1} />
-                                            <Box>
-                                                {userApplys ? (
-                                                    user.user.username == job.userApply.username && job.notiApplyJob == "Chờ phê duyệt" || user.user.username == job.userApply.username && job.notiApplyJob == "Bạn đã ứng tuyển thất bại" ? (
-                                                        <Box sx={{ margin: "30px 30px 0px 0px" }} >
-                                                            <Button style={{ backgroundColor: "red", color: "white", height: "30px", width: "120px", fontSize: "12px", fontWeight: "bold", borderRadius: "6px", textTransform: "capitalize" }} onClick={(e) => dispatch(userUnApplyJob(event._id, job.jobEvent._id))}>Hủy Ứng Tuyển</Button>
-                                                        </Box>
-                                                    ) : null
-                                                ) : userApply !== user.user.username ? (
-                                                    job.jobEvent._id !== userJob ? (
-                                                        <Box sx={{ margin: "30px 30px 0px 0px" }}>
-                                                            <Button style={{ backgroundColor: "#00B14F", color: "white", height: "30px", width: "120px", fontSize: "12px", fontWeight: "bold", borderRadius: "6px", textTransform: "capitalize" }} onClick={(e) => dispatch(userApplyJob(event._id, job.jobEvent._id))}>Ứng Tuyển</Button>
-                                                        </Box>
-                                                    ) : null
-                                                ) : null
-                                                }
-                                            </Box>
+                                            <Button style={{color:"green"}} target='_blank' href={event.ggSheet} rel="noopener noreferrer">
+                                                Link chi tiết công việc
+                                            </Button>
                                         </Box>
                                     </CardContent>
 
@@ -201,4 +165,4 @@ const FeedApplyJob: React.FC<Props> = ({ event }): JSX.Element => {
     );
 };
 
-export default FeedApplyJob;
+export default FeedManageJob;

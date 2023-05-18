@@ -1,19 +1,19 @@
 import * as React from "react";
 import { styled, alpha } from "@material-ui/core/styles";
 import { useDispatch, useSelector } from "react-redux";
-import { getListCTV } from "redux/actions/Manager";
+import { getListCTV, acceptCTV, unacceptCTV } from "redux/actions/Manager";
 import { RootState } from "redux/reducers";
 import { IEvent } from "redux/types/event";
 import UpdateCoefficient from "./UpdateCoefficient"
-import { TableSortLabel, Toolbar, OutlinedInput, InputAdornment, Card, Container, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography, Popover, Button } from "@mui/material";
+import { IconButton, TableSortLabel, Toolbar, OutlinedInput, InputAdornment, Card, Container, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography, Popover, Button } from "@mui/material";
 // @mui
 import SearchIcon from '@mui/icons-material/Search';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import { Box } from "@mui/system";
 import { visuallyHidden } from '@mui/utils';
 
 import { useParams } from 'react-router-dom';
-
-import { DownloadTableExcel } from 'react-export-table-to-excel';
 
 const StyledRoot = styled(Toolbar)(({ theme }) => ({
   height: 96,
@@ -81,6 +81,9 @@ interface DataUser {
   unitPrice: keyof IEvent;
   coefficient: keyof IEvent;
   total: keyof IEvent;
+  acceptStatus: keyof IEvent;
+  accept: keyof IEvent;
+  unaccept: keyof IEvent;
 }
 
 interface HeadCell {
@@ -103,7 +106,7 @@ const headCells: HeadCell[] = [
   {
     _id: 'userApply',
     numeric: false,
-    label: 'Người ứng tuyển',
+    label: 'Tên Cộng Tác Viên',
   },
   {
     _id: 'unitPrice',
@@ -119,6 +122,21 @@ const headCells: HeadCell[] = [
     _id: 'total',
     numeric: false,
     label: 'Thành tiền',
+  },
+  {
+    _id: 'acceptStatus',
+    numeric: false,
+    label: 'Trạng thái',
+  },
+  {
+    _id: 'accept',
+    numeric: false,
+    label: '',
+  },
+  {
+    _id: 'unaccept',
+    numeric: false,
+    label: '',
   },
 ];
 
@@ -177,7 +195,7 @@ interface RouteParams {
   id: string
 }
 
-const Users: React.FC = (): JSX.Element => {
+const ListCTVEvent: React.FC = (): JSX.Element => {
 
   const dispatch = useDispatch();
   const params = useParams<RouteParams>();
@@ -296,14 +314,6 @@ const Users: React.FC = (): JSX.Element => {
                   }
                 />
               </Box>
-              <DownloadTableExcel
-                    filename="users table"
-                    sheet="users"
-                    currentTableRef={tableRef.current}
-                    
-                >
-                   <Button> Export excel </Button>
-                </DownloadTableExcel>
             </Box>
           </StyledRoot>
           <TableContainer>
@@ -324,28 +334,28 @@ const Users: React.FC = (): JSX.Element => {
                         </Box>
                       </TableCell>
                       <TableCell align="left" sx={{ width: "200px", fontSize: '12px' }}>
-                        {event.usersApplyJob.filter((jobApply: any) => jobApply.notiApplyJob.includes("Bạn đã ứng tuyển thành công")).map((job: any) =>
+                        {event.usersApplyJob.filter((jobApply: any) => jobApply.notiApplyJob.includes("Bạn đã ứng tuyển thành công") && jobApply.acceptStatus.includes("Chờ phê duyệt")).map((job: any) =>
                           <Box key={job._id} style={{ display: "flex", flexDirection: "column", marginTop: "20px", paddingBottom: "20px" }}>
                             {job.jobEvent.nameJob}
                           </Box>
                         )}
                       </TableCell>
                       <TableCell align="left" sx={{ width: "200px", fontSize: '12px' }}>
-                        {event.usersApplyJob.filter((jobApply: any) => jobApply.notiApplyJob.includes("Bạn đã ứng tuyển thành công")).map((job: any) =>
+                        {event.usersApplyJob.filter((jobApply: any) => jobApply.notiApplyJob.includes("Bạn đã ứng tuyển thành công") && jobApply.acceptStatus.includes("Chờ phê duyệt")).map((job: any) =>
                           <Box key={job._id} style={{ display: "flex", flexDirection: "column", marginTop: "20px", paddingBottom: "20px" }}>
-                            {job.userApply.username}
+                            {job.userApply.fullName}
                           </Box>
                         )}
                       </TableCell>
                       <TableCell align="left" sx={{ width: "300px", fontSize: '12px' }}>
-                        {event.usersApplyJob.filter((jobApply: any) => jobApply.notiApplyJob.includes("Bạn đã ứng tuyển thành công")).map((job: any) =>
+                        {event.usersApplyJob.filter((jobApply: any) => jobApply.notiApplyJob.includes("Bạn đã ứng tuyển thành công") && jobApply.acceptStatus.includes("Chờ phê duyệt")).map((job: any) =>
                           <Box key={job._id} style={{ display: "flex", flexDirection: "column", marginTop: "20px", paddingBottom: "20px" }}>
                             {new Intl.NumberFormat().format(job.jobEvent.unitPrice)} VND
                           </Box>
                         )}
                       </TableCell>
                       <TableCell align="left" sx={{ width: "250px", fontSize: '12px' }}>
-                        {event.usersApplyJob.filter((jobApply: any) => jobApply.notiApplyJob.includes("Bạn đã ứng tuyển thành công")).map((job: any, index: number) =>
+                        {event.usersApplyJob.filter((jobApply: any) => jobApply.notiApplyJob.includes("Bạn đã ứng tuyển thành công") && jobApply.acceptStatus.includes("Chờ phê duyệt")).map((job: any, index: number) =>
                           <Box key={job._id} style={{ display: "flex", flexDirection: "column", marginTop: "14px", paddingBottom: "14px" }}>
                             <Button style={{ fontSize: '12px', fontWeight: "normal", textTransform: "lowercase", width: "20px" }} size="small" color="inherit" onClick={(jobApply) => handleOpenMenu(jobApply, index)} >
                               {job.coefficient}
@@ -374,48 +384,73 @@ const Users: React.FC = (): JSX.Element => {
                         )}
                       </TableCell>
                       <TableCell align="left" sx={{ width: "300px", fontSize: '12px' }}>
-                        {event.usersApplyJob.filter((jobApply: any) => jobApply.notiApplyJob.includes("Bạn đã ứng tuyển thành công")).map((job: any) =>
+                        {event.usersApplyJob.filter((jobApply: any) => jobApply.notiApplyJob.includes("Bạn đã ứng tuyển thành công") && jobApply.acceptStatus.includes("Chờ phê duyệt")).map((job: any) =>
                           <Box key={job._id} style={{ display: "flex", flexDirection: "column", marginTop: "20px", paddingBottom: "20px" }}>
                             {new Intl.NumberFormat().format(job.total)} VND
+                          </Box>
+                        )}
+                      </TableCell>
+                      <TableCell align="left" sx={{ width: "300px", fontSize: '12px' }}>
+                        {event.usersApplyJob.filter((jobApply: any) => jobApply.notiApplyJob.includes("Bạn đã ứng tuyển thành công") && jobApply.acceptStatus.includes("Chờ phê duyệt")).map((job: any) =>
+                          <Box key={job._id} style={{ display: "flex", flexDirection: "column", marginTop: "20px", paddingBottom: "20px" }}>
+                            {job.acceptStatus}
+                          </Box>
+                        )}
+                      </TableCell>
+                      <TableCell align="left" sx={{ width: "50px", fontSize: '12px' }}>
+                        {event.usersApplyJob.filter((jobApply: any) => jobApply.notiApplyJob.includes("Bạn đã ứng tuyển thành công") && jobApply.acceptStatus.includes("Chờ phê duyệt")).map((job: any) =>
+                          <Box key={job._id} style={{ display: "flex", flexDirection: "column", marginTop: "5px", paddingBottom: "10px" }}>
+                            <IconButton onClick={(e) => dispatch(acceptCTV(event._id, job._id))} style={{ color: "green" }}>
+                              <CheckCircleOutlineIcon />
+                            </IconButton>
+                          </Box>
+                        )}
+                      </TableCell>
+                      <TableCell align="left" sx={{ width: "50px", fontSize: '12px' }}>
+                        {event.usersApplyJob.filter((jobApply: any) => jobApply.notiApplyJob.includes("Bạn đã ứng tuyển thành công") && jobApply.acceptStatus.includes("Chờ phê duyệt")).map((job: any) =>
+                          <Box key={job._id} style={{ display: "flex", flexDirection: "column", marginTop: "5px", paddingBottom: "10px" }}>
+                            <IconButton onClick={(e) => dispatch(unacceptCTV(event._id, job._id))} style={{ color: "red" }}>
+                              <HighlightOffIcon />
+                            </IconButton>
                           </Box>
                         )}
                       </TableCell>
                     </TableRow>
                   )}
 
-                    <TablePagination
-                      style={{ fontSize: "12px" }}
-                      sx={{
-                        '& .MuiTablePagination-selectLabel': {
-                          fontSize: "12px"
-                        },
-                        '& .MuiTablePagination-selectIcon': {
-                          width: "16px"
-                        },
-                        '& .MuiTablePagination-displayedRows': {
-                          fontSize: "12px"
-                        },
-                        '& .MuiSvgIcon-root': {
-                          fontSize: "16px"
-                        },
-                      }}
-                      rowsPerPageOptions={[5, 10, 25]}
-                      labelRowsPerPage={"Số lượng hàng:"}
-                      count={events.length}
-                      rowsPerPage={rowsPerPage}
-                      page={page}
-                      onPageChange={handleChangePage}
-                      onRowsPerPageChange={handleChangeRowsPerPage}
-                      SelectProps={{
-                        MenuProps: {
-                          sx: {
-                            "&& .MuiTablePagination-menuItem": {
-                              fontSize: "12px"
-                            }
+                  <TablePagination
+                    style={{ fontSize: "12px" }}
+                    sx={{
+                      '& .MuiTablePagination-selectLabel': {
+                        fontSize: "12px"
+                      },
+                      '& .MuiTablePagination-selectIcon': {
+                        width: "16px"
+                      },
+                      '& .MuiTablePagination-displayedRows': {
+                        fontSize: "12px"
+                      },
+                      '& .MuiSvgIcon-root': {
+                        fontSize: "16px"
+                      },
+                    }}
+                    rowsPerPageOptions={[5, 10, 25]}
+                    labelRowsPerPage={"Số lượng hàng:"}
+                    count={events.length}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    onPageChange={handleChangePage}
+                    onRowsPerPageChange={handleChangeRowsPerPage}
+                    SelectProps={{
+                      MenuProps: {
+                        sx: {
+                          "&& .MuiTablePagination-menuItem": {
+                            fontSize: "12px"
                           }
                         }
-                      }}
-                    />
+                      }
+                    }}
+                  />
                 </TableBody>
               ) : (
                 <TableBody>
@@ -441,4 +476,4 @@ const Users: React.FC = (): JSX.Element => {
   );
 };
 
-export default Users;
+export default ListCTVEvent;
